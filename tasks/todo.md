@@ -85,8 +85,9 @@
 
 ### S6 — ni-article-image-gen（配图 prompt，P1）✅ 已完成
 
-- [x] `ni-article-image-gen/SKILL.md` — 封面 3 组 + 配图 prompt，实体锚定；基因内嵌
-- [x] `references/visual-prompts.md` — 6 种配图类型结构化模板 + 封面 3 策略 + 实体锚定正反例
+- [x] `ni-article-image-gen/SKILL.md` — 风格默认黏土定格动画（可按用户输入切换），每篇 1 封面 + 9 内文，实体锚定；基因内嵌
+- [x] `references/visual-prompts.md` — 默认黏土风格块 + 其他风格的风格块结构 + 6 种构图类型模板 + 封面 3 构思方向 + 9 图分布 + 实体锚定正反例
+- **优化记录（2026-05-19）**：①输出从「封面 3 组 + 内文 3-6 张」改为「封面 1 张 + 内文固定 9 张」；②风格默认黏土定格动画，用户可指定其他风格，整篇 10 图风格统一
 - **独立运行**：用户给 article.md（+ 可选 insight）→ 产出 cover-prompts.md / inline-prompts.md
 - **验收**：封面 3 组差异化、每条 prompt ≥2 个文章实体
 
