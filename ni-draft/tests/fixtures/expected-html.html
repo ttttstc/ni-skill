@@ -1,0 +1,17 @@
+<section style="font-size:16px;color:#333;line-height:1.75;letter-spacing:0.3px;"><h1 style="font-size:22px;font-weight:bold;color:#222;margin:1.4em 0 0.8em;">怎么判断一个 AI 编程工具该不该上手</h1>
+<p style="margin:0 0 1.2em;">这两天我在重新整理自己的工具链，顺手想把这件事讲清楚。</p>
+<blockquote style="border-left:3px solid #999;padding:0.4em 0 0.4em 1em;color:#666;margin:1.3em 0;"><p style="margin:0 0 1.2em;">你不是在选一个工具，你是在赌一个还在变的趋势。</p></blockquote>
+<p style="margin:0 0 1.2em;">很多人选 Claude Code 还是 Codex，纠结的是功能对比表。我觉得这个对比表多半没用。</p>
+<section style="text-align:center;font-weight:bold;font-size:17px;color:#222;margin:2em 0;padding:1.1em 1em;background:#f5f5f5;border-radius:5px;">工具选型不是技术问题，是你愿意为可复现性付多少成本的问题。</section>
+<hr style="border:none;border-top:1px solid #ddd;margin:2.2em 0 1.2em;"><h2 style="font-size:19px;font-weight:bold;color:#222;margin:1.4em 0 0.7em;">一、先看使用频次</h2>
+<p style="margin:0 0 1.2em;">一个工具值不值得正式纳入工作流，<strong style="font-weight:bold;color:#222;">第一个判断标准是你每天碰它几次</strong>。</p>
+<p style="margin:0 0 1.2em;">每天碰十次的工具，花两小时配置都值；一周碰一次的，配置成本永远赚不回来。</p>
+<section style="background:#fff3cd;border-left:4px solid #ffc107;padding:0.9em 1em;margin:1.3em 0;border-radius:3px;"><p style="margin:0 0 1.2em;">注意，把工具直接接进生产分支的 CI 之前，先在测试分支跑一轮。配置写错会清掉未提交的改动。</p></section>
+<hr style="border:none;border-top:1px solid #ddd;margin:2.2em 0 1.2em;"><h2 style="font-size:19px;font-weight:bold;color:#222;margin:1.4em 0 0.7em;">二、落地三步</h2>
+<p style="margin:0 0 1.2em;">如果你决定要上，按下面三步走。</p>
+<ol style="margin:0 0 1.2em;padding-left:1.4em;">
+<li style="margin:0 0 0.5em;"><strong style="font-weight:bold;color:#222;">统计调用频次</strong>，先有个真实的数。</li>
+<li style="margin:0 0 0.5em;"><strong style="font-weight:bold;color:#222;">估算配置成本</strong>，把一次性投入算清楚。</li>
+<li style="margin:0 0 0.5em;"><strong style="font-weight:bold;color:#222;">设一个回滚开关</strong>，留好随时撤掉的退路。</li>
+</ol>
+<p style="margin:0 0 1.2em;">工具会一直换，但这套判断方式不会过时。</p></section>
