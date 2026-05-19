@@ -1,4 +1,6 @@
 .claude/
+tasks/
+DESIGN.md
 SPEC.md
 
 # workflow 工作目录，草稿产物不入库
