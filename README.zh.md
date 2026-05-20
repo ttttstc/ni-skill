@@ -2,7 +2,7 @@
 
 [English](./README.md) | 中文
 
-> 泥巴猪「低卧扑食」公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
+> ni个人风格公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
 
 ni-skill 是为 Claude Code 设计的一组协同 skill，串起调研 → 灵魂挖掘 → 写作 → 排版 → 预检 → 发布的全流程。所有 skill 共享 5 条套件基因（真实优先 / 独特角度 / 活人在场 / 四层自检 / 降级而不放弃），既能单独使用，也能由 `ni-article-workflow` 编排器串成一条管线。
 
@@ -53,7 +53,7 @@ git clone https://github.com/ttttstc/ni-skill.git ~/.claude/skills/ni-skill
 |------|-------|---------|
 | 素材 | [`ni-url2md`](./skills/ni-url2md) | 把任意 URL 抓成 Markdown（Chrome CDP，含 `--wait` 登录态） |
 | 调研 | [`ni-research`](./skills/ni-research) | 摸热点、扫竞品（二分输出）、采具名素材 |
-| 灵魂 | [`ni-insight`](./skills/ni-insight) ⭐ | 角度发现 → 用户碰撞 → 灵魂锁定。**整个套件的北极星** |
+| 灵魂 | [`ni-insight`](./skills/ni-insight)  | 角度发现 → 用户碰撞 → 灵魂锁定。 |
 | 写作 | [`ni-writer`](./skills/ni-writer) | 长文写作，奥威尔 + 卡尔维诺 + 博尔赫斯文风糅合，四层自检 |
 | 排版 | [`ni-formatter`](./skills/ni-formatter) | 5 模块最小集（part/callout/quote/steps/verdict） |
 | 预检 | [`ni-inspect`](./skills/ni-inspect) | 元数据 / 内容质量 / 结构三组检查，自带禁用词黑名单 |
@@ -65,21 +65,7 @@ git clone https://github.com/ttttstc/ni-skill.git ~/.claude/skills/ni-skill
 
 ---
 
-## 套件基因（G1-G5）
 
-所有 ni-* skill 强制遵守，源自 `ni-writer` 的实战经验：
-
-| 基因 | 含义 |
-|------|------|
-| **G1 真实优先** | 禁编造场景、禁假设性例子、禁空泛工具名。未验证的标 `[待核实]` |
-| **G2 独特角度门槛** | 「没有干货或独特角度不下笔」。`ni-insight` 的三个反直觉提问模板是硬门槛 |
-| **G3 活人在场** | 第一人称对话腔，禁报告体。所有 skill 的输出都像同事在聊 |
-| **G4 四层自检** | L1 硬规则 / L2 风格 / L3 内容 / L4 反 AI 终审。每个 skill 输出前自查 |
-| **G5 降级而不放弃** | 外部依赖不可用时给降级路径，显式标注，不抛错给用户 |
-
-基因细节在各 skill 的 SKILL.md 内嵌，不依赖跨 skill 引用——保证每个 skill 都能独立运行。
-
----
 
 ## 完整管线流程
 
@@ -88,7 +74,7 @@ git clone https://github.com/ttttstc/ni-skill.git ~/.claude/skills/ni-skill
   ↓
 ni-research        摸热点 + 扫竞品 + 采素材
   ↓
-ni-insight  ⭐     挖灵魂、锁定 10-20 字核心论点（朋友圈测试）
+ni-insight       挖灵魂、锁定 10-20 字核心论点
   ↓
 ni-writer          按文风 + 灵魂展开成长文
   ↓
