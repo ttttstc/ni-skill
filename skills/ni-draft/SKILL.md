@@ -124,12 +124,12 @@ python ${SKILL_DIR}/scripts/wechat_draft.py create \
 
 绝不把原始 errcode 数字甩给用户。
 
-## 验收（四层自检）
+## 验收
 
-- **L1 输入合法**：文章文件存在、title ≤ 64 字节、digest ≤ 120 字节、Python 环境和依赖就绪、配置可读。
-- **L2 输出对齐**：成功时 `draft-meta.yaml` 写出且含 draft media_id。
-- **L3 渲染正确**：HTML 在草稿箱预览不变形，5 个排版模块都正常显示。
-- **L4 反 AI 自查**：给用户的每句话都是人话，没有泄露 errcode、没有谎报结果。
+- **输入合法**：文章文件存在、title ≤ 64 字节、digest ≤ 120 字节、Python 环境和依赖就绪、配置可读。
+- **输出对齐**：成功时 `draft-meta.yaml` 写出且含 draft media_id。
+- **渲染正确**：HTML 在草稿箱预览不变形，5 个排版模块都正常显示。
+- **交付前自查**：给用户的每句话都是人话，没有泄露 errcode、没有谎报结果。
 
 ## 降级
 

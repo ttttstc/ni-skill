@@ -4,7 +4,7 @@ English | [中文](./README.zh.md)
 
 > A content creation skill suite for "低卧扑食" — a WeChat public-account brand by 泥巴猪 (Ni). End-to-end pipeline from topic → research → soul → writing → layout → preflight → publish. Focus: AI / engineering management / DevOps / architecture.
 
-ni-skill is a set of cooperating skills for Claude Code, threading research → soul mining → writing → layout → preflight → publishing into one pipeline. All skills share 5 principles (truth-first / unique-angle gatekeeping / human voice / four-layer self-check / degrade rather than abandon). Every skill works standalone, and `ni-article-workflow` orchestrates them into a single pipeline.
+ni-skill is a set of cooperating skills for Claude Code, threading research → soul mining → writing → layout → preflight → publishing into one pipeline. All skills share three engineering ground rules (honest output / self-verify before delivering / explicit degradation), and each skill has its own domain principles on top. Every skill works standalone, and `ni-article-workflow` orchestrates them into a single pipeline.
 
 ---
 
