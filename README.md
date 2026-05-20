@@ -67,17 +67,13 @@ Every skill is **independently runnable** and also orchestratable by `ni-article
 
 ## Principles
 
-Mandatory for every ni-* skill, distilled from `ni-writer`:
+`ni-writer`'s writing style (seven values + four hard rules + seven traits of voice) is its own concern. The other 8 skills each have their own engineering principles, all roughly clustered around three things:
 
-| Principle | Meaning |
-|------|---------|
-| **Truth First** | No fabricated scenes, no hypothetical examples, no vague tool names. Mark unverified items `[待核实]` |
-| **Unique-Angle Gatekeeping** | "No dry takes, no unique angle, no pen-down." `ni-insight`'s three counter-intuitive question templates are the hard gate |
-| **Human in the Room** | First-person conversational tone. No report-speak. Every skill speaks like a coworker |
-| **Four-Layer Self-Check** | L1 hard rules / L2 style / L3 content / L4 anti-AI final pass — run before output |
-| **Degrade, Don't Abandon** | When external deps fail, provide a degraded path; mark it explicitly; never dump a stack trace on the user |
+- **Honest output**: no fabrication, no overstating, no claiming success on failure.
+- **Self-verify before delivering**: each skill runs its own checklist before output.
+- **Explicit degradation**: when external dependencies fail, provide a degraded path, mark it clearly, never dump a stack trace.
 
-Principles are embedded in each SKILL.md — no cross-skill file references — so every skill is fully standalone.
+Each skill also has its own domain principles — e.g. `ni-insight` requires "angles must hook to real material + user must approve", `ni-formatter` requires "no module stuffing + verdict must exist", `ni-draft` requires "translate errors to plain language + always fall back to local HTML". See each skill's SKILL.md.
 
 ---
 
