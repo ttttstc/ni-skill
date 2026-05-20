@@ -34,7 +34,9 @@ ni-formatter 产出 `formatted.md`（带 `:::xxx` 排版注释），ni-draft 把
 
 - Python 3.10+，纯内嵌脚本，零外部二进制依赖。
 - 三个 PyPI 包：`requests` / `markdown` / `pyyaml`（见 `requirements.txt`）。
-- 首次使用前装依赖：`pip install -r ni-draft/requirements.txt`。
+- 首次使用前装依赖：`pip install -r ${SKILL_DIR}/requirements.txt`。
+
+> **关于 `${SKILL_DIR}`**：本 SKILL.md 所在的目录。Claude Code 加载 skill 时自动解析；用户手动跑命令时，把它替换成 skill 的实际安装路径即可（例如 `~/.claude/skills/ni-skill/skills/ni-draft` 或 `git clone` 下来的对应位置）。
 
 ## 工程结构
 
@@ -79,7 +81,7 @@ wechat:
 ### 第二步：调脚本
 
 ```bash
-python ni-draft/scripts/wechat_draft.py create \
+python ${SKILL_DIR}/scripts/wechat_draft.py create \
   --article path/to/formatted.md \
   --title "文章标题" \
   --digest "文章摘要" \
@@ -136,7 +138,7 @@ python ni-draft/scripts/wechat_draft.py create \
 | 场景 | 降级路径 |
 |------|---------|
 | 推送失败（非 40001 / 45004） | 脚本输出 `local-preview.html` + 手动上传指引，对用户显式说明这是降级结果 |
-| Python 依赖没装 | 引导用户 `pip install -r ni-draft/requirements.txt`，不硬跑 |
+| Python 依赖没装 | 引导用户 `pip install -r ${SKILL_DIR}/requirements.txt`，不硬跑 |
 | 配置缺失 | 引导用户填 `~/.config/ni-skill/config.yaml` 或设环境变量 |
 | 正文有本地图片 | P0 不传图，跳过并提示用户在草稿箱手动补图 |
 

@@ -52,6 +52,8 @@ ni-url-to-md/
 
 第一次跑会比较慢（拉 Bun + 启动 Chrome）。后续命中缓存就快了。
 
+> **关于 `${SKILL_DIR}`**：本 SKILL.md 所在的目录。Claude Code 加载 skill 时自动解析；用户手动跑命令时，把它替换成 skill 的实际安装路径即可（例如 `~/.claude/skills/ni-skill/skills/ni-url-to-md` 或 `git clone` 下来的对应位置）。
+
 ## 使用方法
 
 ### 自动模式（默认）
@@ -59,8 +61,8 @@ ni-url-to-md/
 适合公开页：博客、技术文档、新闻、产品页。脚本等页面加载 + 网络空闲 + 自动滚动触发懒加载，然后抓。
 
 ```bash
-npx -y bun ni-url-to-md/scripts/main.ts <url>
-npx -y bun ni-url-to-md/scripts/main.ts <url> -o my-article.md
+npx -y bun ${SKILL_DIR}/scripts/main.ts <url>
+npx -y bun ${SKILL_DIR}/scripts/main.ts <url> -o my-article.md
 ```
 
 ### 等待模式（`--wait`）
@@ -68,13 +70,13 @@ npx -y bun ni-url-to-md/scripts/main.ts <url> -o my-article.md
 适合需登录 / 付费墙 / 懒加载严重的页面。脚本打开浏览器，你登录或滚到位后，**回车**触发抓取。
 
 ```bash
-npx -y bun ni-url-to-md/scripts/main.ts <url> --wait
+npx -y bun ${SKILL_DIR}/scripts/main.ts <url> --wait
 ```
 
 ### 超时
 
 ```bash
-npx -y bun ni-url-to-md/scripts/main.ts <url> --timeout 60000
+npx -y bun ${SKILL_DIR}/scripts/main.ts <url> --timeout 60000
 ```
 
 ## CLI 参数
