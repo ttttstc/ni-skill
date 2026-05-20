@@ -1,10 +1,10 @@
 ---
-name: ni-url-to-md
+name: ni-url2md
 description: |
   泥巴猪「低卧扑食」公众号的网页抓取 skill。用 Chrome 真实浏览器把任意 URL 抓成干净的 Markdown，带元数据。当用户说「把这个链接存下来」「这篇文章抓成 md」「保存这个网页」「这个博客我想读」「这个文档转成 markdown」「网页转 md」时触发。也适用于用户丢一个链接、说「帮我把这个弄下来当素材」的场景。支持自动捕获和等待用户登录两种模式。覆盖任何能用浏览器打开的页面（包括 SPA、需 JS 渲染、需登录）。不适用于已经是 markdown 的本地文件、二进制/媒体下载、需要绕反爬的场景。
 ---
 
-# ni-url-to-md — 网页抓取 Markdown
+# ni-url2md — 网页抓取 Markdown
 
 > 这是泥巴猪「低卧扑食」公众号创作套件里的网页抓取 skill。它把任何 URL 抓成干净的 Markdown，给后续 ni-research / ni-writer 当素材。
 
@@ -15,14 +15,14 @@ description: |
 **独立可用**：用户丢链接 → 抓成 md → 用户拿去读、存档、引用。
 **给 ni-research 喂料**：workflow 模式下，抓下来的 md 进 `research-sources/`，ni-research 从里面抠主流观点和具名素材。
 
-## 套件基因（G1-G5，本 skill 强制遵守）
+## 原则
 
-- **G1 真实优先**：抓下来的内容必须挂回真实 URL 和真实捕获时间。不要替用户「整理」「润色」原文意思，只做清理和转格式。
-- **G3 活人在场**：脚本本身的 CLI 输出可以英文（这是 baoyu 的原版风格，保留），但你在和用户对话时用第一人称中文。
+- **真实优先**：抓下来的内容必须挂回真实 URL 和真实捕获时间。不要替用户「整理」「润色」原文意思，只做清理和转格式。
+- **活人在场**：脚本本身的 CLI 输出可以英文（这是 baoyu 的原版风格，保留），但你在和用户对话时用第一人称中文。
   - 反例（禁止）：「抓取完成，输出位置：xxx.md。」
   - 正例（推荐）：「抓下来了，存在 xxx.md。标题是『……』，作者那栏空着——这站可能没在 meta 里写作者，你看一眼。」
-- **G4 四层自检骨架**：交付前过 L1-L4（见下方「验收」）。
-- **G5 降级而不放弃**：Chrome / Bun 缺失、页面抓不到时给清晰的人话错误 + 安装/排查指引，不甩 stack trace。
+- **四层自检**：交付前过 L1-L4（见下方「验收」）。
+- **降级而不放弃**：Chrome / Bun 缺失、页面抓不到时给清晰的人话错误 + 安装/排查指引，不甩 stack trace。
 
 ## 技术栈与脚本来源
 
@@ -33,7 +33,7 @@ description: |
 ## 工程结构
 
 ```
-ni-url-to-md/
+ni-url2md/
 ├── SKILL.md
 └── scripts/
     ├── main.ts                  CLI 入口 + 主流程
@@ -52,7 +52,7 @@ ni-url-to-md/
 
 第一次跑会比较慢（拉 Bun + 启动 Chrome）。后续命中缓存就快了。
 
-> **关于 `${SKILL_DIR}`**：本 SKILL.md 所在的目录。Claude Code 加载 skill 时自动解析；用户手动跑命令时，把它替换成 skill 的实际安装路径即可（例如 `~/.claude/skills/ni-skill/skills/ni-url-to-md` 或 `git clone` 下来的对应位置）。
+> **关于 `${SKILL_DIR}`**：本 SKILL.md 所在的目录。Claude Code 加载 skill 时自动解析；用户手动跑命令时，把它替换成 skill 的实际安装路径即可（例如 `~/.claude/skills/ni-skill/skills/ni-url2md` 或 `git clone` 下来的对应位置）。
 
 ## 使用方法
 
@@ -131,17 +131,17 @@ workflow 模式下，把多个抓取产物放进 `drafts/{article-name}/research
 ## 硬规则
 
 - **不改写原文。** 只清理（去导航/广告/侧栏）+ 转格式（HTML→MD），不删段落、不归纳、不重写。
-- **元数据必须挂回真实 URL 和捕获时间。** 这是 G1 的硬落点：让作者引用时能溯源。
-- **抓取失败不要静默成功。** 错误就报错，G5 降级也要显式标注。
+- **元数据必须挂回真实 URL 和捕获时间。** 这是 真实优先的落点：让作者引用时能溯源。
+- **抓取失败不要静默成功。** 错误就报错，降级也要显式标注。
 
-## 验收（G4 四层自检骨架）
+## 验收（四层自检）
 
 - **L1 输入合法**：URL 是有效 http(s) URL；Chrome 和 Bun 就绪。
 - **L2 输出对齐**：md 文件含 frontmatter（至少 url、title、captured_at），正文非空。
 - **L3 内容达标**：正文是文章本体，不是导航和广告残渣；段落、标题、链接、代码块结构合理。
 - **L4 反 AI 自查**：通读一遍开头，问自己「这看起来是原文，还是被我『润色』过」。润色过的回炉——这个 skill 只清理、不改写。
 
-## 降级（G5）
+## 降级
 
 | 场景 | 降级路径 |
 |------|---------|
@@ -162,4 +162,4 @@ workflow 模式下，把多个抓取产物放进 `drafts/{article-name}/research
 
 ## 参考
 
-baoyu-url-to-markdown 是本 skill 的脚本源。如果你直接装了 baoyu 的 skill，两个 skill 行为完全一致——ni-url-to-md 提供的是 ni-skill 套件层面的对接（接入 ni-research、套件基因风格、与套件其他 skill 协同）。
+baoyu-url-to-markdown 是本 skill 的脚本源。如果你直接装了 baoyu 的 skill，两个 skill 行为完全一致——ni-url2md 提供的是 ni-skill 套件层面的对接（接入 ni-research、原则风格、与套件其他 skill 协同）。

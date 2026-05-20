@@ -4,7 +4,7 @@ English | [中文](./README.zh.md)
 
 > A content creation skill suite for "低卧扑食" — a WeChat public-account brand by 泥巴猪 (Ni). End-to-end pipeline from topic → research → soul → writing → layout → preflight → publish. Focus: AI / engineering management / DevOps / architecture.
 
-ni-skill is a set of cooperating skills for Claude Code, threading research → soul mining → writing → layout → preflight → publishing into one pipeline. All skills share 5 "suite genes" (truth-first / unique-angle gatekeeping / human voice / four-layer self-check / degrade rather than abandon). Every skill works standalone, and `ni-article-workflow` orchestrates them into a single pipeline.
+ni-skill is a set of cooperating skills for Claude Code, threading research → soul mining → writing → layout → preflight → publishing into one pipeline. All skills share 5 principles (truth-first / unique-angle gatekeeping / human voice / four-layer self-check / degrade rather than abandon). Every skill works standalone, and `ni-article-workflow` orchestrates them into a single pipeline.
 
 ---
 
@@ -65,19 +65,19 @@ Every skill is **independently runnable** and also orchestratable by `ni-article
 
 ---
 
-## Suite Genes (G1-G5)
+## Principles
 
 Mandatory for every ni-* skill, distilled from `ni-writer`:
 
-| Gene | Meaning |
+| Principle | Meaning |
 |------|---------|
-| **G1 Truth First** | No fabricated scenes, no hypothetical examples, no vague tool names. Mark unverified items `[待核实]` |
-| **G2 Unique-Angle Gatekeeping** | "No dry takes, no unique angle, no pen-down." `ni-insight`'s three counter-intuitive question templates are the hard gate |
-| **G3 Human in the Room** | First-person conversational tone. No report-speak. Every skill speaks like a coworker |
-| **G4 Four-Layer Self-Check** | L1 hard rules / L2 style / L3 content / L4 anti-AI final pass — run before output |
-| **G5 Degrade, Don't Abandon** | When external deps fail, provide a degraded path; mark it explicitly; never dump a stack trace on the user |
+| **Truth First** | No fabricated scenes, no hypothetical examples, no vague tool names. Mark unverified items `[待核实]` |
+| **Unique-Angle Gatekeeping** | "No dry takes, no unique angle, no pen-down." `ni-insight`'s three counter-intuitive question templates are the hard gate |
+| **Human in the Room** | First-person conversational tone. No report-speak. Every skill speaks like a coworker |
+| **Four-Layer Self-Check** | L1 hard rules / L2 style / L3 content / L4 anti-AI final pass — run before output |
+| **Degrade, Don't Abandon** | When external deps fail, provide a degraded path; mark it explicitly; never dump a stack trace on the user |
 
-Genes are embedded in each SKILL.md — no cross-skill file references — so every skill is fully standalone.
+Principles are embedded in each SKILL.md — no cross-skill file references — so every skill is fully standalone.
 
 ---
 
