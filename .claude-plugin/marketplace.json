@@ -1,0 +1,30 @@
+{
+  "name": "ni-skill",
+  "owner": {
+    "name": "泥巴猪",
+    "email": "423310463@qq.com"
+  },
+  "metadata": {
+    "description": "泥巴猪「低卧扑食」公众号的创作技能矩阵：从选题到发布的完整管线",
+    "version": "1.1.0"
+  },
+  "plugins": [
+    {
+      "name": "ni-skill",
+      "description": "AI / 工程化管理 / DevOps / 架构 四个领域的公众号长文创作管线",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/ni-writer",
+        "./skills/ni-research",
+        "./skills/ni-insight",
+        "./skills/ni-formatter",
+        "./skills/ni-inspect",
+        "./skills/ni-article-image-gen",
+        "./skills/ni-draft",
+        "./skills/ni-article-workflow",
+        "./skills/ni-url2md"
+      ]
+    }
+  ]
+}

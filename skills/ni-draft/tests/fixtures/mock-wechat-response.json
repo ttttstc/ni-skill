@@ -1,0 +1,24 @@
+{
+  "_comment": "微信草稿箱 API 的模拟响应，供离线测试错误码分支。真实推送不依赖本文件。",
+  "success": {
+    "errcode": 0,
+    "errmsg": "ok",
+    "media_id": "MOCK_DRAFT_MEDIA_ID_abc123"
+  },
+  "token_expired": {
+    "errcode": 40001,
+    "errmsg": "invalid credential, access_token is invalid or not latest"
+  },
+  "digest_too_long": {
+    "errcode": 45004,
+    "errmsg": "invalid digest size"
+  },
+  "cover_missing": {
+    "errcode": 41059,
+    "errmsg": "media_id missing"
+  },
+  "content_too_long": {
+    "errcode": 45002,
+    "errmsg": "content size out of limit"
+  }
+}

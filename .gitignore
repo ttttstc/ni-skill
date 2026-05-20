@@ -1,2 +1,12 @@
 .claude/
+tasks/
+DESIGN.md
 SPEC.md
+
+# workflow 工作目录，草稿产物不入库
+drafts/
+
+# Python 运行产物
+__pycache__/
+*.pyc
+ni-draft/tests/fixtures/local-preview.html
