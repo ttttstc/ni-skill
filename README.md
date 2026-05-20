@@ -1,145 +1,147 @@
 # ni-skill
 
-> 泥巴猪「低卧扑食」公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
+English | [中文](./README.zh.md)
 
-ni-skill 是为 Claude Code 设计的一组协同 skill，串起调研 → 灵魂挖掘 → 写作 → 排版 → 预检 → 发布的全流程。所有 skill 共享 5 条套件基因（真实优先 / 独特角度 / 活人在场 / 四层自检 / 降级而不放弃），既能单独使用，也能由 `ni-article-workflow` 编排器串成一条管线。
+> A content creation skill suite for "低卧扑食" — a WeChat public-account brand by 泥巴猪 (Ni). End-to-end pipeline from topic → research → soul → writing → layout → preflight → publish. Focus: AI / engineering management / DevOps / architecture.
+
+ni-skill is a set of cooperating skills for Claude Code, threading research → soul mining → writing → layout → preflight → publishing into one pipeline. All skills share 5 "suite genes" (truth-first / unique-angle gatekeeping / human voice / four-layer self-check / degrade rather than abandon). Every skill works standalone, and `ni-article-workflow` orchestrates them into a single pipeline.
 
 ---
 
 ## Prerequisites
 
-- **Claude Code**（支持 Plugin Marketplace）
-- **Python 3.10+** — 仅 `ni-draft` 推送微信草稿用
-- **Node.js + Chrome** — 仅 `ni-url-to-md` 抓网页用（首次会用 `npx -y bun` 拉取 Bun 运行时）
+- **Claude Code** (with Plugin Marketplace support)
+- **Python 3.10+** — only for `ni-draft` (push WeChat drafts)
+- **Node.js + Chrome** — only for `ni-url2md` (scrape web pages; first run uses `npx -y bun` to fetch the Bun runtime)
 
-各 skill 的具体依赖见各自的 `SKILL.md`。
+See each skill's `SKILL.md` for its specific dependencies.
 
 ---
 
-## 安装
+## Installation
 
-### 方式 1：Plugin Marketplace（推荐）
+### Option 1: Plugin Marketplace (recommended)
 
-在 Claude Code 里：
+In Claude Code:
 
 ```
 /plugin marketplace add ttttstc/ni-skill
 /plugin install ni-skill@ni-skill
 ```
 
-### 方式 2：让 Agent 帮你装
+### Option 2: Ask the Agent
 
-直接告诉 Claude：
+Just tell Claude:
 
-> 帮我安装 github.com/ttttstc/ni-skill 的 skill
+> Please install skills from github.com/ttttstc/ni-skill
 
-### 方式 3：手动 clone
+### Option 3: Manual clone
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git ~/.claude/skills/ni-skill
 ```
 
-> 手动安装时 skill 在 `~/.claude/skills/ni-skill/skills/ni-*/` 下，Claude Code 会自动扫描。
+> With manual install, skills live under `~/.claude/skills/ni-skill/skills/ni-*/` — Claude Code auto-discovers them.
 
 ---
 
 ## Skills
 
-9 个 skill，按管线阶段排列：
+9 skills, ordered by pipeline stage:
 
-| 阶段 | Skill | 触发场景 |
-|------|-------|---------|
-| 素材 | [`ni-url-to-md`](./skills/ni-url-to-md) | 把任意 URL 抓成 Markdown（Chrome CDP，含 `--wait` 登录态） |
-| 调研 | [`ni-research`](./skills/ni-research) | 摸热点、扫竞品（二分输出）、采具名素材 |
-| 灵魂 | [`ni-insight`](./skills/ni-insight) ⭐ | 角度发现 → 用户碰撞 → 灵魂锁定。**整个套件的北极星** |
-| 写作 | [`ni-writer`](./skills/ni-writer) | 长文写作，奥威尔 + 卡尔维诺 + 博尔赫斯文风糅合，四层自检 |
-| 排版 | [`ni-formatter`](./skills/ni-formatter) | 5 模块最小集（part/callout/quote/steps/verdict） |
-| 预检 | [`ni-inspect`](./skills/ni-inspect) | 元数据 / 内容质量 / 结构三组检查，自带禁用词黑名单 |
-| 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 1 张封面 + 9 张内文 prompt，默认黏土定格动画，可切风格 |
-| 发布 | [`ni-draft`](./skills/ni-draft) | Markdown → 微信兼容 HTML → 草稿箱（Python 内嵌，零外部二进制依赖） |
-| 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串起以上 8 个 skill，状态机驱动，支持断点续跑 |
+| Stage | Skill | When to trigger |
+|-------|-------|-----------------|
+| Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown (Chrome CDP, supports `--wait` for logged-in pages) |
+| Research | [`ni-research`](./skills/ni-research) | Trend check, competitor scan (binary output), named-source material |
+| Soul | [`ni-insight`](./skills/ni-insight) ⭐ | Angle discovery → user collision → soul lock. **The suite's North Star** |
+| Writing | [`ni-writer`](./skills/ni-writer) | Long-form writing in a hybrid Orwell + Calvino + Borges voice, four-layer self-check |
+| Layout | [`ni-formatter`](./skills/ni-formatter) | Minimal 5-module set (part / callout / quote / steps / verdict) |
+| Preflight | [`ni-inspect`](./skills/ni-inspect) | Metadata / content quality / structure checks, with built-in banned-word list |
+| Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 1 cover + 9 inline image prompts, default claymation style, switchable |
+| Publish | [`ni-draft`](./skills/ni-draft) | Markdown → WeChat-compatible HTML → draft inbox (Python, zero binary deps) |
+| Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Threads the 8 skills above into a state-machine-driven pipeline with resume support |
 
-每个 skill 都支持**独立运行**，也都能被 `ni-article-workflow` 编排调度。
-
----
-
-## 套件基因（G1-G5）
-
-所有 ni-* skill 强制遵守，源自 `ni-writer` 的实战经验：
-
-| 基因 | 含义 |
-|------|------|
-| **G1 真实优先** | 禁编造场景、禁假设性例子、禁空泛工具名。未验证的标 `[待核实]` |
-| **G2 独特角度门槛** | 「没有干货或独特角度不下笔」。`ni-insight` 的三个反直觉提问模板是硬门槛 |
-| **G3 活人在场** | 第一人称对话腔，禁报告体。所有 skill 的输出都像同事在聊 |
-| **G4 四层自检** | L1 硬规则 / L2 风格 / L3 内容 / L4 反 AI 终审。每个 skill 输出前自查 |
-| **G5 降级而不放弃** | 外部依赖不可用时给降级路径，显式标注，不抛错给用户 |
-
-基因细节在各 skill 的 SKILL.md 内嵌，不依赖跨 skill 引用——保证每个 skill 都能独立运行。
+Every skill is **independently runnable** and also orchestratable by `ni-article-workflow`.
 
 ---
 
-## 完整管线流程
+## Suite Genes (G1-G5)
+
+Mandatory for every ni-* skill, distilled from `ni-writer`:
+
+| Gene | Meaning |
+|------|---------|
+| **G1 Truth First** | No fabricated scenes, no hypothetical examples, no vague tool names. Mark unverified items `[待核实]` |
+| **G2 Unique-Angle Gatekeeping** | "No dry takes, no unique angle, no pen-down." `ni-insight`'s three counter-intuitive question templates are the hard gate |
+| **G3 Human in the Room** | First-person conversational tone. No report-speak. Every skill speaks like a coworker |
+| **G4 Four-Layer Self-Check** | L1 hard rules / L2 style / L3 content / L4 anti-AI final pass — run before output |
+| **G5 Degrade, Don't Abandon** | When external deps fail, provide a degraded path; mark it explicitly; never dump a stack trace on the user |
+
+Genes are embedded in each SKILL.md — no cross-skill file references — so every skill is fully standalone.
+
+---
+
+## Full Pipeline
 
 ```
-选题
+topic
   ↓
-ni-research        摸热点 + 扫竞品 + 采素材
+ni-research        trend + competitor + material
   ↓
-ni-insight  ⭐     挖灵魂、锁定 10-20 字核心论点（朋友圈测试）
+ni-insight  ⭐     mine the soul, lock a 10-20 char core thesis (passes the "would-anyone-comment-on-this-on-Moments" test)
   ↓
-ni-writer          按文风 + 灵魂展开成长文
+ni-writer          expand into long-form following the style + soul
   ↓
-ni-formatter       穿衣：5 模块最小集
+ni-formatter       dress it: minimal 5-module set
   ↓
-ni-inspect         体检：BLOCKED 回炉 / WARNING 提示 / ready 放行
+ni-inspect         health check: BLOCKED → rewrite / WARNING → notify / ready → pass
   ↓
-ni-article-image-gen   1 封面 + 9 内文配图 prompt（可选）
+ni-article-image-gen   1 cover + 9 inline image prompts (optional)
   ↓
-ni-draft           推送微信草稿箱（封面占位，自己在后台设）
+ni-draft           push to WeChat draft inbox (cover is a placeholder, set the real one in the dashboard)
   ↓
-done（公众号后台看到草稿，发布前自己再调一遍）
+done (find the draft in WeChat back-office; fine-tune before publishing)
 ```
 
-中间任何一步降级或失败，都会显式告诉你，你来定下一步。
+Any stage that degrades or fails will tell you explicitly — you decide what to do next.
 
 ---
 
-## 怎么用
+## How to use
 
-### 完整管线
+### Full pipeline
 
-直接说：
+Just say:
 
-> 用 ni-skill 从头写一篇关于「AGENTS.md 该不该写」的文章
+> Use ni-skill to write a full piece on "should we still write AGENTS.md".
 
-`ni-article-workflow` 会接管，问你 article-name，建工作目录，逐阶段调对应 skill。
+`ni-article-workflow` takes over, asks for an article-name, creates a working directory, and walks the stages.
 
-### 单步触发
+### Single skill
 
-直接说想做的事：
+Say what you want:
 
-- 「帮我挖这篇的角度」→ `ni-insight`
-- 「这篇排个版」→ `ni-formatter`
-- 「把这个链接抓成 markdown」→ `ni-url-to-md`
-- 「推到草稿箱」→ `ni-draft`
+- "Help me find an angle for this draft" → `ni-insight`
+- "Lay this out" → `ni-formatter`
+- "Scrape this URL into markdown" → `ni-url2md`
+- "Push to drafts" → `ni-draft`
 
-每个 skill 的 SKILL.md 里有完整触发词清单。
+Each skill's SKILL.md has the full trigger-word list.
 
 ---
 
-## 配置
+## Configuration
 
-### 微信草稿推送（ni-draft）
+### WeChat draft push (ni-draft)
 
-环境变量：
+Env vars:
 
 ```bash
 WECHAT_APPID=wx_xxxxxxxx
 WECHAT_SECRET=xxxxxxxxxxxxxxxx
 ```
 
-或写到 `~/.config/ni-skill/config.yaml`：
+Or `~/.config/ni-skill/config.yaml`:
 
 ```yaml
 wechat:
@@ -147,17 +149,17 @@ wechat:
   secret: xxxxxxxxxxxxxxxx
 ```
 
-凭证从公众号后台「设置与开发 → 基本配置」拿。注意把调用机器的 IP 加进白名单。
+Get credentials from WeChat back-office → "设置与开发 → 基本配置". Don't forget to add the calling machine's IP to the allowlist.
 
-### 网页抓取（ni-url-to-md）
+### Web scraping (ni-url2md)
 
-可选环境变量：
+Optional env vars:
 
-| 变量 | 用途 |
-|------|------|
-| `URL_CHROME_PATH` | Chrome 不在默认位置时指定 |
-| `URL_DATA_DIR` | 默认输出目录 |
-| `URL_CHROME_PROFILE_DIR` | 保留 cookies 用 |
+| Variable | Purpose |
+|----------|---------|
+| `URL_CHROME_PATH` | Specify Chrome when not in the default location |
+| `URL_DATA_DIR` | Default output directory |
+| `URL_CHROME_PROFILE_DIR` | Persist cookies for logged-in sessions |
 
 ---
 
