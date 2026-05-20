@@ -2,9 +2,9 @@
 
 [English](./README.md) | 中文
 
-> ni个人风格公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
+> 泥巴猪「低卧扑食」公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
 
-ni-skill 是为 Claude Code 设计的一组协同 skill，串起调研 → 灵魂挖掘 → 写作 → 排版 → 预检 → 发布的全流程。所有 skill 共享 5 条套件基因（真实优先 / 独特角度 / 活人在场 / 四层自检 / 降级而不放弃），既能单独使用，也能由 `ni-article-workflow` 编排器串成一条管线。
+ni-skill 是为 Claude Code 设计的一组协同 skill，串起调研 → 灵魂挖掘 → 写作 → 排版 → 预检 → 发布的全流程。所有 skill 共享 3 条工程通则（诚实输出 / 输出前自检 / 显式降级），每个 skill 还有自己的领域原则。既能单独使用，也能由 `ni-article-workflow` 编排器串成一条管线。
 
 ---
 
@@ -65,7 +65,17 @@ git clone https://github.com/ttttstc/ni-skill.git ~/.claude/skills/ni-skill
 
 ---
 
+## 原则
 
+`ni-writer` 的写作风格（七条价值观 + 底盘四律 + 活人感七条）是它自己的事。其他 8 个 skill 各有自己的工程原则，大体围绕三件事：
+
+- **诚实输出**：不编造、不谎报、不夸大；失败如实报。
+- **输出前自检**：按各自的检查清单核对再交付。
+- **显式降级**：外部依赖不可用时给降级路径，标注清楚，不抛 stack trace。
+
+每个 skill 还有自己的领域原则——比如 `ni-insight` 的「角度必须挂回素材 + 用户拍板」、`ni-formatter` 的「不堆模块 + verdict 必存在」、`ni-draft` 的「错误转人话 + 失败必降级到本地 HTML」。详见各 skill 的 SKILL.md。
+
+---
 
 ## 完整管线流程
 

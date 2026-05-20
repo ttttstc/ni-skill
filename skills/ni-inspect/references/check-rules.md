@@ -2,7 +2,7 @@
 
 > 本文是 ni-inspect 的检查依据。包含三组检查项的阈值、分级规则，以及**自带的禁用词黑名单副本**。
 
-> **关于禁用词黑名单**：下方第 4 节的禁用词表**源自 ni-writer**（`ni-writer/SKILL.md` 禁区清单 + `references/ai_fingerprint_blacklist.md`），在此固化为独立副本。ni-inspect 不在运行时引用 ni-writer 的文件——基因一致，文件独立。ni-writer 的禁区清单若有更新，需手动同步此表。
+> **关于禁用词黑名单**：下方第 4 节的禁用词表**源自 ni-writer**（`ni-writer/SKILL.md` 禁区清单 + `references/ai_fingerprint_blacklist.md`），在此固化为独立副本。ni-inspect 不在运行时引用 ni-writer 的文件——原则一致，文件独立。ni-writer 的禁区清单若有更新，需手动同步此表。
 
 ---
 
