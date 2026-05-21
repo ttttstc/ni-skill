@@ -4,17 +4,17 @@
 
 > 泥巴猪公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
 
-ni-skill 是为 Claude Code 设计的一组协同 skill，串起调研 → 灵魂挖掘 → 写作 → 排版 → 预检 → 发布的全流程。所有 skill 共享 3 条工程通则（诚实输出 / 输出前自检 / 显式降级），每个 skill 还有自己的领域原则。既能单独使用，也能由 `ni-article-workflow` 编排器串成一条管线。
+ni-skill 是一组面向 Claude Code 的协同 skill，覆盖调研、灵魂挖掘、写作、排版、预检、发布六个阶段。每个 skill 均可独立使用，也可由 `ni-article-workflow` 编排为完整管线。
 
 ---
 
-## Prerequisites
+## 环境要求
 
 - **Claude Code**（支持 Plugin Marketplace）
-- **Python 3.10+** — 仅 `ni-draft` 推送微信草稿用
-- **Node.js + Chrome** — 仅 `ni-url2md` 抓网页用（首次会用 `npx -y bun` 拉取 Bun 运行时）
+- **Python 3.10+** —— `ni-draft` 推送微信草稿时需要
+- **Node.js + Chrome** —— `ni-url2md` 抓取网页时需要
 
-各 skill 的具体依赖见各自的 `SKILL.md`。
+各 skill 的具体依赖见对应的 `SKILL.md`。
 
 ---
 
@@ -22,22 +22,22 @@ ni-skill 是为 Claude Code 设计的一组协同 skill，串起调研 → 灵�
 
 ### 方式 1：Plugin Marketplace（推荐）
 
-在 Claude Code 里：
+在 Claude Code 中执行：
 
 ```
 /plugin marketplace add ttttstc/ni-skill
 /plugin install ni-skill@ni-skill
 ```
 
-### 方式 2：让 Agent 帮你装
+### 方式 2：通过 Agent 安装
 
-直接告诉 Claude：
+向 Claude 说明：
 
 > 帮我安装 github.com/ttttstc/ni-skill 的 skill
 
-### 方式 3：手动安装（仅在不能用 Marketplace 时）
+### 方式 3：手动安装
 
-Claude Code 只扫描 `~/.claude/skills/` 的**直接子目录**找 `SKILL.md`，所以要把 9 个 ni-* 子目录**展平到根上**：
+clone 仓库后，将 `skills/` 下的子目录移动到 `~/.claude/skills/`：
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git
@@ -51,88 +51,84 @@ git clone https://github.com/ttttstc/ni-skill.git
 Move-Item ni-skill\skills\* $HOME\.claude\skills\
 ```
 
-> 这种方式会**失去插件包统一管理和自动更新**，建议优先用方式 1。直接 `git clone` 到 `~/.claude/skills/ni-skill/` 是**装不上**的——Claude Code 不会递归扫描嵌套目录。
+手动安装不支持自动更新，推荐使用方式 1。
 
 ---
 
 ## Skills
 
-9 个 skill，按管线阶段排列：
+| 阶段 | Skill | 能力 |
+|------|-------|------|
+| 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
+| 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
+| 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
+| 写作 | [`ni-writer`](./skills/ni-writer) | 长文写作，融合奥威尔 / 卡尔维诺 / 博尔赫斯文风 |
+| 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
+| 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
+| 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
+| 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
+| 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 
-| 阶段 | Skill | 触发场景 |
-|------|-------|---------|
-| 素材 | [`ni-url2md`](./skills/ni-url2md) | 把任意 URL 抓成 Markdown（Chrome CDP，含 `--wait` 登录态） |
-| 调研 | [`ni-research`](./skills/ni-research) | 摸热点、扫竞品（二分输出）、采具名素材 |
-| 灵魂 | [`ni-insight`](./skills/ni-insight)  | 角度发现 → 用户碰撞 → 灵魂锁定。 |
-| 写作 | [`ni-writer`](./skills/ni-writer) | 长文写作，奥威尔 + 卡尔维诺 + 博尔赫斯文风糅合，四层自检 |
-| 排版 | [`ni-formatter`](./skills/ni-formatter) | 5 模块最小集（part/callout/quote/steps/verdict） |
-| 预检 | [`ni-inspect`](./skills/ni-inspect) | 元数据 / 内容质量 / 结构三组检查，自带禁用词黑名单 |
-| 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 1 张封面 + 9 张内文 prompt，默认黏土定格动画，可切风格 |
-| 发布 | [`ni-draft`](./skills/ni-draft) | Markdown → 微信兼容 HTML → 草稿箱（Python 内嵌，零外部二进制依赖） |
-| 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串起以上 8 个 skill，状态机驱动，支持断点续跑 |
-
-每个 skill 都支持**独立运行**，也都能被 `ni-article-workflow` 编排调度。
+每个 skill 均可独立调用，也可由 `ni-article-workflow` 统一编排。
 
 ---
 
-## 原则
+## 设计准则
 
-`ni-writer` 的写作风格（七条价值观 + 底盘四律 + 活人感七条）是它自己的事。其他 8 个 skill 各有自己的工程原则，大体围绕三件事：
+所有 skill 遵循三条共同准则：
 
-- **诚实输出**：不编造、不谎报、不夸大；失败如实报。
-- **输出前自检**：按各自的检查清单核对再交付。
-- **显式降级**：外部依赖不可用时给降级路径，标注清楚，不抛 stack trace。
+- **诚实输出**：不编造、不夸大，失败如实反馈。
+- **输出前自检**：交付前按各自的检查清单核对。
+- **显式降级**：外部依赖不可用时提供降级路径，并明确标注。
 
-每个 skill 还有自己的领域原则——比如 `ni-insight` 的「角度必须挂回素材 + 用户拍板」、`ni-formatter` 的「不堆模块 + verdict 必存在」、`ni-draft` 的「错误转人话 + 失败必降级到本地 HTML」。详见各 skill 的 SKILL.md。
+每个 skill 另有各自的领域准则，详见对应的 `SKILL.md`。
 
 ---
 
-## 完整管线流程
+## 创作管线
 
 ```
 选题
   ↓
-ni-research        摸热点 + 扫竞品 + 采素材
+ni-research           热点分析、竞品扫描、素材采集
   ↓
-ni-insight       挖灵魂、锁定 10-20 字核心论点
+ni-insight            确定核心观点与独特角度
   ↓
-ni-writer          按文风 + 灵魂展开成长文
+ni-writer             按文风与角度展开长文
   ↓
-ni-formatter       穿衣：5 模块最小集
+ni-formatter          注入排版模块
   ↓
-ni-inspect         体检：BLOCKED 回炉 / WARNING 提示 / ready 放行
+ni-inspect            发布前质量检查
   ↓
-ni-article-image-gen   1 封面 + 9 内文配图 prompt（可选）
+ni-article-image-gen  生成配图提示词（可选）
   ↓
-ni-draft           推送微信草稿箱（封面占位，自己在后台设）
-  ↓
-done（公众号后台看到草稿，发布前自己再调一遍）
+ni-draft              推送至微信草稿箱
 ```
 
-中间任何一步降级或失败，都会显式告诉你，你来定下一步。
+任一阶段降级或失败时，对应 skill 会明确告知，由你决定后续处理。
 
 ---
 
-## 怎么用
+## 使用方式
 
 ### 完整管线
 
-直接说：
+向 Claude 描述选题，例如：
 
-> 用 ni-skill 从头写一篇关于「AGENTS.md 该不该写」的文章
+> 用 ni-skill 写一篇关于「AGENTS.md 实践」的文章
 
-`ni-article-workflow` 会接管，问你 article-name，建工作目录，逐阶段调对应 skill。
+`ni-article-workflow` 会接管流程，逐阶段调用对应 skill。
 
-### 单步触发
+### 单个 skill
 
-直接说想做的事：
+直接描述需求即可触发对应 skill：
 
-- 「帮我挖这篇的角度」→ `ni-insight`
-- 「这篇排个版」→ `ni-formatter`
-- 「把这个链接抓成 markdown」→ `ni-url2md`
-- 「推到草稿箱」→ `ni-draft`
+- 挖掘文章角度 → `ni-insight`
+- 排版文章 → `ni-formatter`
+- 抓取网页为 Markdown → `ni-url2md`
+- 推送草稿 → `ni-draft`
 
-每个 skill 的 SKILL.md 里有完整触发词清单。
+各 skill 的完整触发词见对应的 `SKILL.md`。
 
 ---
 
@@ -140,14 +136,14 @@ done（公众号后台看到草稿，发布前自己再调一遍）
 
 ### 微信草稿推送（ni-draft）
 
-环境变量：
+通过环境变量配置：
 
 ```bash
 WECHAT_APPID=wx_xxxxxxxx
 WECHAT_SECRET=xxxxxxxxxxxxxxxx
 ```
 
-或写到 `~/.config/ni-skill/config.yaml`：
+或写入 `~/.config/ni-skill/config.yaml`：
 
 ```yaml
 wechat:
@@ -155,7 +151,7 @@ wechat:
   secret: xxxxxxxxxxxxxxxx
 ```
 
-凭证从公众号后台「设置与开发 → 基本配置」拿。注意把调用机器的 IP 加进白名单。
+凭证可在微信公众号后台「设置与开发 → 基本配置」获取，并需将调用方 IP 加入白名单。
 
 ### 网页抓取（ni-url2md）
 
@@ -163,9 +159,9 @@ wechat:
 
 | 变量 | 用途 |
 |------|------|
-| `URL_CHROME_PATH` | Chrome 不在默认位置时指定 |
-| `URL_DATA_DIR` | 默认输出目录 |
-| `URL_CHROME_PROFILE_DIR` | 保留 cookies 用 |
+| `URL_CHROME_PATH` | 指定 Chrome 可执行文件路径 |
+| `URL_DATA_DIR` | 指定默认输出目录 |
+| `URL_CHROME_PROFILE_DIR` | 指定 Chrome 配置目录以保留登录态 |
 
 ---
 
