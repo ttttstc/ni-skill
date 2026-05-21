@@ -35,13 +35,23 @@ Just tell Claude:
 
 > Please install skills from github.com/ttttstc/ni-skill
 
-### Option 3: Manual clone
+### Option 3: Manual install (only if you can't use the Marketplace)
+
+Claude Code only scans the **immediate children** of `~/.claude/skills/` for `SKILL.md`, so the 9 ni-* sub-skill directories must be **flattened to the root**:
 
 ```bash
-git clone https://github.com/ttttstc/ni-skill.git ~/.claude/skills/ni-skill
+git clone https://github.com/ttttstc/ni-skill.git
+mv ni-skill/skills/* ~/.claude/skills/
 ```
 
-> With manual install, skills live under `~/.claude/skills/ni-skill/skills/ni-*/` — Claude Code auto-discovers them.
+PowerShell:
+
+```powershell
+git clone https://github.com/ttttstc/ni-skill.git
+Move-Item ni-skill\skills\* $HOME\.claude\skills\
+```
+
+> This approach **loses bundled management and auto-updates** — prefer Option 1 when possible. Cloning directly into `~/.claude/skills/ni-skill/` **won't work** — Claude Code does not recurse into nested directories.
 
 ---
 

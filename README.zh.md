@@ -35,13 +35,23 @@ ni-skill 是为 Claude Code 设计的一组协同 skill，串起调研 → 灵�
 
 > 帮我安装 github.com/ttttstc/ni-skill 的 skill
 
-### 方式 3：手动 clone
+### 方式 3：手动安装（仅在不能用 Marketplace 时）
+
+Claude Code 只扫描 `~/.claude/skills/` 的**直接子目录**找 `SKILL.md`，所以要把 9 个 ni-* 子目录**展平到根上**：
 
 ```bash
-git clone https://github.com/ttttstc/ni-skill.git ~/.claude/skills/ni-skill
+git clone https://github.com/ttttstc/ni-skill.git
+mv ni-skill/skills/* ~/.claude/skills/
 ```
 
-> 手动安装时 skill 在 `~/.claude/skills/ni-skill/skills/ni-*/` 下，Claude Code 会自动扫描。
+PowerShell：
+
+```powershell
+git clone https://github.com/ttttstc/ni-skill.git
+Move-Item ni-skill\skills\* $HOME\.claude\skills\
+```
+
+> 这种方式会**失去插件包统一管理和自动更新**，建议优先用方式 1。直接 `git clone` 到 `~/.claude/skills/ni-skill/` 是**装不上**的——Claude Code 不会递归扫描嵌套目录。
 
 ---
 
