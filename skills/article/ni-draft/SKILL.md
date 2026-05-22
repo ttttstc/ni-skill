@@ -34,7 +34,7 @@ ni-formatter 产出 `formatted.md`（带 `:::xxx` 排版注释），ni-draft 把
 - 三个 PyPI 包：`requests` / `markdown` / `pyyaml`（见 `requirements.txt`）。
 - 首次使用前装依赖：`pip install -r ${SKILL_DIR}/requirements.txt`。
 
-> **关于 `${SKILL_DIR}`**：本 SKILL.md 所在的目录。Claude Code 加载 skill 时自动解析；用户手动跑命令时，把它替换成 skill 的实际安装路径即可（例如 `~/.claude/skills/ni-skill/skills/ni-draft` 或 `git clone` 下来的对应位置）。
+> **关于 `${SKILL_DIR}`**：本 SKILL.md 所在的目录。Claude Code 加载 skill 时自动解析；用户手动跑命令时，把它替换成 skill 的实际安装路径即可（例如 `~/.claude/skills/ni-skill/skills/article/ni-draft` 或 `git clone` 下来的对应位置）。
 
 ## 工程结构
 

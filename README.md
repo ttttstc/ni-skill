@@ -2,9 +2,9 @@
 
 English | [中文](./README.zh.md)
 
-> A content creation skill suite for 泥巴猪. End-to-end pipeline from topic to publication, covering AI, engineering management, DevOps, and architecture.
+> A Claude Code skill collection by 泥巴猪. Two tracks: a long-form content creation pipeline, and harness engineering tools for AI agents.
 
-ni-skill is a set of cooperating skills for Claude Code, spanning six stages: research, insight, writing, layout, preflight, and publishing. Each skill works standalone, and `ni-article-workflow` orchestrates them into a complete pipeline.
+ni-skill has two tracks. **Content creation** — a set of cooperating skills for Claude Code spanning six stages (research, insight, writing, layout, preflight, publishing), each usable standalone or orchestrated by `ni-article-workflow` into a complete pipeline. **Harness engineering** — tooling for making codebases legible to AI coding agents.
 
 ---
 
@@ -37,18 +37,18 @@ Ask Claude:
 
 ### Option 3: Manual
 
-Clone the repository and move the subdirectories under `skills/` into `~/.claude/skills/`:
+Clone the repository and move the skill directories under `skills/article/` and `skills/harness/` into `~/.claude/skills/`:
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git
-mv ni-skill/skills/* ~/.claude/skills/
+mv ni-skill/skills/article/* ni-skill/skills/harness/* ~/.claude/skills/
 ```
 
 PowerShell:
 
 ```powershell
 git clone https://github.com/ttttstc/ni-skill.git
-Move-Item ni-skill\skills\* $HOME\.claude\skills\
+Move-Item ni-skill\skills\article\*,ni-skill\skills\harness\* $HOME\.claude\skills\
 ```
 
 Manual installation does not support auto-updates; Option 1 is recommended.
@@ -57,19 +57,27 @@ Manual installation does not support auto-updates; Option 1 is recommended.
 
 ## Skills
 
+### Content creation (`skills/article/`)
+
 | Stage | Skill | Capability |
 |-------|-------|------------|
-| Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
-| Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
-| Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
-| Writing | [`ni-writer`](./skills/ni-writer) | Long-form writing in a hybrid Orwell / Calvino / Borges voice |
-| Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
-| Preflight | [`ni-inspect`](./skills/ni-inspect) | Check metadata, content quality, and structure before publishing |
-| Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | Generate cover and inline image prompts |
-| Publish | [`ni-draft`](./skills/ni-draft) | Push the article to the WeChat draft inbox |
-| Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
+| Source | [`ni-url2md`](./skills/article/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
+| Research | [`ni-research`](./skills/article/ni-research) | Trend analysis, competitor scanning, sourced material collection |
+| Insight | [`ni-insight`](./skills/article/ni-insight) | Identify the core argument and a distinctive angle |
+| Writing | [`ni-writer`](./skills/article/ni-writer) | Long-form writing in a hybrid Orwell / Calvino / Borges voice |
+| Layout | [`ni-formatter`](./skills/article/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
+| Preflight | [`ni-inspect`](./skills/article/ni-inspect) | Check metadata, content quality, and structure before publishing |
+| Imagery | [`ni-article-image-gen`](./skills/article/ni-article-image-gen) | Generate cover and inline image prompts |
+| Publish | [`ni-draft`](./skills/article/ni-draft) | Push the article to the WeChat draft inbox |
+| Orchestration | [`ni-article-workflow`](./skills/article/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
 
 Each skill can be used standalone or orchestrated by `ni-article-workflow`.
+
+### Harness engineering (`skills/harness/`)
+
+| Skill | Capability |
+|-------|------------|
+| [`agent-legible`](./skills/harness/agent-legible) | Audit how legible a TS/JS codebase is to AI agents: flag misusable interfaces, check layering, produce an audit report with fix drafts |
 
 ---
 
@@ -127,6 +135,7 @@ Describe what you need to trigger the matching skill:
 - Lay out an article → `ni-formatter`
 - Scrape a URL into Markdown → `ni-url2md`
 - Push a draft → `ni-draft`
+- Audit a codebase's agent legibility → `agent-legible`
 
 See each skill's `SKILL.md` for its full trigger-word list.
 

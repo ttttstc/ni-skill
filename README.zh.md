@@ -2,9 +2,9 @@
 
 [English](./README.md) | 中文
 
-> 泥巴猪公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
+> 泥巴猪的 Claude Code 技能集合。两条线：公众号长文创作管线，与面向 AI agent 的 harness 工程工具。
 
-ni-skill 是一组面向 Claude Code 的协同 skill，覆盖调研、灵魂挖掘、写作、排版、预检、发布六个阶段。每个 skill 均可独立使用，也可由 `ni-article-workflow` 编排为完整管线。
+ni-skill 分两条线。**内容创作**——一组面向 Claude Code 的协同 skill，覆盖调研、灵魂挖掘、写作、排版、预检、发布六个阶段，每个均可独立使用，也可由 `ni-article-workflow` 编排为完整管线。**Harness 工程**——面向 AI coding agent 的代码库工具。
 
 ---
 
@@ -37,18 +37,18 @@ ni-skill 是一组面向 Claude Code 的协同 skill，覆盖调研、灵魂挖�
 
 ### 方式 3：手动安装
 
-clone 仓库后，将 `skills/` 下的子目录移动到 `~/.claude/skills/`：
+clone 仓库后，将 `skills/article/` 和 `skills/harness/` 下的各 skill 目录移动到 `~/.claude/skills/`：
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git
-mv ni-skill/skills/* ~/.claude/skills/
+mv ni-skill/skills/article/* ni-skill/skills/harness/* ~/.claude/skills/
 ```
 
 PowerShell：
 
 ```powershell
 git clone https://github.com/ttttstc/ni-skill.git
-Move-Item ni-skill\skills\* $HOME\.claude\skills\
+Move-Item ni-skill\skills\article\*,ni-skill\skills\harness\* $HOME\.claude\skills\
 ```
 
 手动安装不支持自动更新，推荐使用方式 1。
@@ -57,19 +57,27 @@ Move-Item ni-skill\skills\* $HOME\.claude\skills\
 
 ## Skills
 
+### 内容创作（`skills/article/`）
+
 | 阶段 | Skill | 能力 |
 |------|-------|------|
-| 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
-| 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
-| 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
-| 写作 | [`ni-writer`](./skills/ni-writer) | 长文写作，融合奥威尔 / 卡尔维诺 / 博尔赫斯文风 |
-| 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
-| 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
-| 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
-| 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
-| 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
+| 素材 | [`ni-url2md`](./skills/article/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
+| 调研 | [`ni-research`](./skills/article/ni-research) | 热点分析、竞品扫描、采集具名素材 |
+| 灵魂 | [`ni-insight`](./skills/article/ni-insight) | 挖掘文章的核心观点与独特角度 |
+| 写作 | [`ni-writer`](./skills/article/ni-writer) | 长文写作，融合奥威尔 / 卡尔维诺 / 博尔赫斯文风 |
+| 排版 | [`ni-formatter`](./skills/article/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
+| 预检 | [`ni-inspect`](./skills/article/ni-inspect) | 发布前检查元数据、内容质量与结构 |
+| 配图 | [`ni-article-image-gen`](./skills/article/ni-article-image-gen) | 生成封面与内文配图提示词 |
+| 发布 | [`ni-draft`](./skills/article/ni-draft) | 将文章推送至微信公众号草稿箱 |
+| 编排 | [`ni-article-workflow`](./skills/article/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 
 每个 skill 均可独立调用，也可由 `ni-article-workflow` 统一编排。
+
+### Harness 工程（`skills/harness/`）
+
+| Skill | 能力 |
+|-------|------|
+| [`agent-legible`](./skills/harness/agent-legible) | 审计 TS/JS 代码库对 AI agent 的可读性：标出会被误用的接口，检查分层结构，产出审计报告与修复草稿 |
 
 ---
 
@@ -127,6 +135,7 @@ ni-draft              推送至微信草稿箱
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
 - 推送草稿 → `ni-draft`
+- 审计代码库的 Agent 可读性 → `agent-legible`
 
 各 skill 的完整触发词见对应的 `SKILL.md`。
 

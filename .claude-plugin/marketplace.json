@@ -5,25 +5,26 @@
     "email": "423310463@qq.com"
   },
   "metadata": {
-    "description": "泥巴猪「低卧扑食」公众号的创作技能矩阵：从选题到发布的完整管线",
+    "description": "泥巴猪的 Claude Code 技能集合：公众号长文创作管线 + 面向 AI agent 的 harness 工程工具",
     "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "ni-skill",
-      "description": "AI / 工程化管理 / DevOps / 架构 四个领域的公众号长文创作管线",
+      "description": "两条线——公众号长文创作管线（AI / 工程化管理 / DevOps / 架构），与面向 AI coding agent 的 harness 工程工具",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/ni-writer",
-        "./skills/ni-research",
-        "./skills/ni-insight",
-        "./skills/ni-formatter",
-        "./skills/ni-inspect",
-        "./skills/ni-article-image-gen",
-        "./skills/ni-draft",
-        "./skills/ni-article-workflow",
-        "./skills/ni-url2md"
+        "./skills/article/ni-writer",
+        "./skills/article/ni-research",
+        "./skills/article/ni-insight",
+        "./skills/article/ni-formatter",
+        "./skills/article/ni-inspect",
+        "./skills/article/ni-article-image-gen",
+        "./skills/article/ni-draft",
+        "./skills/article/ni-article-workflow",
+        "./skills/article/ni-url2md",
+        "./skills/harness/agent-legible"
       ]
     }
   ]
