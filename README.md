@@ -62,7 +62,7 @@ Manual installation does not support auto-updates; Option 1 is recommended.
 | Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
 | Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
 | Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
-| Writing | [`ni-writer`](./skills/ni-writer) | Long-form writing in a hybrid Orwell / Calvino / Borges voice |
+| Writing | [`ni-writer`](./skills/ni-writer) | Long- and short-form writing across 5 article archetypes, in a hybrid Orwell / Calvino / Borges voice |
 | Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
 | Preflight | [`ni-inspect`](./skills/ni-inspect) | Check metadata, content quality, and structure before publishing |
 | Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | Generate cover and inline image prompts |
@@ -70,6 +70,20 @@ Manual installation does not support auto-updates; Option 1 is recommended.
 | Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
 
 Each skill can be used standalone or orchestrated by `ni-article-workflow`.
+
+### The 5 article archetypes in ni-writer
+
+Before writing, classify the piece along three axes — **argument / emotion / source-compression** — then pick the matching archetype:
+
+| Archetype | Word count | Soul | Fit for |
+|-----------|-----------|------|---------|
+| 1. Hands-on review | ≤ 6,000 | I tried it myself | Field tests, product reviews, process narratives |
+| 2. Discovery brief (speed-read digest) | 500-1,500 | I pre-filtered the source for you | Distilling posts / videos / blogs / papers |
+| 3. Engineering playbook | ≤ 6,000 | Here's my battle-tested framework | Engineering experience + actionable steps |
+| 4. Technical polemic | 5,000-8,500 | Clear stance, zero filler, no fence-sitting | Concept disambiguation, paradigm reframing |
+| 5. Personal essay | 3,000-5,000 | I've been turning this over | Stream-of-thought, feelings, non-argumentative pieces |
+
+Full rules: [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) and the sub-style files under `references/`.
 
 ---
 

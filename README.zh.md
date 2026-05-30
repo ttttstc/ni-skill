@@ -62,7 +62,7 @@ Move-Item ni-skill\skills\* $HOME\.claude\skills\
 | 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
 | 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
 | 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
-| 写作 | [`ni-writer`](./skills/ni-writer) | 长文写作，融合奥威尔 / 卡尔维诺 / 博尔赫斯文风 |
+| 写作 | [`ni-writer`](./skills/ni-writer) | 5 种文章原型的长/短文写作，融合奥威尔 / 卡尔维诺 / 博尔赫斯文风 |
 | 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
 | 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
 | 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
@@ -70,6 +70,20 @@ Move-Item ni-skill\skills\* $HOME\.claude\skills\
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 
 每个 skill 均可独立调用，也可由 `ni-article-workflow` 统一编排。
+
+### ni-writer 的 5 种文章原型
+
+写作前先按「**论点 / 情绪 / 资料压缩**」三分判型，再选对应原型：
+
+| 原型 | 字数 | 灵魂 | 适用题材 |
+|------|------|------|---------|
+| 1. 产品体验和评价型 | ≤ 6000 | 我亲自下场 | 实测、上手评价、过程叙事 |
+| 2. 发现分享型（速读精华式） | 500-1500 | 我替你刷资料压缩精华 | 帖子 / 视频 / 博客 / 论文转译 |
+| 3. 技术方法论型 | ≤ 6000 | 我把框架掏给你 | 工程经验 + 落地清单 |
+| 4. 技术思辨型 | 5000-8500 | 立场鲜明、字字不冗、不左右摇摆 | 概念辨析、范式升维 |
+| 5. 人生哲学随笔型 | 3000-5000 | 我在想这件事 | 思绪流、感受、非论点写作 |
+
+详细规则见 [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) 与 `references/` 下的子风格规则文件。
 
 ---
 
