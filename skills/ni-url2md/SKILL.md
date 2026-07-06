@@ -50,7 +50,7 @@ ni-url2md/
 
 第一次跑会比较慢（拉 Bun + 启动 Chrome）。后续命中缓存就快了。
 
-> **关于 `${SKILL_DIR}`**：本 SKILL.md 所在的目录。Claude Code 加载 skill 时自动解析；用户手动跑命令时，把它替换成 skill 的实际安装路径即可（例如 `~/.claude/skills/ni-skill/skills/ni-url2md` 或 `git clone` 下来的对应位置）。
+> **关于 `${SKILL_DIR}`**：本 SKILL.md 所在的目录。Claude Code / Codex 加载 skill 时会按安装位置解析；用户手动跑命令时，把它替换成 skill 的实际安装路径即可（例如 `~/.claude/skills/ni-url2md`、`~/.codex/skills/ni-url2md`，或 `git clone` 下来的对应位置）。
 
 ## 使用方法
 

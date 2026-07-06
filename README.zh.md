@@ -4,13 +4,13 @@
 
 > 泥巴猪公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
 
-ni-skill 是一组面向 Claude Code 的协同 skill，覆盖调研、灵魂挖掘、写作、排版、预检、发布六个阶段。每个 skill 均可独立使用，也可由 `ni-article-workflow` 编排为完整管线。
+ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、灵魂挖掘、写作、排版、预检、配图提示词、发布等阶段。每个 skill 均可独立使用，也可由 `ni-article-workflow` 编排为完整管线。
 
 ---
 
 ## 环境要求
 
-- **Claude Code**（支持 Plugin Marketplace）
+- **Codex** / **Claude Code** / 任何能从本地 skills 目录加载 skill 的 AI agent 运行时
 - **Python 3.10+** —— `ni-draft` 推送微信草稿时需要
 - **Node.js + Chrome** —— `ni-url2md` 抓取网页时需要
 
@@ -20,38 +20,93 @@ ni-skill 是一组面向 Claude Code 的协同 skill，覆盖调研、灵魂挖�
 
 ## 安装
 
-### 方式 1：Plugin Marketplace（推荐）
+按你的运行时挑一条。
 
-在 Claude Code 中执行：
+### Codex — 本地插件
 
-```
-/plugin marketplace add ttttstc/ni-skill
-/plugin install ni-skill@ni-skill
-```
+仓库已包含 Codex 插件清单 `.codex-plugin/plugin.json`。本地开发时，clone 后按你的 Codex 插件工作流安装或软链这个仓库。
 
-### 方式 2：通过 Agent 安装
-
-向 Claude 说明：
-
-> 帮我安装 github.com/ttttstc/ni-skill 的 skill
-
-### 方式 3：手动安装
-
-clone 仓库后，将 `skills/` 下的子目录移动到 `~/.claude/skills/`：
+如果只需要使用 skills，也可以把 `skills/` 下的子目录复制到 `~/.codex/skills/`。下面这段适合直接交给 AI Agent 执行，会安装当前发布的 ni-skill 集合：
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git
-mv ni-skill/skills/* ~/.claude/skills/
+mkdir -p ~/.codex/skills
+for skill in \
+  ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
+  ni-article-image-gen ni-draft ni-article-workflow ni-unknown-first \
+  ni-tech-report ni-book-writer
+do
+  cp -R "ni-skill/skills/$skill" ~/.codex/skills/
+done
 ```
 
 PowerShell：
 
 ```powershell
 git clone https://github.com/ttttstc/ni-skill.git
-Move-Item ni-skill\skills\* $HOME\.claude\skills\
+New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
+$skills = @(
+  "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
+  "ni-inspect", "ni-article-image-gen", "ni-draft", "ni-article-workflow",
+  "ni-unknown-first", "ni-tech-report", "ni-book-writer"
+)
+foreach ($skill in $skills) {
+  Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
+}
 ```
 
-手动安装不支持自动更新，推荐使用方式 1。
+只安装 `ni-unknown-first`：
+
+```bash
+git clone https://github.com/ttttstc/ni-skill.git
+mkdir -p ~/.codex/skills
+cp -R ni-skill/skills/ni-unknown-first ~/.codex/skills/
+```
+
+PowerShell：
+
+```powershell
+git clone https://github.com/ttttstc/ni-skill.git
+New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
+Copy-Item ni-skill\skills\ni-unknown-first $HOME\.codex\skills\ni-unknown-first -Recurse -Force
+```
+
+安装后开启新的 Codex 会话，让 skill 列表重新加载。
+
+### Claude Code — Plugin Marketplace
+
+```
+/plugin marketplace add ttttstc/ni-skill
+/plugin install ni-skill@ni-skill
+```
+
+### 任意运行时 — 让 Agent 代装
+
+向 Codex 或 Claude 说明：
+
+> 帮我安装 github.com/ttttstc/ni-skill 的 skill
+
+只装单个 skill 到 Codex 时可以说：
+
+> 只把 github.com/ttttstc/ni-skill 里的 ni-unknown-first 安装到 ~/.codex/skills
+
+### 手动安装 — 复制到对应 skills 目录
+
+大多数 AI agent 运行时都从 `~/.{agent}/skills/` 加载 skill（如 `~/.codex/skills/`、`~/.claude/skills/`）。clone 仓库后，把 `skills/` 下的子目录复制到你运行时的 skills 目录：
+
+```bash
+git clone https://github.com/ttttstc/ni-skill.git
+cp -R ni-skill/skills/* ~/.claude/skills/
+```
+
+PowerShell：
+
+```powershell
+git clone https://github.com/ttttstc/ni-skill.git
+Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
+```
+
+手动安装不支持自动更新：能走运行时专属路径就优先走那条。
 
 ---
 
@@ -63,6 +118,8 @@ Move-Item ni-skill\skills\* $HOME\.claude\skills\
 | 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
 | 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
 | 写作 | [`ni-writer`](./skills/ni-writer) | 5 种文章原型的长/短文写作，融合奥威尔 / 卡尔维诺 / 博尔赫斯文风 |
+| 写书 | [`ni-book-writer`](./skills/ni-book-writer) | 长篇书稿写作（技术书 / 畅销书双风格），含结构、大纲与章节脚手架 |
+| 汇报 | [`ni-tech-report`](./skills/ni-tech-report) | 构建一份清晰的技术汇报——叙事线索、证据布局、执行摘要综合 |
 | 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
 | 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
 | 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
@@ -128,7 +185,7 @@ ni-draft              推送至微信草稿箱
 
 ### 完整管线
 
-向 Claude 描述选题，例如：
+向 Codex 或 Claude 描述选题，例如：
 
 > 用 ni-skill 写一篇关于「AGENTS.md 实践」的文章
 
