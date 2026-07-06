@@ -23,7 +23,8 @@
         "./skills/ni-article-image-gen",
         "./skills/ni-draft",
         "./skills/ni-article-workflow",
-        "./skills/ni-url2md"
+        "./skills/ni-url2md",
+        "./skills/ni-unknown-first"
       ]
     }
   ]

@@ -68,6 +68,7 @@ Move-Item ni-skill\skills\* $HOME\.claude\skills\
 | 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
+| 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
 
 每个 skill 均可独立调用，也可由 `ni-article-workflow` 统一编排。
 
@@ -140,6 +141,7 @@ ni-draft              推送至微信草稿箱
 - 挖掘文章角度 → `ni-insight`
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
+- 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
 - 推送草稿 → `ni-draft`
 
 各 skill 的完整触发词见对应的 `SKILL.md`。

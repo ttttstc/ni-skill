@@ -68,6 +68,7 @@ Manual installation does not support auto-updates; Option 1 is recommended.
 | Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | Generate cover and inline image prompts |
 | Publish | [`ni-draft`](./skills/ni-draft) | Push the article to the WeChat draft inbox |
 | Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
+| Diagnosis | [`ni-unknown-first`](./skills/ni-unknown-first) | Diagnose which kind of "unknown" you are facing and emit a Chinese next-step prompt |
 
 Each skill can be used standalone or orchestrated by `ni-article-workflow`.
 
@@ -140,6 +141,7 @@ Describe what you need to trigger the matching skill:
 - Find an article angle → `ni-insight`
 - Lay out an article → `ni-formatter`
 - Scrape a URL into Markdown → `ni-url2md`
+- Diagnose which "unknown" you're facing and get a next-step prompt → `ni-unknown-first`
 - Push a draft → `ni-draft`
 
 See each skill's `SKILL.md` for its full trigger-word list.
