@@ -446,10 +446,11 @@ Vibe Coding 失败通常不是因为 AI 不会执行，而是因为 AI 在关键
 
 每次运行时，优先使用当前对话上下文进行诊断。
 
-只有在用户明确要求跨会话保留状态时，才建议写入用户全局状态目录：
+只有在用户明确要求跨会话保留状态时，才建议写入用户全局状态目录；在 Claude Code 使用 `~/.claude`，在 Codex 使用 `~/.codex`：
 
 ```text
 ~/.claude/ni-unknown-first/projects/{project-id}/state.md
+~/.codex/ni-unknown-first/projects/{project-id}/state.md
 ```
 
 只有在用户明确要求团队共享或项目内沉淀时，才写入当前项目：

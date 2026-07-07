@@ -4,13 +4,13 @@ English | [中文](./README.zh.md)
 
 > A content creation skill suite for 泥巴猪. End-to-end pipeline from topic to publication, covering AI, engineering management, DevOps, and architecture.
 
-ni-skill is a set of cooperating skills for Claude Code, spanning six stages: research, insight, writing, layout, preflight, and publishing. Each skill works standalone, and `ni-article-workflow` orchestrates them into a complete pipeline.
+ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code, and similar runtimes), spanning source capture, research, insight, writing, layout, preflight, imagery, and publishing. Each skill works standalone, and `ni-article-workflow` orchestrates them into a complete pipeline.
 
 ---
 
 ## Requirements
 
-- **Claude Code** (with Plugin Marketplace support)
+- **Codex** / **Claude Code** / any AI agent runtime that loads skills from a local skills directory
 - **Python 3.10+** — required by `ni-draft` for pushing WeChat drafts
 - **Node.js + Chrome** — required by `ni-url2md` for web scraping
 
@@ -20,7 +20,60 @@ See each skill's `SKILL.md` for its specific dependencies.
 
 ## Installation
 
-### Option 1: Plugin Marketplace (recommended)
+Pick the path that matches your runtime.
+
+### Codex — local plugin
+
+The repo ships a Codex plugin manifest at `.codex-plugin/plugin.json`. For local development, clone the repo and install or symlink it per your Codex plugin workflow.
+
+If you only need the skills, copy them into `~/.codex/skills/`. This snippet installs the full published set:
+
+```bash
+git clone https://github.com/ttttstc/ni-skill.git
+mkdir -p ~/.codex/skills
+for skill in \
+  ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
+  ni-article-image-gen ni-draft ni-article-workflow ni-unknown-first \
+  ni-tech-report ni-book-writer
+do
+  cp -R "ni-skill/skills/$skill" ~/.codex/skills/
+done
+```
+
+PowerShell:
+
+```powershell
+git clone https://github.com/ttttstc/ni-skill.git
+New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
+$skills = @(
+  "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
+  "ni-inspect", "ni-article-image-gen", "ni-draft", "ni-article-workflow",
+  "ni-unknown-first", "ni-tech-report", "ni-book-writer"
+)
+foreach ($skill in $skills) {
+  Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
+}
+```
+
+To install only `ni-unknown-first`:
+
+```bash
+git clone https://github.com/ttttstc/ni-skill.git
+mkdir -p ~/.codex/skills
+cp -R ni-skill/skills/ni-unknown-first ~/.codex/skills/
+```
+
+PowerShell:
+
+```powershell
+git clone https://github.com/ttttstc/ni-skill.git
+New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
+Copy-Item ni-skill\skills\ni-unknown-first $HOME\.codex\skills\ni-unknown-first -Recurse -Force
+```
+
+After installing, start a new Codex session so the skill list is refreshed.
+
+### Claude Code — Plugin Marketplace
 
 In Claude Code:
 
@@ -29,29 +82,33 @@ In Claude Code:
 /plugin install ni-skill@ni-skill
 ```
 
-### Option 2: Via the Agent
+### Any runtime — ask the agent
 
-Ask Claude:
+Tell Codex or Claude:
 
 > Please install skills from github.com/ttttstc/ni-skill
 
-### Option 3: Manual
+For a single skill (e.g. only `ni-unknown-first` into Codex):
 
-Clone the repository and move the subdirectories under `skills/` into `~/.claude/skills/`:
+> Please install only ni-unknown-first from github.com/ttttstc/ni-skill into ~/.codex/skills
+
+### Manual — copy into your skills directory
+
+Most AI agent runtimes load skills from `~/.{agent}/skills/` (e.g. `~/.codex/skills/`, `~/.claude/skills/`). Clone the repo and copy the subdirectories under `skills/` into your runtime's skills folder:
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git
-mv ni-skill/skills/* ~/.claude/skills/
+cp -R ni-skill/skills/* ~/.claude/skills/
 ```
 
 PowerShell:
 
 ```powershell
 git clone https://github.com/ttttstc/ni-skill.git
-Move-Item ni-skill\skills\* $HOME\.claude\skills\
+Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 ```
 
-Manual installation does not support auto-updates; Option 1 is recommended.
+Manual install doesn't support auto-updates; prefer the per-runtime path above when available.
 
 ---
 
@@ -63,6 +120,8 @@ Manual installation does not support auto-updates; Option 1 is recommended.
 | Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
 | Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
 | Writing | [`ni-writer`](./skills/ni-writer) | Long- and short-form writing across 6 article archetypes, in a hybrid Orwell / Calvino / Borges voice |
+| Book writing | [`ni-book-writer`](./skills/ni-book-writer) | Long-form book writing in two styles (technical / trade-press), with structure, outline, and chapter scaffolding |
+| Reporting | [`ni-tech-report`](./skills/ni-tech-report) | Build a clear technical report — narrative arc, evidence layout, and executive-summary synthesis |
 | Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
 | Preflight | [`ni-inspect`](./skills/ni-inspect) | Check metadata, content quality, and structure before publishing |
 | Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | Generate cover and inline image prompts |
@@ -129,7 +188,7 @@ If any stage degrades or fails, the skill reports it clearly and leaves the next
 
 ### Full pipeline
 
-Describe a topic to Claude, for example:
+Describe a topic to Codex or Claude, for example:
 
 > Use ni-skill to write an article on "AGENTS.md in practice"
 

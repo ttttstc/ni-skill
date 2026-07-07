@@ -1,0 +1,44 @@
+{
+  "name": "ni-skill",
+  "version": "1.1.0",
+  "description": "A content creation skill suite for research, insight, writing, layout, preflight, imagery, and WeChat publishing.",
+  "author": {
+    "name": "泥巴猪",
+    "email": "423310463@qq.com",
+    "url": "https://github.com/ttttstc"
+  },
+  "homepage": "https://github.com/ttttstc/ni-skill",
+  "repository": "https://github.com/ttttstc/ni-skill",
+  "license": "MIT",
+  "keywords": [
+    "writing",
+    "wechat",
+    "research",
+    "content",
+    "devops",
+    "architecture",
+    "codex-skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ni-skill",
+    "shortDescription": "公众号内容创作技能矩阵",
+    "longDescription": "A Codex-compatible skill suite for the 泥巴猪 content pipeline: source capture, research, insight, writing, layout, preflight, imagery prompts, and WeChat draft publishing.",
+    "developerName": "泥巴猪",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/ttttstc/ni-skill",
+    "privacyPolicyURL": "https://github.com/ttttstc/ni-skill",
+    "termsOfServiceURL": "https://github.com/ttttstc/ni-skill",
+    "defaultPrompt": [
+      "用 ni-skill 从选题到草稿跑一篇公众号文章",
+      "帮我把这个链接抓成 Markdown 当素材",
+      "把这篇文章做发布前预检"
+    ],
+    "brandColor": "#0F766E",
+    "screenshots": []
+  }
+}
