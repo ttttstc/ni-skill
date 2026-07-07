@@ -119,7 +119,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
 | Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
 | Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
-| Writing | [`ni-writer`](./skills/ni-writer) | Long- and short-form writing across 5 article archetypes, in a hybrid Orwell / Calvino / Borges voice |
+| Writing | [`ni-writer`](./skills/ni-writer) | Long- and short-form writing across 6 article archetypes, in a hybrid Orwell / Calvino / Borges voice |
 | Book writing | [`ni-book-writer`](./skills/ni-book-writer) | Long-form book writing in two styles (technical / trade-press), with structure, outline, and chapter scaffolding |
 | Reporting | [`ni-tech-report`](./skills/ni-tech-report) | Build a clear technical report — narrative arc, evidence layout, and executive-summary synthesis |
 | Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
@@ -131,7 +131,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 
 Each skill can be used standalone or orchestrated by `ni-article-workflow`.
 
-### The 5 article archetypes in ni-writer
+### The 6 article archetypes in ni-writer
 
 Before writing, classify the piece along three axes — **argument / emotion / source-compression** — then pick the matching archetype:
 
@@ -142,6 +142,7 @@ Before writing, classify the piece along three axes — **argument / emotion / s
 | 3. Engineering playbook | ≤ 6,000 | Here's my battle-tested framework | Engineering experience + actionable steps |
 | 4. Technical polemic | 5,000-8,500 | Clear stance, zero filler, no fence-sitting | Concept disambiguation, paradigm reframing |
 | 5. Personal essay | 3,000-5,000 | I've been turning this over | Stream-of-thought, feelings, non-argumentative pieces |
+| 6. Field methodology (deep-water practice) | 4,500-7,000 | I hit a real engineering problem, then abstracted it | Engineering governance, workflows, collaboration, AI-tool reflection |
 
 Full rules: [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) and the sub-style files under `references/`.
 
