@@ -2,9 +2,9 @@
 
 [English](./README.md) | 中文
 
-> 泥巴猪公众号的创作技能矩阵。从选题到发布的完整管线，覆盖 AI / 工程化管理 / DevOps / 架构 四个领域。
+> 面向内容创作与首层软件架构决策的技能矩阵，覆盖 AI / 工程化管理 / DevOps / 架构四个领域。
 
-ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、灵魂挖掘、写作、排版、预检、配图提示词、发布等阶段。每个 skill 均可独立使用，也可由 `ni-article-workflow` 编排为完整管线。
+ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、灵魂挖掘、写作、排版、预检、配图、发布和第一性原则架构决策。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
 
 ---
 
@@ -34,7 +34,7 @@ mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-draft ni-article-workflow ni-unknown-first \
-  ni-tech-report ni-book-writer
+  ni-tech-report ni-book-writer think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -48,7 +48,8 @@ New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-draft", "ni-article-workflow",
-  "ni-unknown-first", "ni-tech-report", "ni-book-writer"
+  "ni-unknown-first", "ni-tech-report", "ni-book-writer",
+  "think-like-architect"
 )
 foreach ($skill in $skills) {
   Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
@@ -126,8 +127,9 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
+| 架构 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
 
-每个 skill 均可独立调用，也可由 `ni-article-workflow` 统一编排。
+每个 skill 均可独立调用；`ni-article-workflow` 只编排内容生产类 skill。
 
 ### ni-writer 的 6 种文章原型
 
@@ -200,6 +202,7 @@ ni-draft              推送至微信草稿箱
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
 - 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
+- 将 PRD 或现有项目转成首层架构决策 → `think-like-architect`
 - 推送草稿 → `ni-draft`
 
 各 skill 的完整触发词见对应的 `SKILL.md`。
