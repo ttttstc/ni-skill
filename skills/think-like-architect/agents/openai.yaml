@@ -1,0 +1,4 @@
+interface:
+  display_name: "Think Like an Architect"
+  short_description: "First-principles architecture decisions from PRDs"
+  default_prompt: "Use $think-like-architect to turn this PRD into an Architecture First Cut."
