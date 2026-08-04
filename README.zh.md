@@ -124,13 +124,33 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
 | 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
 | 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
-| 海报 | [`ni-poster`](./skills/ni-poster) | ZINE 风格极简纸感海报：编译 prompt 并生成图像 |
+| 海报 | [`ni-poster`](./skills/ni-poster) | 一个公开入口，按参数路由三种 ZINE 风格并生成图像 |
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
 | 架构 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
 
 每个 skill 均可独立调用；`ni-article-workflow` 只编排内容生产类 skill。
+
+### ni-poster 风格参数
+
+`ni-poster` 是海报功能唯一对外暴露的 skill。需要显式控制风格时，在 `/ni-poster` 后使用短参数：
+
+| 命令 | 内部风格 | 适用场景 |
+|------|----------|----------|
+| `/ni-poster s ...` | Standard | 极简纸刊：3:5 竖版、70–90% 留白、小主体、旧纸扫描质感、稀疏文字、单个克制色彩锚点 |
+| `/ni-poster g ...` | Gathered Scenes | 保留用户照片真实内容，再接入来源简化插画场和可见手撕纤维边 |
+| `/ni-poster d ...` | Scene Distillation | 照片只作语义参考，最终不保留照片像素，进行作者化抽象重构 |
+
+不写 `s`、`g`、`d` 时，`ni-poster` 会根据需求关键词自动路由。完整参数名 `standard`、`gathered`、`distillation` 仍兼容。`g` 需要参考照片；`d` 还支持精确触发词 `单色块模式`。
+
+示例：
+
+```text
+/ni-poster s 把这句话做成极简纸刊：夏天结束得很轻
+/ni-poster g 保留这张照片的真实场景，加入手撕纤维边
+/ni-poster d 用这张照片做视觉隐喻，不保留照片像素
+```
 
 ### ni-writer 的 6 种文章原型
 

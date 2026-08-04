@@ -1,7 +1,7 @@
 ---
 name: ni-poster
 description: |
-  Generate ZINE-style poetic paper-poster prompts and the matching generated image. Use when the user gives a theme, sentence, object, mood, article idea, photo, or content brief and wants a quiet Japanese/Korean zine-like editorial poster with large negative space, aged paper texture, experimental typography, restrained color accents, and a generated bitmap image. Triggers include 「做一张海报」「ZINE 风格」「杂志风海报」「极简海报」「纸感海报」「用这句话做张图」「poster」「zine poster」. Not for commercial ad posters, product KV, UI mockups, article inline illustrations (use ni-article-image-gen), or dense collage/scrapbook layouts.
+  Generate ZINE-style poetic paper-poster prompts and matching raster images through one public skill with three internal styles: Standard minimal paper zine, Gathered Scenes photo-anchor collage, and Scene Distillation photo-inspired abstraction. Use when the user gives a theme, sentence, object, mood, article idea, photo, or content brief and wants a tactile editorial poster. Triggers include 「做一张海报」「ZINE 风格」「杂志风海报」「极简海报」「纸感海报」「拾景纸刊」「保留照片」「撕纸边」「场景提炼」「不保留照片」「视觉隐喻」「单色块模式」「poster」「zine poster」. Recommended short style controls are `/ni-poster s`, `/ni-poster g`, and `/ni-poster d`. The full names remain accepted as compatibility aliases. Not for commercial ad posters, product KV, UI mockups, or article inline illustrations (use ni-article-image-gen).
 ---
 
 # ni-poster — Minimal Zine Poster
@@ -11,9 +11,54 @@ Turn the user's content into both:
 1. a final image-generation prompt, and
 2. a generated raster image made from that prompt.
 
+## Style Router
+
+Select exactly one mode before compiling a prompt. Read the matching reference only after routing:
+
+| Mode | Choose when | Photo treatment | Visual grammar |
+| --- | --- | --- | --- |
+| **Standard** | Generic minimal paper/zine request, no supplied photo, small subject, huge quiet field | No photo requirement; use a photo only as a small crop/cutout when requested | Small cluster, 70–90% paper, one compact high-chroma anchor, subordinate short text |
+| **Gathered Scenes** | User wants the supplied scene kept truthful, photo as anchor, photo-to-illustration continuity, visible torn-paper seam, or source-derived collage | Preserve a recognizable photographic section | Photo anchor plus expansive simplified illustration field; one source-derived structural hue |
+| **Scene Distillation** | User wants the photo used only as semantic reference, an authored abstract rewrite, visual metaphor, free typography, or exact `单色块模式` | Do not retain photographic pixels or photorealistic regions | Independent illustration, emotional proposition, adaptive edge, authorial text/color |
+
+**Standard** is the original `ni-poster` base style: a quiet vertical 3:5 paper poster with 70–90% negative space, one small image cluster, aged scanned-paper texture, sparse short typography, and one clear but restrained high-chroma anchor. It does not require a source photo.
+
+Use this priority order:
+
+1. A valid slash selector is authoritative: `/ni-poster s`, `/ni-poster g`, or `/ni-poster d`. Strip the command and selector before parsing the poster content.
+2. An explicit style name or style request inside `ni-poster` wins when no slash selector is present: `Standard`, `Gathered Scenes`/`拾景纸刊`, or `Scene Distillation`/`场景提炼`.
+3. Exact `单色块模式` routes to **Scene Distillation** only when no explicit selector overrides it.
+4. Explicit photo handling outranks generic aesthetic words: “保留照片/真景为锚” routes to **Gathered Scenes**; “只作参考/不保留照片/不要照片像素” routes to **Scene Distillation**.
+5. Material and composition cues resolve remaining ambiguity: “撕纸纤维边、照片与插画相接、来源形状延展” favors Gathered Scenes; “视觉隐喻、情绪命题、自由排版、抽象重构” favors Scene Distillation; “小主体、超大留白、静谧纸刊” favors Standard.
+6. If no strong cue exists, use **Standard**. Do not mix the core photo rules of Gathered Scenes and Scene Distillation.
+
+### Explicit slash selectors
+
+Treat the first token after `/ni-poster` as a case-insensitive style selector. Prefer the short selectors; accept full names as compatibility aliases:
+
+| Selector | Internal mode | Reference |
+| --- | --- | --- |
+| `s` (`standard`) | Standard | rules in this `SKILL.md` |
+| `g` (`gathered`) | Gathered Scenes | `references/gathered-scenes-zine.md` |
+| `d` (`distillation`) | Scene Distillation | `references/scene-distillation-zine.md` |
+
+Supported forms:
+
+```text
+/ni-poster s <theme, sentence, object, or photo request>
+/ni-poster g <photo + source-faithful collage request>
+/ni-poster d <photo/theme + abstract reinterpretation request>
+```
+
+If `/ni-poster` has no selector, use automatic routing. If the selector is unknown, do not silently choose a style: state the valid short values (`s`, `g`, `d`) and then use automatic routing only when the remaining request contains a clear style cue.
+
+Keyword categories and examples are maintained in [references/style-routing.md](references/style-routing.md). For **Gathered Scenes**, read [references/gathered-scenes-zine.md](references/gathered-scenes-zine.md). For **Scene Distillation**, read [references/scene-distillation-zine.md](references/scene-distillation-zine.md).
+
+Photo input rule: Gathered Scenes needs a supplied photo. Scene Distillation can use a supplied photo or, when explicitly requested without one, treat the user's theme/text as the semantic source. Without an explicit selector, a Gathered Scenes request without a photo falls back to Standard with a brief explanation. With `/ni-poster g`, keep the requested mode and state that a reference photo is required before generating.
+
 ## Mode Policy
 
-Use **Standard Mode** for all generation. Use the Standard Mode Prompt Compiler in this `SKILL.md` to convert the user's content into a compact, imageable, high-fidelity prompt. If the user asks for higher quality, strengthen the prompt using the rules below.
+Use the compiler and output policy of the selected mode. Use **Standard Mode** rules below for the default route. For the other routes, load only the matching reference file and do not copy Standard's small-cluster, tiny-accent, or subordinate-text constraints into them. If the user asks for higher quality, strengthen the selected mode without changing its visual grammar.
 
 ## Standard Mode Prompt Compiler
 
@@ -156,15 +201,18 @@ Before writing the prompt, choose one option from each axis. Randomness must cha
 ## Workflow
 
 1. Determine mode.
-   - Use Standard Mode.
+   - Parse `/ni-poster <selector>` first. If present and valid (`s`, `g`, `d`, or a full-name alias), use that selector as the resolved mode even when content keywords point elsewhere. Record both the selector and resolved mode in the final response.
+   - If no selector is present, apply the Style Router and record the resolved mode in the final response.
+   - If the selected mode is Gathered Scenes or Scene Distillation, read its reference file before analyzing the source image.
 
 2. Parse the user's content.
    - Identify the core subject, mood, exact text if supplied, possible visual metaphor, and any reference image role.
    - For an article or complex idea, extract one central imageable idea rather than summarizing the whole argument.
-   - If no image text is supplied, invent one short poetic English or Chinese phrase.
+   - In Standard Mode, if no image text is supplied, invent one short poetic English or Chinese phrase. In the routed modes, follow the selected reference's text policy instead.
 
 3. Select a variation recipe.
    - In Standard Mode, pick layout, image anchor, typography, texture, and mood from the Variation Engine, then choose color through the Standard Color Engine. Do not select `near-monochrome` unless the user explicitly asks for it.
+   - In Gathered Scenes or Scene Distillation, follow the selected reference's source analysis, composition, edge, color, typography, and correction rules instead of this Variation Engine.
    - Do not default to "tiny photo + blue dots + microtext" unless it truly fits.
    - If the recipe becomes too dense, simplify typography or color treatment first.
 
@@ -179,11 +227,12 @@ Before writing the prompt, choose one option from each axis. Randomness must cha
      2. an installed image-generation skill or tool in this environment (e.g. `chatgpt-imagegen`, an MCP image tool, or any project-local generation CLI);
      3. an image-generation command the user has already told you to use in this session.
    - Do not hardcode a single vendor. Do not ask the user which tool to use if one of the above is already available — just use it and name the tool in the output.
-   - Do not stop after prompt-only unless the user explicitly asks for prompt-only, **or** no generation capability is available at all. In the no-capability case, deliver the final prompt, state plainly that no image was generated and why, and name the concrete missing capability.
-   - If the result obviously violates the selected mode or recipe, tighten the prompt and regenerate once.
+   - Do not stop after prompt-only unless the user explicitly asks for prompt-only, **or** no generation capability is available at all. In the no-capability case, state plainly that no image was generated and why, and name the concrete missing capability. Return the final prompt automatically only in Standard Mode; for Gathered Scenes or Scene Distillation, return it only if the user asked for it.
+   - If Standard or Gathered Scenes visibly violates the selected mode or recipe, tighten only the failed constraint and regenerate once. In Gathered Scenes, preserve the truthful photo and torn handoff during this correction.
+   - In Scene Distillation, follow its reference: do not perform an automatic visual-inspection review or regeneration after a successful generation unless the user asks for a check/revision. Retry only a concrete runtime generation failure.
    - In Standard Mode, inspect the result at thumbnail scale. If the high-chroma anchor is absent, washed out, or reduced to an imperceptible mark, regenerate once with stronger color wording and a larger colored area.
 
-6. Return the image and prompt.
+6. Return the mode-specific output contract. State the selected mode; Standard includes the final prompt by default, while the two ported modes return their rationale/notes and reveal the prompt only when requested.
 
 ## Negative Constraints
 
@@ -202,6 +251,8 @@ Always avoid:
 
 ## Output Format
 
+Use this output format for **Standard Mode**. Gathered Scenes and Scene Distillation have their own output contracts in their reference files: both return the generated image and a concise rationale/notes by default, and reveal the final prompt only when the user asks for it.
+
 ````markdown
 **生成图**
 
@@ -215,6 +266,7 @@ Always avoid:
 
 **说明**
 
+- Selector: [s / g / d / auto]
 - Mode: Standard
 - Tool: [the image-generation capability actually used]
 - Recipe: [layout / anchor / typography / accent / texture / mood]
@@ -251,6 +303,12 @@ Before finalizing, check:
 - "用 ni-poster 做一张关于旧书的海报"
 - "用这张照片做一张同风格 poster"
 - "把这句话做成 ZINE 风海报：夏天结束得很轻"
+- "保留这张照片的真实感，用拾景纸刊做成照片和插画相接的海报"
+- "用这张照片做场景提炼，不要保留照片像素，要有视觉隐喻"
+- "用 ni-poster 的单色块模式处理这张图"
+- "/ni-poster s 把这句话做成极简纸刊：夏天结束得很轻"
+- "/ni-poster g 保留这张照片的真实场景，加入手撕纤维边"
+- "/ni-poster d 用这张照片做视觉隐喻，不保留照片像素"
 
 ## Reference Examples
 

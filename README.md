@@ -126,13 +126,33 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
 | Preflight | [`ni-inspect`](./skills/ni-inspect) | Check metadata, content quality, and structure before publishing |
 | Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | Generate cover and inline image prompts |
-| Poster | [`ni-poster`](./skills/ni-poster) | Minimal ZINE-style paper posters: compile the prompt and generate the image |
+| Poster | [`ni-poster`](./skills/ni-poster) | One public poster skill with three routed ZINE styles and image generation |
 | Publish | [`ni-draft`](./skills/ni-draft) | Push the article to the WeChat draft inbox |
 | Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
 | Diagnosis | [`ni-unknown-first`](./skills/ni-unknown-first) | Diagnose which kind of "unknown" you are facing and emit a Chinese next-step prompt |
 | Architecture | [`think-like-architect`](./skills/think-like-architect) | Turn a PRD or project context into a first-principles Architecture First Cut |
 
 Each skill can be used standalone. `ni-article-workflow` orchestrates the content-production skills.
+
+### ni-poster style selectors
+
+`ni-poster` is the only public poster skill. Use a short selector after `/ni-poster` when you want deterministic style control:
+
+| Command | Internal style | Use when |
+|---------|----------------|----------|
+| `/ni-poster s ...` | Standard | Minimal paper zine: 3:5 portrait, 70–90% negative space, small subject cluster, aged scan texture, sparse type, one restrained chromatic anchor |
+| `/ni-poster g ...` | Gathered Scenes | Keep a supplied photo truthful, then connect it to a simplified source-derived illustration field with a visible torn-fiber edge |
+| `/ni-poster d ...` | Scene Distillation | Use a supplied photo as semantic reference only; create an authored abstract reinterpretation with no photographic pixels in the result |
+
+Without `s`, `g`, or `d`, `ni-poster` routes automatically from the request. The full selectors `standard`, `gathered`, and `distillation` remain accepted as compatibility aliases. `g` requires a reference photo; `d` also supports the exact `单色块模式` trigger.
+
+Examples:
+
+```text
+/ni-poster s 把这句话做成极简纸刊：夏天结束得很轻
+/ni-poster g 保留这张照片的真实场景，加入手撕纤维边
+/ni-poster d 用这张照片做视觉隐喻，不保留照片像素
+```
 
 ### The 6 article archetypes in ni-writer
 
