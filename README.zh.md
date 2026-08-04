@@ -33,7 +33,7 @@ git clone https://github.com/ttttstc/ni-skill.git
 mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
-  ni-article-image-gen ni-draft ni-article-workflow ni-unknown-first \
+  ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
@@ -47,7 +47,7 @@ git clone https://github.com/ttttstc/ni-skill.git
 New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
-  "ni-inspect", "ni-article-image-gen", "ni-draft", "ni-article-workflow",
+  "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer",
   "think-like-architect"
 )
@@ -124,6 +124,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
 | 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
 | 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
+| 海报 | [`ni-poster`](./skills/ni-poster) | ZINE 风格极简纸感海报：编译 prompt 并生成图像 |
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
@@ -201,6 +202,7 @@ ni-draft              推送至微信草稿箱
 - 挖掘文章角度 → `ni-insight`
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
+- 做一张 ZINE 风格极简海报 → `ni-poster`
 - 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
 - 将 PRD 或现有项目转成首层架构决策 → `think-like-architect`
 - 推送草稿 → `ni-draft`

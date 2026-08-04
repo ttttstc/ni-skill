@@ -33,7 +33,7 @@ git clone https://github.com/ttttstc/ni-skill.git
 mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
-  ni-article-image-gen ni-draft ni-article-workflow ni-unknown-first \
+  ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
@@ -47,7 +47,7 @@ git clone https://github.com/ttttstc/ni-skill.git
 New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
-  "ni-inspect", "ni-article-image-gen", "ni-draft", "ni-article-workflow",
+  "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer",
   "think-like-architect"
 )
@@ -126,6 +126,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
 | Preflight | [`ni-inspect`](./skills/ni-inspect) | Check metadata, content quality, and structure before publishing |
 | Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | Generate cover and inline image prompts |
+| Poster | [`ni-poster`](./skills/ni-poster) | Minimal ZINE-style paper posters: compile the prompt and generate the image |
 | Publish | [`ni-draft`](./skills/ni-draft) | Push the article to the WeChat draft inbox |
 | Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
 | Diagnosis | [`ni-unknown-first`](./skills/ni-unknown-first) | Diagnose which kind of "unknown" you are facing and emit a Chinese next-step prompt |
@@ -203,6 +204,7 @@ Describe what you need to trigger the matching skill:
 - Find an article angle → `ni-insight`
 - Lay out an article → `ni-formatter`
 - Scrape a URL into Markdown → `ni-url2md`
+- Make a minimal ZINE-style poster → `ni-poster`
 - Diagnose which "unknown" you're facing and get a next-step prompt → `ni-unknown-first`
 - Turn a PRD or existing project into a first-cut architecture decision set → `think-like-architect`
 - Push a draft → `ni-draft`
