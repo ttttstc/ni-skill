@@ -1,95 +1,95 @@
 # ni-poster Style Routing
 
-Use this file only after `ni-poster/SKILL.md` has been triggered. It separates the three modes so a generic “zine” request does not accidentally receive the wrong photo behavior.
+Use this file only after `ni-poster/SKILL.md` has triggered. Resolve exactly one of four internal modes before compiling a prompt or generating an image.
 
 ## Mode map
 
-| Mode | Source contract | Composition scale | Color role | Text role | Default return |
-| --- | --- | --- | --- | --- | --- |
-| Standard | Theme, text, object, or optional reference image | Small cluster; 8–25% cluster and 70–90% paper | One compact saturated anchor; roughly 0.8–2.5% canvas | Short, quiet, subordinate line | Image + final prompt + recipe |
-| Gathered Scenes | Supplied photo is factual visual anchor | Photo about 25–60%; illustration field about 45–70%; much of field remains quiet | One source-derived added hue bridges or restructures photo and illustration | One small editorial micro-text line, English by default | Image + brief Chinese rationale; prompt only if requested |
-| Scene Distillation | Supplied photo is semantic reference only; text/theme may substitute when explicitly requested | 68–85% paper; active cluster about 12–32%; source orientation normally preserved | Standard Accent or exact Solid Color-Block Mode | Fully authorial: caption, interruption, field, fragments, or none | Image + Chinese idea + concise art direction; prompt only if requested |
+| Mode | Direct defining trait | Photo contract | Visual grammar |
+| --- | --- | --- | --- |
+| Standard | 极简纸刊 / 大留白小主体 | Photo optional | 3:5 aged paper, 70–90% quiet space, small cluster, one saturated anchor |
+| Gathered Scenes | 保留照片 + 撕纸插画融合 | Supplied photo remains recognizable | Truthful photo anchor, torn-fiber handoff, expansive source-derived illustration field |
+| Scene Distillation | 不保留照片 / 场景提炼 | Photo is semantic reference only; theme/text may substitute | Independent abstract illustration, visual metaphor, authorial typography; exact `单色块模式` |
+| Photo Abstract Editorial | 保留原片 + 下方抽象面板 | Supplied photo remains intact as upper/principal section | Clean direct join, flat ivory memory panel, muted source palette, one English title |
 
-## Keyword buckets
+## Decisive signals
 
-### Explicit mode names — strongest
+Use only direct, mode-defining signals for no-interview routing:
 
-- Standard: `Standard Mode`, `minimal zine`, `极简纸刊`, `小主体海报`, `大留白海报`.
-- Gathered Scenes: `Gathered Scenes`, `拾景纸刊`, `拾景`, `真景为锚`, `照片锚点`.
-- Scene Distillation: `Scene Distillation`, `场景提炼`, `场景蒸馏`, `抽象重构`, `作者化再创作`.
+- **Standard:** `极简纸刊`, `大留白小主体`, `minimal zine`.
+- **Gathered Scenes:** `撕纸边`, `照片与插画融合`, `拾景纸刊`, `torn-paper photo illustration`.
+- **Scene Distillation:** `不保留照片`, `场景提炼`, `照片只作参考`, `no photo pixels`, or exact `单色块模式`.
+- **Photo Abstract Editorial:** `照片＋抽象面板`, `原片下方接抽象面板`, `照片抽象编辑`, `photo plus abstract panel`.
 
-### Source-handling cues — resolve photo ambiguity
+Do not route from generic words alone: `照片`, `保留照片`, `抽象`, `纸感`, `ZINE`, `杂志风`, `安静`, `诗性`, `memory`, or `editorial`. These describe more than one mode.
 
-Gathered Scenes cues:
+## Guided interview
 
-- `保留照片`, `照片真实`, `照片是主体`, `保留场景识别度`, `照片与插画相接`
-- `photo anchor`, `truthful photography`, `keep the photo`, `source-derived illustration field`
+Interview when no selector, explicit mode name, or decisive signal identifies one mode. Ask one question per turn.
 
-Scene Distillation cues:
+Interview controls selection only. It must not change or hybridize any child style's capabilities. Once selected, load and follow that mode's existing rules unchanged.
 
-- `照片只作参考`, `不保留照片`, `不要照片像素`, `不出现摄影区域`, `只提炼情绪/语义`
-- `semantic reference only`, `no photo pixels`, `abstract reinterpretation`, `visual metaphor`
+### Photo supplied or planned
 
-### Material and composition cues — secondary
+1. Ask whether the original photo should remain visible.
+2. If no, choose **Scene Distillation**.
+3. If yes, ask whether the user wants:
+   - photo fused into torn-paper illustration: **Gathered Scenes**;
+   - original photo joined to a clean lower abstract panel: **Photo Abstract Editorial**.
 
-Gathered Scenes cues:
+### No photo supplied or planned
 
-- `撕纸纤维边`, `手撕照片边`, `照片到纸面的撕裂过渡`, `来源形状延展`, `场景拼贴但不拥挤`
-- `torn-paper seam`, `hand-torn fibrous edge`, `photo-to-paper handoff`, `source continuation`
+Ask whether the user wants:
 
-Scene Distillation cues:
+- minimal aged-paper zine with large whitespace: **Standard**;
+- independent abstract reinterpretation from the theme/text: **Scene Distillation**.
 
-- `情绪命题`, `中心张力`, `视觉隐喻`, `自由排版`, `不按模板排字`, `独立插画`
-- `expressive proposition`, `central tension`, `authorial typography`, `independent illustration`
-
-Standard cues:
-
-- `安静`, `诗性`, `极简`, `超大留白`, `小图钉式主体`, `短句`, `静谧纸感`
-- `quiet minimal`, `huge negative space`, `tiny anchor`, `short phrase`, `paper zine`
-
-### Color trigger
-
-The exact string `单色块模式` is a hard route to Scene Distillation. It means one contiguous fully saturated color field and neutral ink everywhere else. Do not interpret it as “use a small color accent,” and do not route it to Standard or Gathered Scenes.
+If the answer stays vague, ask one narrower contrast based on the remaining two modes. Do not show all four choices again. Confirm the selected mode in one sentence before continuing.
 
 ## Conflict resolution
 
-1. A valid `/ni-poster s|g|d` selector overrides all inferred cues and `单色块模式`; full names remain compatibility aliases.
-2. Without a selector, follow an explicit mode name over inferred cues.
-3. Without a selector, follow `单色块模式` over other color words, but keep the user's explicit source-handling instruction if compatible.
-4. When “保留照片” and “不保留照片” both appear without a selector, honor the later explicit instruction and mention the chosen interpretation briefly.
-5. Without an explicit selector, if a mode's source contract is impossible (for example, Gathered Scenes without a photo), fall back to Standard rather than inventing source material. With `/ni-poster g`, keep the requested mode and state that a reference photo is required.
-6. Do not combine these pairs unless the user explicitly asks for a hybrid: “photo truthful” + “no photo pixels”; “tiny compact accent” + “large structural color field”; “subordinate micro-text” + “free authorial typography”. If a hybrid is requested, preserve the explicitly named source treatment and borrow only compatible secondary rules.
+1. A valid `/ni-poster s|g|d|a` selector overrides all other signals, including `单色块模式`.
+2. An explicit mode name overrides inferred treatment cues.
+3. A decisive treatment resolves the mode without an interview.
+4. `保留照片` alone is incomplete because both Gathered Scenes and Photo Abstract Editorial retain photography; interview between torn illustration and clean abstract panel.
+5. If the user combines contradictory treatments, ask a narrow clarification instead of honoring word order or inventing a hybrid.
+6. Gathered Scenes and Photo Abstract Editorial require a supplied photo. If one is selected without a photo, ask for the photo and wait; do not fall back to Standard.
+7. Do not compile a prompt or generate an image while mode remains unresolved.
 
 ## Slash command contract
 
-`ni-poster` is the only public skill. The first token after the slash command is optional and accepts three short canonical selectors:
+`ni-poster` remains the only public skill:
 
 ```text
 /ni-poster s ...
 /ni-poster g ...
 /ni-poster d ...
+/ni-poster a ...
 ```
 
-The selector controls the internal mode; the remaining text is the content request. Full names are accepted as aliases. `/ni-poster ...` without a selector uses automatic keyword routing.
+Full names remain compatibility aliases. `/ni-poster ...` without a selector uses decisive signals when present; otherwise it starts the Guided Style Interview.
 
-## ni-poster invocation examples
+## Examples
 
 ```text
-用 $ni-poster 做一张关于雨天的极简纸刊海报
+用 $ni-poster 做一张关于雨天的海报
 ```
-Route: Standard.
+
+No mode specified. Start interview; do not generate yet.
 
 ```text
-/ni-poster g 保留这张照片的场景，加入照片锚点和撕纸纤维边
+保留这张照片做海报
 ```
-Route: Gathered Scenes.
+
+Photo retention specified, handoff unresolved. Ask Gathered Scenes versus Photo Abstract Editorial.
 
 ```text
-/ni-poster d 处理这张照片，照片只作语义参考，改成视觉隐喻
+用这张照片做场景提炼，不保留照片像素
 ```
+
 Route: Scene Distillation.
 
 ```text
-/ni-poster s 处理这张图，使用单色块模式
+/ni-poster a 保留原照片，在下方生成干净象牙色抽象面板
 ```
-Route: Standard, because explicit selector overrides the inferred `单色块模式` route.
+
+Route: Photo Abstract Editorial. If no photo is attached, request it and wait.
