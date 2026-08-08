@@ -124,7 +124,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
 | 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
 | 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
-| 海报 | [`ni-poster`](./skills/ni-poster) | 一个公开入口，按参数路由三种 ZINE 风格并生成图像 |
+| 海报 | [`ni-poster`](./skills/ni-poster) | 一个公开入口，按参数路由四种 ZINE 风格并生成图像 |
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
@@ -141,8 +141,11 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | `/ni-poster s ...` | Standard | 极简纸刊：3:5 竖版、70–90% 留白、小主体、旧纸扫描质感、稀疏文字、单个克制色彩锚点 |
 | `/ni-poster g ...` | Gathered Scenes | 保留用户照片真实内容，再接入来源简化插画场和可见手撕纤维边 |
 | `/ni-poster d ...` | Scene Distillation | 照片只作语义参考，最终不保留照片像素，进行作者化抽象重构 |
+| `/ni-poster a ...` | Photo Abstract Editorial | 保留原照片，在下方增加由照片空间与色彩关系推导的干净象牙色抽象记忆面板 |
 
-不写 `s`、`g`、`d` 时，`ni-poster` 会根据需求关键词自动路由。完整参数名 `standard`、`gathered`、`distillation` 仍兼容。`g` 需要参考照片；`d` 还支持精确触发词 `单色块模式`。
+不写 `s`、`g`、`d`、`a` 时，足够明确的风格描述仍可直接判型；如果需求仍然模糊，`ni-poster` 会每次询问一个关键问题，直到风格确认，不再静默默认 Standard。完整参数名 `standard`、`gathered`、`distillation`、`photo-abstract-editorial` 仍兼容。`g` 和 `a` 需要参考照片；`d` 还支持精确触发词 `单色块模式`。
+
+最直白的区别：极简纸刊选 `s`；照片与撕纸插画融合选 `g`；最终不保留照片选 `d`；原照片加下方干净抽象面板选 `a`。只有“照片、抽象、纸感、ZINE”等泛词时会进入访谈。
 
 示例：
 
@@ -150,6 +153,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 /ni-poster s 把这句话做成极简纸刊：夏天结束得很轻
 /ni-poster g 保留这张照片的真实场景，加入手撕纤维边
 /ni-poster d 用这张照片做视觉隐喻，不保留照片像素
+/ni-poster a 保留原照片，在下方生成干净象牙色抽象面板
 ```
 
 ### ni-writer 的 6 种文章原型

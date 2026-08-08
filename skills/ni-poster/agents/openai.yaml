@@ -1,4 +1,4 @@
 interface:
   display_name: "ni-poster · Routed Zine Posters"
-  short_description: "按照片处理方式选择三种纸刊海报风格"
-  default_prompt: "Use $ni-poster to make a tactile paper zine poster; optionally control style with /ni-poster s, /ni-poster g, or /ni-poster d."
+  short_description: "四种纸刊海报风格，未指定时先访谈确认风格再生成图片"
+  default_prompt: "Use $ni-poster to make a tactile paper zine poster; if I did not specify a style, interview me until one mode is confirmed before generating."
