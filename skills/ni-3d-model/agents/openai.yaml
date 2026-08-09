@@ -1,0 +1,4 @@
+interface:
+  display_name: "ni-3d-model"
+  short_description: "先确认需求与多视图效果，再生成并验收 GLB 三维模型"
+  default_prompt: "Use $ni-3d-model to turn my theme into an approved multiview concept and a validated GLB model."

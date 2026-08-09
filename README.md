@@ -2,9 +2,9 @@
 
 English | [中文](./README.zh.md)
 
-> A skill suite for content creation and first-cut software architecture, covering AI, engineering management, DevOps, and architecture.
+> A skill suite for content creation, first-cut software architecture, and review-gated 3D asset production.
 
-ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code, and similar runtimes), spanning source capture, research, insight, writing, layout, preflight, imagery, publishing, and first-principles architecture decisions. Each skill works standalone, and `ni-article-workflow` orchestrates the content skills into a complete pipeline.
+ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code, and similar runtimes), spanning source capture, research, insight, writing, layout, preflight, imagery, publishing, first-principles architecture decisions, and review-gated multiview-to-GLB production. Each skill works standalone, and `ni-article-workflow` orchestrates the content skills into a complete pipeline.
 
 ---
 
@@ -13,6 +13,7 @@ ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code
 - **Codex** / **Claude Code** / any AI agent runtime that loads skills from a local skills directory
 - **Python 3.10+** — required by `ni-draft` for pushing WeChat drafts
 - **Node.js + Chrome** — required by `ni-url2md` for web scraping
+- **Image generation + browser control + an available image-to-3D service** — required by `ni-3d-model`; login and free quota depend on the selected provider
 
 See each skill's `SKILL.md` for its specific dependencies.
 
@@ -34,7 +35,7 @@ mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
-  ni-tech-report ni-book-writer think-like-architect
+  ni-tech-report ni-book-writer ni-3d-model think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -48,7 +49,7 @@ New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
-  "ni-unknown-first", "ni-tech-report", "ni-book-writer",
+  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model",
   "think-like-architect"
 )
 foreach ($skill in $skills) {
@@ -127,6 +128,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Preflight | [`ni-inspect`](./skills/ni-inspect) | Check metadata, content quality, and structure before publishing |
 | Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | Generate cover and inline image prompts |
 | Poster | [`ni-poster`](./skills/ni-poster) | One public poster skill with four routed ZINE styles and image generation |
+| 3D modeling | [`ni-3d-model`](./skills/ni-3d-model) | Confirm requirements, review consistent multiview images, then generate and validate a textured GLB |
 | Publish | [`ni-draft`](./skills/ni-draft) | Push the article to the WeChat draft inbox |
 | Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
 | Diagnosis | [`ni-unknown-first`](./skills/ni-unknown-first) | Diagnose which kind of "unknown" you are facing and emit a Chinese next-step prompt |
@@ -229,6 +231,7 @@ Describe what you need to trigger the matching skill:
 - Lay out an article → `ni-formatter`
 - Scrape a URL into Markdown → `ni-url2md`
 - Make a minimal ZINE-style poster → `ni-poster`
+- Turn a theme into reviewed multiview images and a validated GLB → `ni-3d-model`
 - Diagnose which "unknown" you're facing and get a next-step prompt → `ni-unknown-first`
 - Turn a PRD or existing project into a first-cut architecture decision set → `think-like-architect`
 - Push a draft → `ni-draft`
