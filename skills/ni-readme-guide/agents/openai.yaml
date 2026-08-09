@@ -1,0 +1,4 @@
+interface:
+  display_name: "NI README Guide"
+  short_description: "Create bilingual, project-native GitHub READMEs"
+  default_prompt: "Use $ni-readme-guide to create Chinese-default and English GitHub READMEs with reciprocal language links and verified badges."

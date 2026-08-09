@@ -35,7 +35,7 @@ mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
-  ni-tech-report ni-book-writer ni-3d-model think-like-architect
+  ni-tech-report ni-book-writer ni-3d-model ni-readme-guide think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -49,7 +49,7 @@ New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
-  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model",
+  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-readme-guide",
   "think-like-architect"
 )
 foreach ($skill in $skills) {
@@ -132,9 +132,19 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Publish | [`ni-draft`](./skills/ni-draft) | Push the article to the WeChat draft inbox |
 | Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
 | Diagnosis | [`ni-unknown-first`](./skills/ni-unknown-first) | Diagnose which kind of "unknown" you are facing and emit a Chinese next-step prompt |
+| README | [`ni-readme-guide`](./skills/ni-readme-guide) | Create synchronized Chinese-default and English GitHub READMEs with reciprocal links and verified badges |
 | Architecture | [`think-like-architect`](./skills/think-like-architect) | Turn a PRD or project context into a first-principles Architecture First Cut |
 
 Each skill can be used standalone. `ni-article-workflow` orchestrates the content-production skills.
+
+### ni-readme-guide
+
+`ni-readme-guide` creates or audits a synchronized README pair:
+
+- `README.md` — Simplified Chinese and the default entry point
+- `README.en.md` — English counterpart with a reciprocal language link
+
+It derives the story from repository evidence, puts the shortest successful path early, keeps commands, facts, and verified badges aligned, and validates local links, images, code blocks, and basic SVG safety. See [`skills/ni-readme-guide/README.md`](./skills/ni-readme-guide/README.md) for the bilingual skill guide.
 
 ### ni-poster style selectors
 
@@ -233,6 +243,7 @@ Describe what you need to trigger the matching skill:
 - Make a minimal ZINE-style poster → `ni-poster`
 - Turn a theme into reviewed multiview images and a validated GLB → `ni-3d-model`
 - Diagnose which "unknown" you're facing and get a next-step prompt → `ni-unknown-first`
+- Create synchronized Chinese-default and English GitHub READMEs → `ni-readme-guide`
 - Turn a PRD or existing project into a first-cut architecture decision set → `think-like-architect`
 - Push a draft → `ni-draft`
 
