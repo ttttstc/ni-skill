@@ -30,11 +30,12 @@ description: |
 │   └── v001/
 │       ├── turntable-review.png
 │       ├── front.png
-│       ├── left-45.png
-│       ├── right-45.png
+│       ├── left.png
+│       ├── right.png
 │       └── back.png
 ├── models/
-│   ├── source.glb
+│   ├── sources/
+│   │   └── generation-v001-source.glb
 │   └── {model-slug}.glb
 └── qa/
     ├── inspection.md
@@ -58,6 +59,8 @@ description: |
 - 外观完整体、剖面、爆炸图或透明结构
 - 目标面数、纹理、文件大小、坐标/原点等交付约束
 - 输出目录和文件名
+- 目标 3D 服务及其当前多视图槽位协议
+- 指定或允许的图像生成器、图片尝试次数与费用上限
 - 允许使用的 3D 服务及免费额度范围
 
 把结论写入 `requirements.md`，向用户展示精简的“需求确认单”，明确说：
@@ -68,18 +71,18 @@ description: |
 
 ## 阶段 2：生成可审核的多视图图片
 
-选择当前运行时可用的图像生成能力。若原生能力提供 `gpt-image-2` thinking 模式，优先使用；否则按原生图像生成工具、已安装的图像生成 skill/tool、用户本次指定工具的顺序选择，并明确记录实际工具。没有可用能力时停止，明确说明缺少什么；不要伪造产物。
+用户明确指定图像生成器时，优先使用该工具。指定工具不可用时停止，说明原因并让用户批准替代方案；不要静默切换供应商、数据处理方式或额度。用户未指定时，依次选择原生图像生成工具、已安装的图像生成 skill/tool，并记录运行时实际报告的工具、模型和模式；不要假设不存在的模型模式。没有可用能力时停止，明确说明缺少什么；不要伪造产物。
 
 生成一套“审核包”，而不是互不相关的漂亮单图：
 
 - 同一个对象、同一几何身份、同一比例和材质
-- 默认视图：正面、左前 45°、右后 45°、背面
+- 严格遵守确认单中的目标服务槽位协议，不使用跨服务的通用斜视图默认值
 - 中性纯色背景，无台座、文字、水印、边框或遮挡主体的阴影
 - 相同正交感、相同相机高度、相同照明与色彩管理
 - 满足 `requirements.md` 的数量、左右、朝向、剖面和禁用结构
 - 优先一次生成 2×2 转台审核图并裁成四张；若工具不能稳定做到，则用同一锚点图派生各视图
 
-先做自检：身份是否漂移、左右是否镜像错置、数量是否重复、背面是否只是正面翻转、结构是否跨视图消失。发现明显失败时标记为 rejected，并生成新版本。
+先做自检：身份是否漂移、左右是否镜像错置、数量是否重复、背面是否只是正面翻转、结构是否跨视图消失。发现明显失败时标记为 rejected；仅在确认单的图片尝试预算内生成新版本并递增 `image_attempts_used`。达到上限后停止，展示失败版本与原因，重新询问用户。
 
 把审核图保存到版本目录，在回复中直接展示绝对路径图片，并列出 3–5 个需要用户重点看的结构。明确说：
 
@@ -89,16 +92,16 @@ description: |
 
 ## 阶段 3：准备 3D 输入
 
-确认四张上传图来自已批准版本，并核对槽位映射：
+确认四张上传图来自已批准版本，并核对目标服务协议。Hunyuan 的 `front/left/right/back` 协议示例：
 
 ```text
 front.png     -> 正图
-left-45.png   -> 左前 45°
-right-45.png  -> 右后 45°
+left.png      -> 真实左侧图
+right.png     -> 真实右侧图
 back.png      -> 背图
 ```
 
-若服务槽位定义不同，以页面当前文案为准，并在上传前写出映射。禁止把左右对象、镜像图、顶视图或底视图冒充转台侧视图。
+若服务槽位定义与确认单不同，先更新需求版本并重新生成、审核图片。禁止把斜视图、左右对象、镜像图、顶视图或底视图冒充左右槽位。
 
 完整读取 `references/glb-production-and-qa.md`，再操作外部 3D 服务。
 
@@ -112,9 +115,10 @@ back.png      -> 背图
 2. 登录、验证码或本地文件权限需要用户操作时，请用户接手；不要索取账号、密码或验证码。
 3. 核对四个槽位和缩略图后再提交。
 4. 选择带纹理的最高质量免费模式；面数服从确认单，不盲目固定某个旧版本或旧档位。
-5. 只提交一次。失败原因不明时先检查任务列表和额度，避免重复扣费。
-6. 等待完成，旋转查看正面、背面、左右侧和上下边缘。
-7. 下载 GLB 到 `models/source.glb`，记录服务、模型版本、参数、额度变化和生成时间。
+5. 点击提交前，先递增 `generation_version`，原子记录 `provider`、`submission_status: submitting`、`job_id: null`、`credits_before` 和当前输入图片版本。
+6. 提交成功后立即记录 `submission_status: submitted`、可见的 `job_id` 或任务 URL、`submitted_at` 和提交后额度；断线时先用这些字段查任务，禁止盲目重提。
+7. 等待完成，更新状态并旋转查看正面、背面、左右侧和上下边缘。
+8. 下载到 `models/sources/generation-{generation_version}-source.glb`，记录服务版本、参数和额度变化。每次生成使用独立源文件。
 
 ## 阶段 5：验收与交付
 
@@ -128,7 +132,7 @@ back.png      -> 背图
 - 在真实查看器中加载并从至少四个角度截图
 - 与已批准图片逐项对照结构、色彩和轮廓
 
-目标文件超限时，保留 `source.glb`，另产出压缩候选。优先压缩几何编码和纹理；除非用户批准，不减面、不降 Base Color 分辨率。压缩后重新做结构验证和 A/B 渲染。
+目标文件超限时，保留对应的版本化源 GLB，另产出压缩候选。优先压缩几何编码和纹理；除非用户批准，不减面、不降 Base Color 分辨率。压缩后重新做结构验证和 A/B 渲染。
 
 只有全部硬性检查通过，才把候选复制或命名为 `models/{model-slug}.glb`。不合格时保留产物、标记失败原因并回到图片或生成阶段，不要把它描述成完成。
 
@@ -152,9 +156,27 @@ back.png      -> 背图
 ```yaml
 phase: intake | requirements-approved | image-review | image-approved | glb-generation | glb-qa | done | blocked
 requirements_version: v001
-image_version: null
 requirements_approved: false
+view_protocol: null
+image_generator: null
+image_attempt_budget: null
+image_attempts_used: 0
+image_version: null
 image_approved: false
+generation_version: null
+provider: null
+submission_status: not-submitted | submitting | submitted | completed | downloaded | failed | unknown
+job_id: null
+credits_before: null
+credits_after: null
+submitted_at: null
+source_file: null
 ```
 
-中断后从文件恢复，不重做已完成阶段。确认只对文件中记录的当前版本有效。
+按以下规则原子更新状态：
+
+- 需求改变：递增 `requirements_version`，清空两级批准、图片版本和全部外部提交字段，回到 `intake`。
+- 生成新图：递增 `image_version` 与 `image_attempts_used`，设置 `image_approved: false`，清空全部外部提交字段，回到 `image-review`。
+- 外部提交：先创建新的 `generation_version` 与提交身份，再点击生成；旧任务身份不得复用于新版本。
+
+中断后从文件恢复，不重做已完成阶段。确认只对文件中记录的当前版本有效；`submitting`、`submitted` 或 `unknown` 状态必须先查任务历史与额度，禁止直接再次提交。

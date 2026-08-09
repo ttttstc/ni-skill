@@ -2,6 +2,19 @@
 
 只在当前图片版本已获用户明确批准后读取和执行。
 
+## 目录
+
+- [服务选择](#服务选择)
+- [浏览器与账号边界](#浏览器与账号边界)
+- [上传前检查](#上传前检查)
+- [可恢复提交日志](#可恢复提交日志)
+- [生成结果的视觉检查](#生成结果的视觉检查)
+- [下载与溯源](#下载与溯源)
+- [文件级检查](#文件级检查)
+- [真实渲染检查](#真实渲染检查)
+- [压缩策略](#压缩策略)
+- [通过标准](#通过标准)
+
 ## 服务选择
 
 按以下顺序决定：
@@ -27,6 +40,7 @@
 
 - 图片版本等于 `requirements.md.image_version`
 - `image_approved: true`
+- 槽位映射等于 `requirements.md.view_protocol`
 - 四个文件可打开，尺寸和色彩模式正常
 - 槽位映射与页面当前定义一致
 - 四张图是同一对象，未混入镜像、另一侧对象或旧版本
@@ -34,6 +48,26 @@
 - 面数、质量和额度与确认单一致
 
 在点击“生成”前，把槽位缩略图和关键参数再核对一次。图片确认已经授权当前确认单内的免费额度；如果实际额度、服务或参数超出确认单，重新询问。
+
+## 可恢复提交日志
+
+每次提交使用新的 `generation_version`。点击生成前，把以下字段一次写入 `requirements.md`：
+
+```yaml
+generation_version: v001
+provider: hunyuan
+submission_status: submitting
+job_id: null
+credits_before: 20
+credits_after: null
+submitted_at: null
+input_image_version: v001
+source_file: null
+```
+
+提交被站点接受后，立即写入 `submission_status: submitted`、任务 ID 或任务 URL、`submitted_at` 和可见的 `credits_after`。完成、下载、失败分别更新为 `completed`、`downloaded`、`failed`。无法判断是否提交成功时设为 `unknown`。
+
+恢复时只要状态为 `submitting`、`submitted` 或 `unknown`，必须先按任务 ID/URL、任务历史、提交时间和额度变化查重。确认不存在任务后才能创建新的 `generation_version`；不得复用旧版本或直接重试。
 
 ## 生成结果的视觉检查
 
@@ -48,10 +82,13 @@
 
 ## 下载与溯源
 
-把站点原始下载保存为 `models/source.glb`，并在 `qa/inspection.md` 记录：
+把站点原始下载保存为 `models/sources/generation-{generation_version}-source.glb`，并在 `qa/inspection.md` 记录：
 
 ```yaml
 provider:
+generation_version:
+submission_status:
+job_id:
 model_version:
 input_image_version:
 quality_or_polygon_setting:
@@ -95,7 +132,7 @@ validator warning 逐条判断。不要把 warning 宣称为 error，也不要�
 
 ## 压缩策略
 
-只有文件超过确认单限制或用户要求时压缩。始终保留 `source.glb`，输出新候选文件。
+只有文件超过确认单限制或用户要求时压缩。始终保留当前 `generation_version` 对应的源 GLB，输出新候选文件。
 
 优先级：
 

@@ -1,5 +1,13 @@
 # 需求确认与图片审核
 
+## 目录
+
+- [最小问题集](#最小问题集)
+- [需求确认单模板](#需求确认单模板)
+- [多视图生成提示结构](#多视图生成提示结构)
+- [审图自检](#审图自检)
+- [图片审核回复模板](#图片审核回复模板)
+
 ## 最小问题集
 
 只问会改变结果的问题。优先顺序如下：
@@ -9,7 +17,8 @@
 3. **风格锚点**：有参考图、现有 GLB、项目页面或色板吗？哪些特征必须继承？灯光只是查看器预览，还是需要烘焙效果或模型内灯光？
 4. **结构约束**：数量、左右、朝向、必须出现和绝不能出现的结构是什么？
 5. **交付规格**：面数、纹理、文件大小、尺寸/原点、输出目录有什么限制？
-6. **外部服务**：允许 Hunyuan、Tripo 或其他服务吗？只用免费额度吗？允许消耗几次？
+6. **外部服务**：目标是 Hunyuan、Tripo 还是其他服务？当前上传槽位是什么？只用免费额度吗？允许消耗几次？
+7. **图片预算**：指定哪个图像生成器？最多允许几次图片尝试、多少费用或额度？默认建议“初稿 + 1 次自动纠正”，但必须写入确认单。
 
 用户没有技术偏好时，给出带理由的默认值，不把术语题全部丢回用户。例如网页展示可建议：带纹理 GLB、PBR 材质、中心原点、Y-up、保持完整轮廓，文件上限由项目已有资产推断。
 
@@ -26,6 +35,9 @@
 - 必须出现：
 - 禁止出现：
 - 结构与视角：
+- 目标服务与槽位协议：
+- 图像生成器：
+- 图片尝试预算：
 - GLB 规格：
 - 输出位置：
 - 生成服务与额度：
@@ -41,9 +53,9 @@
 把已确认需求编译为具体、可见的像素约束：
 
 ```text
-Create one coherent 3D asset turntable review sheet for [subject].
-The four panels depict the exact same physical instance and geometry:
-front, left-front 45 degrees, right-rear 45 degrees, true back.
+Create one coherent 3D asset multiview review sheet for [subject].
+The panels depict the exact same physical instance and geometry using
+the confirmed [provider] slot protocol: [ordered view names and angles].
 
 Identity locks:
 - [count / left-right / orientation / silhouette constraints]
@@ -64,6 +76,8 @@ Reconstruction constraints:
 
 按主题补充结构事实。医学、工程和产品结构不得仅凭印象生成；优先读取用户资料或可靠参考。无法确认的事实必须在需求门禁中暴露。
 
+当确认协议为 Hunyuan `front/left/right/back` 时，生成正面、真实左侧、真实右侧、真实背面；不要用左前 45° 或右后 45° 替代左右侧图。其他服务按其当前槽位协议生成，不跨服务复用视图模板。
+
 ## 审图自检
 
 展示给用户前检查：
@@ -77,7 +91,7 @@ Reconstruction constraints:
 - 每格是否完整露出轮廓，足以供图生 3D
 - 是否包含文字、水印、台座、边框或背景杂物
 
-明显失败时保存到 `review/rejected/` 或标明 rejected，不要让用户误以为它是候选终稿。
+明显失败时保存到 `review/rejected/` 或标明 rejected，不要让用户误以为它是候选终稿。每次调用前先检查 `image_attempts_used < image_attempt_budget`；调用后立即递增次数并记录实际工具、模型、模式和已知费用。达到上限后停止并让用户决定是否增加预算。
 
 ## 图片审核回复模板
 
