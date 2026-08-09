@@ -32,6 +32,8 @@ class AuditReadmeTests(unittest.TestCase):
         shared = """
 ![Project hero](./assets/readme/hero.svg)
 
+[![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://example.com/actions)
+
 ## SECTION
 
 [Docs](./docs.md)
@@ -78,6 +80,17 @@ python -m project
             self.assertEqual(result.returncode, 1)
             self.assertIn("README.en.md missing link", result.stdout)
             self.assertIn("fenced code blocks differ", result.stdout)
+
+    def test_badge_target_drift_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_valid_pair(root)
+            english = (root / "README.en.md").read_text(encoding="utf-8")
+            english = english.replace("example.com/actions", "example.com/other-actions")
+            (root / "README.en.md").write_text(english, encoding="utf-8")
+            result = self.run_audit(root)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("badge sources or targets differ", result.stdout)
 
 
 if __name__ == "__main__":

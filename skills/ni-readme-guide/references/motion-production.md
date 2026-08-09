@@ -4,7 +4,7 @@ Use motion only when it explains a sequence, transition, state change, or relati
 
 ## Confirm the output
 
-When a hero, workflow, or diagram has meaningful motion and the user has not specified static or animated output, ask once:
+When a hero, badge, workflow, or diagram has meaningful motion and the user has not specified static or animated output, ask once:
 
 > Should this stay as a static SVG, or would you like a GitHub-safe GIF animation with the SVG kept as the editable fallback?
 

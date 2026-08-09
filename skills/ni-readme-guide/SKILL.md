@@ -1,6 +1,6 @@
 ---
 name: ni-readme-guide
-description: Create, rewrite, beautify, or audit GitHub repository READMEs as a synchronized Chinese-default and English pair, with reciprocal language links, project-native visuals, real proof, concise quick starts, and maintainable Markdown. Use when a user asks to write, redesign, improve, localize, translate, visually upgrade, or review a README; create README heroes, diagrams, screenshots, or optional GitHub-safe GIF assets; or turn a repository homepage into a clear bilingual project story.
+description: Create, rewrite, beautify, or audit GitHub repository READMEs as a synchronized Chinese-default and English pair, with reciprocal language links, verified functional badges, project-native visuals, real proof, concise quick starts, and maintainable Markdown. Use when a user asks to write, redesign, improve, localize, translate, visually upgrade, or review a README; create README heroes, badges, diagrams, screenshots, or optional GitHub-safe GIF assets; or turn a repository homepage into a clear bilingual project story.
 ---
 
 # NI README Guide
@@ -29,7 +29,7 @@ Put a visible language switch near the top of both files, before the main body:
 ```
 
 - Keep the links relative so forks and local previews work.
-- Keep headings, examples, claims, links, and section order synchronized.
+- Keep headings, examples, claims, links, badges, and section order synchronized.
 - Preserve commands, identifiers, API names, URLs, and version numbers exactly across languages.
 - Translate meaning, not sentence shape. Use natural Chinese in `README.md` and natural English in `README.en.md`.
 - Treat a one-language change as incomplete until the counterpart is updated.
@@ -77,12 +77,13 @@ Strong default order:
 1. Language switch.
 2. Project-native hero or title.
 3. Plain-language pitch: what it is, why it differs, and who it serves.
-4. Real demo, screenshot, output, or other proof.
-5. Quick start: shortest working path, preferably no more than three steps.
-6. Scannable capabilities or use cases.
-7. Mechanism or architecture when it improves understanding.
-8. Configuration, compatibility, limits, and troubleshooting.
-9. Concrete contribution process and license.
+4. Verified functional badges and primary actions.
+5. Real demo, screenshot, output, or other proof.
+6. Quick start: shortest working path, preferably no more than three steps.
+7. Scannable capabilities or use cases.
+8. Mechanism or architecture when it improves understanding.
+9. Configuration, compatibility, limits, and troubleshooting.
+10. Concrete contribution process and license.
 
 Move proof and first success early. Keep advanced internals, long changelogs, and exhaustive API details in dedicated docs.
 
@@ -90,6 +91,9 @@ Move proof and first success early. Keep advanced internals, long changelogs, an
 
 - Make the first paragraph answer: What is this? Why is it different? Who is it for?
 - Keep the shortest copy-paste quick start near the opening, ideally within the first 200 words when prerequisites allow.
+- Add only badges backed by live repository state: license, CI, release/package version, supported platform or distribution, and an active community channel.
+- Link every badge to its authoritative target. Omit any badge whose source, destination, or claim cannot be verified.
+- Keep the set compact. Do not add decorative, redundant, or generic promotional badges.
 - Use descriptive headings and image alt text.
 - Add FAQ or troubleshooting only for real recurring questions or likely setup failures.
 - Add a Star History chart only for a public project when its momentum is meaningful and the user accepts the external dependency; never treat it as mandatory proof.
@@ -129,7 +133,7 @@ Default to pure SVG when delegated. Generated material must have a project-speci
 #### Asset-only mode
 
 - Create assets under `assets/readme/` or a user-approved path.
-- Use SVG for deterministic heroes, headers, diagrams, and workflows.
+- Use SVG for deterministic heroes, headers, badges, diagrams, and workflows.
 - Use PNG/WebP for screenshots, photos, generated art, or complex compositing.
 - Use GIF only after explicit opt-in and retain the static SVG source.
 - Provide embed snippets separately. Do not edit either README without approval.
@@ -166,6 +170,7 @@ Show local previews and the diff. Report evidence used, claims omitted or qualif
 - First screen explains project and points to proof or first action.
 - Real proof appears before abstract claims.
 - Quick start is short, copyable, and verified where possible.
+- Badges are useful, verifiable, linked to authoritative targets, and identical across languages.
 - Visual direction belongs to the project, not this skill.
 - README is clearer, not merely longer or more decorated.
 - Essential content remains usable when images fail.
