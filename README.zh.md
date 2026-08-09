@@ -34,7 +34,7 @@ mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
-  ni-tech-report ni-book-writer think-like-architect
+  ni-tech-report ni-book-writer ni-readme-guide think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -48,7 +48,7 @@ New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
-  "ni-unknown-first", "ni-tech-report", "ni-book-writer",
+  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-readme-guide",
   "think-like-architect"
 )
 foreach ($skill in $skills) {
@@ -128,9 +128,19 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
+| README | [`ni-readme-guide`](./skills/ni-readme-guide) | 创建或重构中文默认、英文配套且可双向跳转的 GitHub README |
 | 架构 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
 
 每个 skill 均可独立调用；`ni-article-workflow` 只编排内容生产类 skill。
+
+### ni-readme-guide
+
+`ni-readme-guide` 创建或审计一组同步的 README：
+
+- `README.md` —— 简体中文，默认入口
+- `README.en.md` —— 英文配套，并反向链接中文版本
+
+它从仓库证据提炼项目故事，把最短可成功路径前置，保持命令和事实一致，并校验本地链接、图片、代码块和基础 SVG 安全性。详见 [`skills/ni-readme-guide/README.md`](./skills/ni-readme-guide/README.md)。
 
 ### ni-poster 风格参数
 
@@ -228,6 +238,7 @@ ni-draft              推送至微信草稿箱
 - 抓取网页为 Markdown → `ni-url2md`
 - 做一张 ZINE 风格极简海报 → `ni-poster`
 - 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
+- 创建中文默认、英文配套且可双向跳转的 GitHub README → `ni-readme-guide`
 - 将 PRD 或现有项目转成首层架构决策 → `think-like-architect`
 - 推送草稿 → `ni-draft`
 
