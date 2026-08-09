@@ -40,7 +40,7 @@ Keep these identical across both files:
 
 - shell commands and code;
 - filenames, flags, environment variables, API names, and identifiers;
-- version numbers, ports, URLs, and image paths;
+- version numbers, ports, URLs, badge sources and targets, and image paths;
 - measured values and qualified claims.
 
 Translate prose, headings, captions, table labels, alt text, and callouts naturally. Do not leave Chinese prose in the English file or English filler in the Chinese file when a normal translation exists.
@@ -52,7 +52,7 @@ Compare the pair section by section:
 1. Same section roles and order, unless language-specific navigation requires a tiny difference.
 2. Same features, limitations, requirements, and contribution steps.
 3. Same code blocks and command order.
-4. Same images, destinations, and factual numbers.
+4. Same badges, images, destinations, and factual numbers.
 5. Same level of certainty; do not make one translation more promotional.
 6. Both language links resolve with exact filename casing.
 

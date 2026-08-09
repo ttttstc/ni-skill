@@ -12,6 +12,10 @@ from pathlib import Path
 
 MARKDOWN_LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)")
 MARKDOWN_IMAGE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)(?:\s+[^)]*)?\)")
+MARKDOWN_BADGE = re.compile(
+    r"\[!\[([^\]]*)\]\(([^)\s]+)(?:\s+[^)]*)?\)\]"
+    r"\(([^)\s]+)(?:\s+[^)]*)?\)"
+)
 HTML_IMAGE = re.compile(r"<img\b[^>]*\bsrc=[\"']([^\"']+)[\"'][^>]*>", re.I)
 HTML_ALT = re.compile(r"\balt=[\"']([^\"']*)[\"']", re.I)
 FENCED_CODE = re.compile(r"^```[^\n]*\n(.*?)^```\s*$", re.M | re.S)
@@ -73,6 +77,10 @@ def image_targets(text: str) -> Counter[str]:
     return Counter(targets)
 
 
+def badge_targets(text: str) -> Counter[tuple[str, str]]:
+    return Counter((source, target) for _, source, target in MARKDOWN_BADGE.findall(text))
+
+
 def compare_pair(chinese: str, english: str) -> list[str]:
     issues: list[str] = []
     if "[English](./README.en.md)" not in chinese:
@@ -90,6 +98,9 @@ def compare_pair(chinese: str, english: str) -> list[str]:
 
     if markdown_targets(chinese) != markdown_targets(english):
         issues.append("Markdown link targets differ between README.md and README.en.md")
+
+    if badge_targets(chinese) != badge_targets(english):
+        issues.append("badge sources or targets differ between README.md and README.en.md")
 
     if image_targets(chinese) != image_targets(english):
         issues.append("image targets differ between README.md and README.en.md")

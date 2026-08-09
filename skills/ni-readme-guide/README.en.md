@@ -8,6 +8,7 @@ Create or redesign synchronized GitHub README files: `README.md` is Simplified C
 
 - Turn repository code, configuration, examples, and real outputs into a clear README
 - Restructure the opening story, quick start, capabilities, architecture, and contribution guide
+- Add a compact set of verified, clickable badges aligned across both languages
 - Create project-native SVGs, screenshots, diagrams, or other README visual assets
 - Audit bilingual parity, broken links, image references, and GitHub rendering safety
 
@@ -27,7 +28,7 @@ Place reciprocal language links near the top:
 [中文](./README.md) | English
 ```
 
-Do not invent features, metrics, compatibility, user counts, or project proof. Lead with real outputs and the shortest successful path. Keep commands, versions, links, and code identical across languages.
+Do not invent features, metrics, compatibility, user counts, or project proof. Lead with real outputs and the shortest successful path. Keep commands, versions, links, badge sources, and code identical across languages. Use badges only for verifiable license, CI, version, platform, or community state, and link them to authoritative targets.
 
 ## Usage
 

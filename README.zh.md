@@ -128,7 +128,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
-| README | [`ni-readme-guide`](./skills/ni-readme-guide) | 创建或重构中文默认、英文配套且可双向跳转的 GitHub README |
+| README | [`ni-readme-guide`](./skills/ni-readme-guide) | 创建中文默认、英文配套、可双向跳转并含可验证徽章的 GitHub README |
 | 架构 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
 
 每个 skill 均可独立调用；`ni-article-workflow` 只编排内容生产类 skill。
@@ -140,7 +140,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 - `README.md` —— 简体中文，默认入口
 - `README.en.md` —— 英文配套，并反向链接中文版本
 
-它从仓库证据提炼项目故事，把最短可成功路径前置，保持命令和事实一致，并校验本地链接、图片、代码块和基础 SVG 安全性。详见 [`skills/ni-readme-guide/README.md`](./skills/ni-readme-guide/README.md)。
+它从仓库证据提炼项目故事，把最短可成功路径前置，保持命令、事实和可验证徽章一致，并校验本地链接、图片、代码块和基础 SVG 安全性。详见 [`skills/ni-readme-guide/README.md`](./skills/ni-readme-guide/README.md)。
 
 ### ni-poster 风格参数
 

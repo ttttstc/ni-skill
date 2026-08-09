@@ -8,8 +8,9 @@ Build the first screen from the strongest available elements:
 
 1. Project name and project-native visual identity.
 2. One concise pitch answering what, difference, and audience.
-3. Primary actions such as quick start, demo, or documentation.
-4. Real screenshot, output, or demonstration.
+3. Verified functional badges.
+4. Primary actions such as quick start, demo, or documentation.
+5. Real screenshot, output, or demonstration.
 
 Do not add empty placeholders just to complete the stack. A repository without a demo should show a real output, test result, architecture cue, or concise example instead.
 
@@ -27,6 +28,18 @@ Install → Configure only if required → Run or verify
 - Include the observable success result.
 - Move advanced configuration to docs or a later section.
 - Test commands locally when the environment allows it.
+
+## Functional badges
+
+Use badges as compact repository state, not decoration. Choose only values that can be verified from the repository or its official services:
+
+- license;
+- CI or build status;
+- release or published package version;
+- supported platform or distribution channel;
+- active community channel.
+
+Link each badge to the authoritative license, workflow, release, package, platform, or community page. Keep badge source URLs and destinations identical in both README languages. Omit vanity, stale, redundant, or unverifiable badges.
 
 ## Optional momentum chart
 
