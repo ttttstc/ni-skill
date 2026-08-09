@@ -27,7 +27,8 @@
         "./skills/ni-url2md",
         "./skills/ni-unknown-first",
         "./skills/ni-tech-report",
-        "./skills/ni-book-writer"
+        "./skills/ni-book-writer",
+        "./skills/ni-readme-guide"
       ]
     }
   ]
