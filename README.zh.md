@@ -2,9 +2,9 @@
 
 [English](./README.md) | 中文
 
-> 面向内容创作与首层软件架构决策的技能矩阵，覆盖 AI / 工程化管理 / DevOps / 架构四个领域。
+> 面向内容创作、首层软件架构决策与审核制 3D 资产生产的技能矩阵。
 
-ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、灵魂挖掘、写作、排版、预检、配图、发布和第一性原则架构决策。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
+ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、灵魂挖掘、写作、排版、预检、配图、发布、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
 
 ---
 
@@ -13,6 +13,7 @@ ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行�
 - **Codex** / **Claude Code** / 任何能从本地 skills 目录加载 skill 的 AI agent 运行时
 - **Python 3.10+** —— `ni-draft` 推送微信草稿时需要
 - **Node.js + Chrome** —— `ni-url2md` 抓取网页时需要
+- **图像生成、浏览器控制与可用的图生 3D 服务** —— `ni-3d-model` 需要；登录状态与免费额度取决于所选服务
 
 各 skill 的具体依赖见对应的 `SKILL.md`。
 
@@ -34,7 +35,7 @@ mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
-  ni-tech-report ni-book-writer ni-readme-guide think-like-architect
+  ni-tech-report ni-book-writer ni-3d-model ni-readme-guide think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -48,7 +49,7 @@ New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
-  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-readme-guide",
+  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-readme-guide",
   "think-like-architect"
 )
 foreach ($skill in $skills) {
@@ -125,6 +126,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
 | 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
 | 海报 | [`ni-poster`](./skills/ni-poster) | 一个公开入口，按参数路由四种 ZINE 风格并生成图像 |
+| 3D 建模 | [`ni-3d-model`](./skills/ni-3d-model) | 先确认需求和多视图，再生成并验收带纹理的 GLB 模型 |
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
@@ -237,6 +239,7 @@ ni-draft              推送至微信草稿箱
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
 - 做一张 ZINE 风格极简海报 → `ni-poster`
+- 按主题先审多视图、再生成并验收 GLB → `ni-3d-model`
 - 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
 - 创建中文默认、英文配套且可双向跳转的 GitHub README → `ni-readme-guide`
 - 将 PRD 或现有项目转成首层架构决策 → `think-like-architect`
