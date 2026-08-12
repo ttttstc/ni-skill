@@ -1,7 +1,7 @@
 {
   "name": "ni-skill",
   "version": "1.2.0",
-  "description": "A skill suite for content creation, first-cut architecture, and review-gated 3D asset production.",
+  "description": "A skill suite for content creation, domain learning, first-cut architecture, and review-gated 3D asset production.",
   "author": {
     "name": "泥巴猪",
     "email": "423310463@qq.com",
@@ -24,8 +24,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "ni-skill",
-    "shortDescription": "公众号内容创作技能矩阵",
-    "longDescription": "A Codex-compatible skill suite for the 泥巴猪 content pipeline, first-principles architecture decisions, and review-gated multiview-to-GLB 3D asset production.",
+    "shortDescription": "内容创作与领域学习技能矩阵",
+    "longDescription": "A Codex-compatible skill suite for the 泥巴猪 content pipeline, gated professional-domain learning, first-principles architecture decisions, and review-gated multiview-to-GLB 3D asset production.",
     "developerName": "泥巴猪",
     "category": "Productivity",
     "capabilities": [
@@ -39,6 +39,7 @@
       "用 ni-skill 从选题到草稿跑一篇公众号文章",
       "帮我把这个链接抓成 Markdown 当素材",
       "把这篇文章做发布前预检",
+      "先分析这些专业资料，确认学习蓝图后再写成能与专家对话的指南",
       "先确认需求和多视图，再把这个主题做成 GLB 模型"
     ],
     "brandColor": "#0F766E",

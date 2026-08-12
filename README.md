@@ -1,33 +1,33 @@
 # ni-skill
 
-English | [中文](./README.zh.md)
+中文 | [English](./README.en.md)
 
-> A skill suite for content creation, first-cut software architecture, and review-gated 3D asset production.
+> 面向内容创作、陌生领域学习、首层软件架构决策与审核制 3D 资产生产的技能矩阵。
 
-ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code, and similar runtimes), spanning source capture, research, insight, writing, layout, preflight, imagery, publishing, first-principles architecture decisions, and review-gated multiview-to-GLB production. Each skill works standalone, and `ni-article-workflow` orchestrates the content skills into a complete pipeline.
-
----
-
-## Requirements
-
-- **Codex** / **Claude Code** / any AI agent runtime that loads skills from a local skills directory
-- **Python 3.10+** — required by `ni-draft` for pushing WeChat drafts
-- **Node.js + Chrome** — required by `ni-url2md` for web scraping
-- **Image generation + browser control + an available image-to-3D service** — required by `ni-3d-model`; login and free quota depend on the selected provider
-
-See each skill's `SKILL.md` for its specific dependencies.
+ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、陌生领域学习、灵魂挖掘、写作、排版、预检、配图、发布、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
 
 ---
 
-## Installation
+## 环境要求
 
-Pick the path that matches your runtime.
+- **Codex** / **Claude Code** / 任何能从本地 skills 目录加载 skill 的 AI agent 运行时
+- **Python 3.10+** —— `ni-draft` 推送微信草稿时需要
+- **Node.js + Chrome** —— `ni-url2md` 抓取网页时需要
+- **图像生成、浏览器控制与可用的图生 3D 服务** —— `ni-3d-model` 需要；登录状态与免费额度取决于所选服务
 
-### Codex — local plugin
+各 skill 的具体依赖见对应的 `SKILL.md`。
 
-The repo ships a Codex plugin manifest at `.codex-plugin/plugin.json`. For local development, clone the repo and install or symlink it per your Codex plugin workflow.
+---
 
-If you only need the skills, copy them into `~/.codex/skills/`. This snippet installs the full published set:
+## 安装
+
+按你的运行时挑一条。
+
+### Codex — 本地插件
+
+仓库已包含 Codex 插件清单 `.codex-plugin/plugin.json`。本地开发时，clone 后按你的 Codex 插件工作流安装或软链这个仓库。
+
+如果只需要使用 skills，也可以把 `skills/` 下的子目录复制到 `~/.codex/skills/`。下面这段适合直接交给 AI Agent 执行，会安装当前发布的 ni-skill 集合：
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git
@@ -35,13 +35,13 @@ mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
-  ni-tech-report ni-book-writer ni-3d-model ni-readme-guide think-like-architect
+  ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
 ```
 
-PowerShell:
+PowerShell：
 
 ```powershell
 git clone https://github.com/ttttstc/ni-skill.git
@@ -49,7 +49,7 @@ New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
-  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-readme-guide",
+  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
   "think-like-architect"
 )
 foreach ($skill in $skills) {
@@ -57,7 +57,7 @@ foreach ($skill in $skills) {
 }
 ```
 
-To install only `ni-unknown-first`:
+只安装 `ni-unknown-first`：
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git
@@ -65,7 +65,7 @@ mkdir -p ~/.codex/skills
 cp -R ni-skill/skills/ni-unknown-first ~/.codex/skills/
 ```
 
-PowerShell:
+PowerShell：
 
 ```powershell
 git clone https://github.com/ttttstc/ni-skill.git
@@ -73,95 +73,102 @@ New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 Copy-Item ni-skill\skills\ni-unknown-first $HOME\.codex\skills\ni-unknown-first -Recurse -Force
 ```
 
-After installing, start a new Codex session so the skill list is refreshed.
+安装后开启新的 Codex 会话，让 skill 列表重新加载。
 
 ### Claude Code — Plugin Marketplace
-
-In Claude Code:
 
 ```
 /plugin marketplace add ttttstc/ni-skill
 /plugin install ni-skill@ni-skill
 ```
 
-### Any runtime — ask the agent
+### 任意运行时 — 让 Agent 代装
 
-Tell Codex or Claude:
+向 Codex 或 Claude 说明：
 
-> Please install skills from github.com/ttttstc/ni-skill
+> 帮我安装 github.com/ttttstc/ni-skill 的 skill
 
-For a single skill (e.g. only `ni-unknown-first` into Codex):
+只装单个 skill 到 Codex 时可以说：
 
-> Please install only ni-unknown-first from github.com/ttttstc/ni-skill into ~/.codex/skills
+> 只把 github.com/ttttstc/ni-skill 里的 ni-unknown-first 安装到 ~/.codex/skills
 
-### Manual — copy into your skills directory
+### 手动安装 — 复制到对应 skills 目录
 
-Most AI agent runtimes load skills from `~/.{agent}/skills/` (e.g. `~/.codex/skills/`, `~/.claude/skills/`). Clone the repo and copy the subdirectories under `skills/` into your runtime's skills folder:
+大多数 AI agent 运行时都从 `~/.{agent}/skills/` 加载 skill（如 `~/.codex/skills/`、`~/.claude/skills/`）。clone 仓库后，把 `skills/` 下的子目录复制到你运行时的 skills 目录：
 
 ```bash
 git clone https://github.com/ttttstc/ni-skill.git
 cp -R ni-skill/skills/* ~/.claude/skills/
 ```
 
-PowerShell:
+PowerShell：
 
 ```powershell
 git clone https://github.com/ttttstc/ni-skill.git
 Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 ```
 
-Manual install doesn't support auto-updates; prefer the per-runtime path above when available.
+手动安装不支持自动更新：能走运行时专属路径就优先走那条。
 
 ---
 
 ## Skills
 
-| Stage | Skill | Capability |
-|-------|-------|------------|
-| Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
-| Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
-| Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
-| Writing | [`ni-writer`](./skills/ni-writer) | Long- and short-form writing across 6 article archetypes, in a hybrid Orwell / Calvino / Borges voice |
-| Book writing | [`ni-book-writer`](./skills/ni-book-writer) | Long-form book writing in two styles (technical / trade-press), with structure, outline, and chapter scaffolding |
-| Reporting | [`ni-tech-report`](./skills/ni-tech-report) | Build a clear technical report — narrative arc, evidence layout, and executive-summary synthesis |
-| Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
-| Preflight | [`ni-inspect`](./skills/ni-inspect) | Check metadata, content quality, and structure before publishing |
-| Imagery | [`ni-article-image-gen`](./skills/ni-article-image-gen) | Generate cover and inline image prompts |
-| Poster | [`ni-poster`](./skills/ni-poster) | One public poster skill with four routed ZINE styles and image generation |
-| 3D modeling | [`ni-3d-model`](./skills/ni-3d-model) | Confirm requirements, review consistent multiview images, then generate and validate a textured GLB |
-| Publish | [`ni-draft`](./skills/ni-draft) | Push the article to the WeChat draft inbox |
-| Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
-| Diagnosis | [`ni-unknown-first`](./skills/ni-unknown-first) | Diagnose which kind of "unknown" you are facing and emit a Chinese next-step prompt |
-| README | [`ni-readme-guide`](./skills/ni-readme-guide) | Create synchronized Chinese-default and English GitHub READMEs with reciprocal links and verified badges |
-| Architecture | [`think-like-architect`](./skills/think-like-architect) | Turn a PRD or project context into a first-principles Architecture First Cut |
+| 阶段 | Skill | 能力 |
+|------|-------|------|
+| 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
+| 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
+| 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
+| 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
+| 写作 | [`ni-writer`](./skills/ni-writer) | 6 种文章原型的长/短文写作，融合奥威尔 / 卡尔维诺 / 博尔赫斯文风 |
+| 写书 | [`ni-book-writer`](./skills/ni-book-writer) | 长篇书稿写作（技术书 / 畅销书双风格），含结构、大纲与章节脚手架 |
+| 汇报 | [`ni-tech-report`](./skills/ni-tech-report) | 构建一份清晰的技术汇报——叙事线索、证据布局、执行摘要综合 |
+| 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
+| 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
+| 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
+| 海报 | [`ni-poster`](./skills/ni-poster) | 一个公开入口，按参数路由四种 ZINE 风格并生成图像 |
+| 3D 建模 | [`ni-3d-model`](./skills/ni-3d-model) | 先确认需求和多视图，再生成并验收带纹理的 GLB 模型 |
+| 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
+| 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
+| 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
+| README | [`ni-readme-guide`](./skills/ni-readme-guide) | 创建中文默认、英文配套、可双向跳转并含可验证徽章的 GitHub README |
+| 架构 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
 
-Each skill can be used standalone. `ni-article-workflow` orchestrates the content-production skills.
+每个 skill 均可独立调用；`ni-article-workflow` 只编排内容生产类 skill。
+
+### ni-fde-copilot
+
+`ni-fde-copilot` 面向 FDE 客户会前补课和陌生专业领域学习。它先完整清点资料，建立领域模型、认知缺口与学习主线，再输出五部分学习蓝图等待确认；确认后才生成引导式学习指南、迁移挑战和对话准备度。
+
+调用方式：在新的代理会话中输入 `$ni-fde-copilot`，附上专业资料，说明会议或学习目标，并要求先输出学习蓝图，确认后再写完整指南。
+
+它支持文本、PDF、书籍、报告、PPT、图表、视频、音频和转录，但实际读取能力取决于当前代理环境。无法读取的范围会被明确阻断，不会假装已经处理。完整使用方式、证据边界与验证说明见[中文说明](./skills/ni-fde-copilot/README.md)和[英文说明](./skills/ni-fde-copilot/README.en.md)。
 
 ### ni-readme-guide
 
-`ni-readme-guide` creates or audits a synchronized README pair:
+`ni-readme-guide` 创建或审计一组同步的 README：
 
-- `README.md` — Simplified Chinese and the default entry point
-- `README.en.md` — English counterpart with a reciprocal language link
+- `README.md` —— 简体中文，默认入口
+- `README.en.md` —— 英文配套，并反向链接中文版本
 
-It derives the story from repository evidence, puts the shortest successful path early, keeps commands, facts, and verified badges aligned, and validates local links, images, code blocks, and basic SVG safety. See [`skills/ni-readme-guide/README.md`](./skills/ni-readme-guide/README.md) for the bilingual skill guide.
+它从仓库证据提炼项目故事，把最短可成功路径前置，保持命令、事实和可验证徽章一致，并校验本地链接、图片、代码块和基础 SVG 安全性。详见 [`skills/ni-readme-guide/README.md`](./skills/ni-readme-guide/README.md)。
 
-### ni-poster style selectors
+### ni-poster 风格参数
 
-`ni-poster` is the only public poster skill. Use a short selector after `/ni-poster` when you want deterministic style control:
+`ni-poster` 是海报功能唯一对外暴露的 skill。需要显式控制风格时，在 `/ni-poster` 后使用短参数：
 
-| Command | Internal style | Use when |
-|---------|----------------|----------|
-| `/ni-poster s ...` | Standard | Minimal paper zine: 3:5 portrait, 70–90% negative space, small subject cluster, aged scan texture, sparse type, one restrained chromatic anchor |
-| `/ni-poster g ...` | Gathered Scenes | Keep a supplied photo truthful, then connect it to a simplified source-derived illustration field with a visible torn-fiber edge |
-| `/ni-poster d ...` | Scene Distillation | Use a supplied photo as semantic reference only; create an authored abstract reinterpretation with no photographic pixels in the result |
-| `/ni-poster a ...` | Photo Abstract Editorial | Keep the original photo intact, then add a clean flat ivory memory panel derived from its spatial and color relationships |
+| 命令 | 内部风格 | 适用场景 |
+|------|----------|----------|
+| `/ni-poster s ...` | Standard | 极简纸刊：3:5 竖版、70–90% 留白、小主体、旧纸扫描质感、稀疏文字、单个克制色彩锚点 |
+| `/ni-poster g ...` | Gathered Scenes | 保留用户照片真实内容，再接入来源简化插画场和可见手撕纤维边 |
+| `/ni-poster d ...` | Scene Distillation | 照片只作语义参考，最终不保留照片像素，进行作者化抽象重构 |
+| `/ni-poster a ...` | Photo Abstract Editorial | 保留原照片，在下方增加由照片空间与色彩关系推导的干净象牙色抽象记忆面板 |
 
-Without `s`, `g`, `d`, or `a`, a decisive style description can still select a mode. If the request remains ambiguous, `ni-poster` asks one focused question at a time until the style is confirmed; it does not silently default to Standard. The full selectors `standard`, `gathered`, `distillation`, and `photo-abstract-editorial` remain compatibility aliases. `g` and `a` require a reference photo; `d` also supports the exact `单色块模式` trigger.
+不写 `s`、`g`、`d`、`a` 时，足够明确的风格描述仍可直接判型；如果需求仍然模糊，`ni-poster` 会每次询问一个关键问题，直到风格确认，不再静默默认 Standard。完整参数名 `standard`、`gathered`、`distillation`、`photo-abstract-editorial` 仍兼容。`g` 和 `a` 需要参考照片；`d` 还支持精确触发词 `单色块模式`。
 
-Direct distinctions: minimal paper zine selects `s`; photo plus torn-paper illustration selects `g`; no photographic pixels selects `d`; original photo plus a clean lower abstract panel selects `a`. Generic words such as “photo”, “abstract”, or “zine” start the guided interview when they do not identify one mode.
+最直白的区别：极简纸刊选 `s`；照片与撕纸插画融合选 `g`；最终不保留照片选 `d`；原照片加下方干净抽象面板选 `a`。只有“照片、抽象、纸感、ZINE”等泛词时会进入访谈。
 
-Examples:
+示例：
 
 ```text
 /ni-poster s 把这句话做成极简纸刊：夏天结束得很轻
@@ -170,36 +177,36 @@ Examples:
 /ni-poster a 保留原照片，在下方生成干净象牙色抽象面板
 ```
 
-### The 6 article archetypes in ni-writer
+### ni-writer 的 6 种文章原型
 
-Before writing, classify the piece along three axes — **argument / emotion / source-compression** — then pick the matching archetype:
+写作前先按「**论点 / 情绪 / 资料压缩**」三分判型，再选对应原型：
 
-| Archetype | Word count | Soul | Fit for |
-|-----------|-----------|------|---------|
-| 1. Hands-on review | ≤ 6,000 | I tried it myself | Field tests, product reviews, process narratives |
-| 2. Discovery brief (speed-read digest) | 500-1,500 | I pre-filtered the source for you | Distilling posts / videos / blogs / papers |
-| 3. Engineering playbook | ≤ 6,000 | Here's my battle-tested framework | Engineering experience + actionable steps |
-| 4. Technical polemic | 5,000-8,500 | Clear stance, zero filler, no fence-sitting | Concept disambiguation, paradigm reframing |
-| 5. Personal essay | 3,000-5,000 | I've been turning this over | Stream-of-thought, feelings, non-argumentative pieces |
-| 6. Field methodology (deep-water practice) | 4,500-7,000 | I hit a real engineering problem, then abstracted it | Engineering governance, workflows, collaboration, AI-tool reflection |
+| 原型 | 字数 | 灵魂 | 适用题材 |
+|------|------|------|---------|
+| 1. 产品体验和评价型 | ≤ 6000 | 我亲自下场 | 实测、上手评价、过程叙事 |
+| 2. 发现分享型（速读精华式） | 500-1500 | 我替你刷资料压缩精华 | 帖子 / 视频 / 博客 / 论文转译 |
+| 3. 技术方法论型 | ≤ 6000 | 我把框架掏给你 | 工程经验 + 落地清单 |
+| 4. 技术思辨型 | 5000-8500 | 立场鲜明、字字不冗、不左右摇摆 | 概念辨析、范式升维 |
+| 5. 人生哲学随笔型 | 3000-5000 | 我在想这件事 | 思绪流、感受、非论点写作 |
+| 6. 工程现场方法论型（深水区实践） | 4500-7000 | 我遇到一个工程问题，事后整理成方法 | 工程治理、工作流、协作、AI 工具反思 |
 
-Full rules: [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) and the sub-style files under `references/`.
-
----
-
-## Design Guidelines
-
-All skills follow three shared guidelines:
-
-- **Honest output**: no fabrication or overstatement; failures are reported as-is.
-- **Self-verification**: each skill runs its own checklist before delivering output.
-- **Explicit degradation**: when an external dependency is unavailable, a degraded path is provided and clearly marked.
-
-Each skill also has its own domain guidelines; see the corresponding `SKILL.md`.
+详细规则见 [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) 与 `references/` 下的子风格规则文件。
 
 ---
 
-## Pipeline
+## 设计准则
+
+所有 skill 遵循三条共同准则：
+
+- **诚实输出**：不编造、不夸大，失败如实反馈。
+- **输出前自检**：交付前按各自的检查清单核对。
+- **显式降级**：外部依赖不可用时提供降级路径，并明确标注。
+
+每个 skill 另有各自的领域准则，详见对应的 `SKILL.md`。
+
+---
+
+## 创作管线
 
 ```
 topic
@@ -219,50 +226,51 @@ ni-article-image-gen  generate image prompts (optional)
 ni-draft              push to the WeChat draft inbox
 ```
 
-If any stage degrades or fails, the skill reports it clearly and leaves the next step to you.
+任一阶段降级或失败时，对应 skill 会明确告知，由你决定后续处理。
 
 ---
 
-## Usage
+## 使用方式
 
-### Full pipeline
+### 完整管线
 
-Describe a topic to Codex or Claude, for example:
+向 Codex 或 Claude 描述选题，例如：
 
-> Use ni-skill to write an article on "AGENTS.md in practice"
+> 用 ni-skill 写一篇关于「AGENTS.md 实践」的文章
 
-`ni-article-workflow` takes over and runs each stage in turn.
+`ni-article-workflow` 会接管流程，逐阶段调用对应 skill。
 
-### Individual skills
+### 单个 skill
 
-Describe what you need to trigger the matching skill:
+直接描述需求即可触发对应 skill：
 
-- Find an article angle → `ni-insight`
-- Lay out an article → `ni-formatter`
-- Scrape a URL into Markdown → `ni-url2md`
-- Make a minimal ZINE-style poster → `ni-poster`
-- Turn a theme into reviewed multiview images and a validated GLB → `ni-3d-model`
-- Diagnose which "unknown" you're facing and get a next-step prompt → `ni-unknown-first`
-- Create synchronized Chinese-default and English GitHub READMEs → `ni-readme-guide`
-- Turn a PRD or existing project into a first-cut architecture decision set → `think-like-architect`
-- Push a draft → `ni-draft`
+- 挖掘文章角度 → `ni-insight`
+- 排版文章 → `ni-formatter`
+- 抓取网页为 Markdown → `ni-url2md`
+- 把专业资料转化为可对话级学习指南 → `ni-fde-copilot`
+- 做一张 ZINE 风格极简海报 → `ni-poster`
+- 按主题先审多视图、再生成并验收 GLB → `ni-3d-model`
+- 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
+- 创建中文默认、英文配套且可双向跳转的 GitHub README → `ni-readme-guide`
+- 将 PRD 或现有项目转成首层架构决策 → `think-like-architect`
+- 推送草稿 → `ni-draft`
 
-See each skill's `SKILL.md` for its full trigger-word list.
+各 skill 的完整触发词见对应的 `SKILL.md`。
 
 ---
 
-## Configuration
+## 配置
 
-### WeChat draft push (ni-draft)
+### 微信草稿推送（ni-draft）
 
-Configure via environment variables:
+通过环境变量配置：
 
 ```bash
 WECHAT_APPID=wx_xxxxxxxx
 WECHAT_SECRET=xxxxxxxxxxxxxxxx
 ```
 
-Or in `~/.config/ni-skill/config.yaml`:
+或写入 `~/.config/ni-skill/config.yaml`：
 
 ```yaml
 wechat:
@@ -270,17 +278,17 @@ wechat:
   secret: xxxxxxxxxxxxxxxx
 ```
 
-Obtain credentials from the WeChat Official Account admin console, and add the calling host's IP to the allowlist.
+凭证可在微信公众号后台「设置与开发 → 基本配置」获取，并需将调用方 IP 加入白名单。
 
-### Web scraping (ni-url2md)
+### 网页抓取（ni-url2md）
 
-Optional environment variables:
+可选环境变量：
 
-| Variable | Purpose |
-|----------|---------|
-| `URL_CHROME_PATH` | Path to the Chrome executable |
-| `URL_DATA_DIR` | Default output directory |
-| `URL_CHROME_PROFILE_DIR` | Chrome profile directory, to persist login sessions |
+| 变量 | 用途 |
+|------|------|
+| `URL_CHROME_PATH` | 指定 Chrome 可执行文件路径 |
+| `URL_DATA_DIR` | 指定默认输出目录 |
+| `URL_CHROME_PROFILE_DIR` | 指定 Chrome 配置目录以保留登录态 |
 
 ---
 
