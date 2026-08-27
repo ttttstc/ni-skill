@@ -5,13 +5,13 @@
     "email": "423310463@qq.com"
   },
   "metadata": {
-    "description": "泥巴猪的内容创作、领域学习、架构决策、审核制 3D 建模与 README 技能矩阵",
-    "version": "1.2.0"
+    "description": "泥巴猪的内容创作、领域学习、产品架构、架构决策、审核制 3D 建模与 README 技能矩阵",
+    "version": "1.3.0"
   },
   "plugins": [
     {
       "name": "ni-skill",
-      "description": "内容创作、陌生领域学习、第一性原则架构决策、多视图到 GLB 的审核制 3D 建模与 README 维护",
+      "description": "内容创作、陌生领域学习、产品架构基线、第一性原则架构决策、多视图到 GLB 的审核制 3D 建模与 README 维护",
       "source": "./",
       "strict": false,
       "skills": [
@@ -30,7 +30,8 @@
         "./skills/ni-book-writer",
         "./skills/ni-3d-model",
         "./skills/ni-fde-copilot",
-        "./skills/ni-readme-guide"
+        "./skills/ni-readme-guide",
+        "./skills/ni-design-with-docs"
       ]
     }
   ]
