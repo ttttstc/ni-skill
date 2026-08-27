@@ -1,7 +1,7 @@
 {
   "name": "ni-skill",
-  "version": "1.2.0",
-  "description": "A skill suite for content creation, domain learning, first-cut architecture, and review-gated 3D asset production.",
+  "version": "1.3.0",
+  "description": "A skill suite for content creation, domain learning, product architecture baselines, first-cut architecture, and review-gated 3D asset production.",
   "author": {
     "name": "泥巴猪",
     "email": "423310463@qq.com",
@@ -17,6 +17,7 @@
     "content",
     "devops",
     "architecture",
+    "product-architecture",
     "3d",
     "glb",
     "codex-skills"
@@ -24,8 +25,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "ni-skill",
-    "shortDescription": "内容创作与领域学习技能矩阵",
-    "longDescription": "A Codex-compatible skill suite for the 泥巴猪 content pipeline, gated professional-domain learning, first-principles architecture decisions, and review-gated multiview-to-GLB 3D asset production.",
+    "shortDescription": "内容创作、领域学习与产品架构技能矩阵",
+    "longDescription": "A Codex-compatible skill suite for content production, gated professional-domain learning, product architecture baselines, first-principles architecture decisions, and review-gated multiview-to-GLB 3D asset production.",
     "developerName": "泥巴猪",
     "category": "Productivity",
     "capabilities": [
@@ -40,6 +41,7 @@
       "帮我把这个链接抓成 Markdown 当素材",
       "把这篇文章做发布前预检",
       "先分析这些专业资料，确认学习蓝图后再写成能与专家对话的指南",
+      "用 ni-product-architect 把这个云服务能力需求设计成可研发评审的产品架构基线",
       "先确认需求和多视图，再把这个主题做成 GLB 模型"
     ],
     "brandColor": "#0F766E",
