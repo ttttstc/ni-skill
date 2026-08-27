@@ -2,9 +2,9 @@
 
 中文 | [English](./README.en.md)
 
-> 面向内容创作、陌生领域学习、首层软件架构决策与审核制 3D 资产生产的技能矩阵。
+> 面向内容创作、陌生领域学习、产品架构基线、首层软件架构决策与审核制 3D 资产生产的技能矩阵。
 
-ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、陌生领域学习、灵魂挖掘、写作、排版、预检、配图、发布、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
+ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、陌生领域学习、灵魂挖掘、写作、排版、预检、配图、发布、产品架构基线、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
 
 ---
 
@@ -35,7 +35,8 @@ mkdir -p ~/.codex/skills
 for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
-  ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide think-like-architect
+  ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
+  ni-product-architect think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -50,7 +51,7 @@ $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
-  "think-like-architect"
+  "ni-product-architect", "think-like-architect"
 )
 foreach ($skill in $skills) {
   Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
@@ -132,7 +133,8 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
 | README | [`ni-readme-guide`](./skills/ni-readme-guide) | 创建中文默认、英文配套、可双向跳转并含可验证徽章的 GitHub README |
-| 架构 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
+| 产品架构 | [`ni-product-architect`](./skills/ni-product-architect) | 从模糊产品或云服务需求生成通过独立评审的研发级产品架构基线 |
+| 架构判断 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
 
 每个 skill 均可独立调用；`ni-article-workflow` 只编排内容生产类 skill。
 
@@ -252,6 +254,7 @@ ni-draft              push to the WeChat draft inbox
 - 按主题先审多视图、再生成并验收 GLB → `ni-3d-model`
 - 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
 - 创建中文默认、英文配套且可双向跳转的 GitHub README → `ni-readme-guide`
+- 将模糊产品或云服务需求生成可研发评审的产品架构基线 → `ni-product-architect`
 - 将 PRD 或现有项目转成首层架构决策 → `think-like-architect`
 - 推送草稿 → `ni-draft`
 
