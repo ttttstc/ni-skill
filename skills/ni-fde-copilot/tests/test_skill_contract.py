@@ -143,7 +143,7 @@ class FdeCopilotContractTests(unittest.TestCase):
         codex = json.loads(
             (REPO_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
-        self.assertEqual("1.2.0", codex["version"])
+        self.assertEqual("1.3.0", codex["version"])
         self.assertEqual(codex["version"], marketplace["metadata"]["version"])
         skills = marketplace["plugins"][0]["skills"]
         self.assertIn("./skills/ni-fde-copilot", skills)

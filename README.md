@@ -36,7 +36,7 @@ for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
-  ni-product-architect think-like-architect
+  ni-design-with-docs think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -51,7 +51,7 @@ $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
-  "ni-product-architect", "think-like-architect"
+  "ni-design-with-docs", "think-like-architect"
 )
 foreach ($skill in $skills) {
   Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
@@ -133,7 +133,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
 | README | [`ni-readme-guide`](./skills/ni-readme-guide) | 创建中文默认、英文配套、可双向跳转并含可验证徽章的 GitHub README |
-| 产品架构 | [`ni-product-architect`](./skills/ni-product-architect) | 从模糊产品或云服务需求生成通过独立评审的研发级产品架构基线 |
+| 文档驱动设计 | [`ni-design-with-docs`](./skills/ni-design-with-docs) | 基于资料、访谈和公开证据，将模糊产品或云服务需求生成通过独立评审的研发级产品架构基线 |
 | 架构判断 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
 
 每个 skill 均可独立调用；`ni-article-workflow` 只编排内容生产类 skill。
@@ -254,7 +254,7 @@ ni-draft              push to the WeChat draft inbox
 - 按主题先审多视图、再生成并验收 GLB → `ni-3d-model`
 - 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
 - 创建中文默认、英文配套且可双向跳转的 GitHub README → `ni-readme-guide`
-- 将模糊产品或云服务需求生成可研发评审的产品架构基线 → `ni-product-architect`
+- 基于现有资料将模糊产品或云服务需求生成可研发评审的产品架构基线 → `ni-design-with-docs`
 - 将 PRD 或现有项目转成首层架构决策 → `think-like-architect`
 - 推送草稿 → `ni-draft`
 

@@ -1,4 +1,0 @@
-interface:
-  display_name: "产品架构基线"
-  short_description: "从模糊需求生成可研发评审的产品架构基线"
-  default_prompt: "使用 $ni-product-architect 从这个产品或云服务能力需求生成一份可直接研发评审的 Markdown 产品架构基线。"

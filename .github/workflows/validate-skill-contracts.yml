@@ -1,0 +1,50 @@
+name: Validate skill contracts
+
+on:
+  pull_request:
+    paths:
+      - "skills/ni-3d-model/**"
+      - "skills/ni-fde-copilot/**"
+      - "skills/ni-design-with-docs/**"
+      - "skills/ni-readme-guide/**"
+      - ".codex-plugin/plugin.json"
+      - ".claude-plugin/marketplace.json"
+      - "README.md"
+      - "README.en.md"
+      - ".github/workflows/validate-skill-contracts.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "skills/ni-3d-model/**"
+      - "skills/ni-fde-copilot/**"
+      - "skills/ni-design-with-docs/**"
+      - "skills/ni-readme-guide/**"
+      - ".codex-plugin/plugin.json"
+      - ".claude-plugin/marketplace.json"
+      - "README.md"
+      - "README.en.md"
+      - ".github/workflows/validate-skill-contracts.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: Skill contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate skill contract tests
+        run: |
+          python -m unittest discover -s skills/ni-3d-model/tests -v
+          python -m unittest discover -s skills/ni-fde-copilot/tests -v
+          python -m unittest discover -s skills/ni-design-with-docs/tests -v
+          python -m unittest discover -s skills/ni-readme-guide/tests -v
+      - name: Audit bilingual READMEs
+        run: |
+          python skills/ni-readme-guide/scripts/audit_readme.py .
+          python skills/ni-readme-guide/scripts/audit_readme.py skills/ni-design-with-docs

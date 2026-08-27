@@ -36,7 +36,7 @@ for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
-  ni-product-architect think-like-architect
+  ni-design-with-docs think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -51,7 +51,7 @@ $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
-  "ni-product-architect", "think-like-architect"
+  "ni-design-with-docs", "think-like-architect"
 )
 foreach ($skill in $skills) {
   Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
@@ -135,7 +135,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
 | Diagnosis | [`ni-unknown-first`](./skills/ni-unknown-first) | Diagnose which kind of "unknown" you are facing and emit a Chinese next-step prompt |
 | README | [`ni-readme-guide`](./skills/ni-readme-guide) | Create synchronized Chinese-default and English GitHub READMEs with reciprocal links and verified badges |
-| Product architecture | [`ni-product-architect`](./skills/ni-product-architect) | Turn an ambiguous product or cloud-service requirement into a review-gated architecture baseline for engineering |
+| Docs-driven design | [`ni-design-with-docs`](./skills/ni-design-with-docs) | Use source documents, interviews, and public evidence to turn an ambiguous product or cloud-service requirement into a review-gated architecture baseline |
 | Architecture | [`think-like-architect`](./skills/think-like-architect) | Turn a PRD or project context into a first-principles Architecture First Cut |
 
 Each skill can be used standalone. `ni-article-workflow` orchestrates the content-production skills.
@@ -256,7 +256,7 @@ Describe what you need to trigger the matching skill:
 - Turn a theme into reviewed multiview images and a validated GLB → `ni-3d-model`
 - Diagnose which "unknown" you're facing and get a next-step prompt → `ni-unknown-first`
 - Create synchronized Chinese-default and English GitHub READMEs → `ni-readme-guide`
-- Turn an ambiguous product or cloud-service requirement into an engineering-reviewable architecture baseline → `ni-product-architect`
+- Use existing source material to turn an ambiguous product or cloud-service requirement into an engineering-reviewable architecture baseline → `ni-design-with-docs`
 - Turn a PRD or existing project into a first-cut architecture decision set → `think-like-architect`
 - Push a draft → `ni-draft`
 
