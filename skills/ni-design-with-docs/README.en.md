@@ -30,8 +30,10 @@ The first substantive response must provide a current understanding, decision-re
 - The formal report uses plain language, includes a directly locatable product specification, and focuses on user outcomes, system boundaries and impact scope, key decisions, the main flow, verifiable quality requirements, concrete security problems, failure handling, rollout, and acceptance.
 - After the interview, the designer derives system boundaries from confirmed input. The user is not asked to draw the architecture, and code is not scanned to invent internal facts.
 - The design chooses the smallest set of responsibilities and relationships that completely solves the problem.
-- Main flows use UML sequence or activity diagrams, core states use UML state diagrams, cross-boundary data uses data-flow diagrams, and multi-module responsibilities use a module architecture relationship diagram. L0 and L1 are conditional.
+- The overall-design chapter contains the system specification (product specification), user usage, system boundaries and impact scope, overall approach, and the required views. Main flows use UML sequence or activity diagrams, core states use UML state diagrams, cross-boundary data uses data-flow diagrams, and multi-module responsibilities use a module architecture relationship diagram. L0 and L1 are conditional.
+- The formal report normally keeps 1–2 tables and never more than 3. Scenarios, quality, security, failure, and acceptance content use scene/adaptation-strategy/acceptance-criteria blocks instead of wide tables with long cells.
 - The report is Chinese-first and does not invent unnecessary modules or terminology.
+- Independent reviews focus on material contradictions. If a review fails, the skill lists the conclusion, minimum fixes, impact of not fixing, and recommendation for user confirmation before editing and re-reviewing.
 - Formal delivery requires independent architecture and security reviews.
 
 ## Workflow
@@ -83,7 +85,7 @@ The tailored Markdown design selects only relevant content from:
 - key product and architecture decisions;
 - necessary responsibility, runtime, data, and collaboration constraints;
 - UML sequence/activity diagrams, UML state diagrams, data-flow diagrams, and module architecture relationship diagrams when applicable;
-- quality requirements stated as what happens, how the system must respond, and how to verify it;
+- quality requirements stated as scene, adaptation strategy, and acceptance criteria blocks;
 - security problems, impact, solutions, and verification;
 - failure handling and troubleshooting;
 - rollout, compatibility, and rollback;

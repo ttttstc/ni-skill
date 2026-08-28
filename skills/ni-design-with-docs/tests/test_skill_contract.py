@@ -140,9 +140,21 @@ class SkillContractTests(unittest.TestCase):
 
         self.assertIn("可直接定位的产品规格", skill)
         self.assertIn("产品规格先闭合", architecture)
-        self.assertIn("## 3. 产品规格", template)
+        self.assertIn("## 3. 总体设计", template)
+        self.assertIn("### 3.1 系统规格（产品规格）", template)
+        self.assertIn("### 3.3 系统边界与影响范围", template)
+        specification_heading = "### 3.1 系统规格（产品规格）"
+        self.assertLess(
+            template.index("## 3. 总体设计"),
+            template.index(specification_heading),
+        )
+        self.assertLess(
+            template.index(specification_heading),
+            template.index("### 3.3 系统边界与影响范围"),
+        )
         self.assertIn("产品对象和使用入口", template)
-        self.assertIn("产品场景 | 系统必须做什么 | 用户或调用方看到什么", template)
+        self.assertIn("产品场景 1", template)
+        self.assertIn("产品规则", template)
         self.assertIn("有可直接定位的产品规格", gates)
 
     def test_security_has_dedicated_reference_reviewer_and_gate(self) -> None:
@@ -156,7 +168,9 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("## G5 安全与信任边界", gates)
         self.assertIn("高残余风险", security)
         self.assertIn("安全影响不显著", reviewer)
-        self.assertIn("安全问题 | 可能造成什么后果 | 解决办法 | 怎么验证", security)
+        self.assertIn("### 安全场景 1", security)
+        self.assertIn("**适配策略**", security)
+        self.assertIn("**验收标准**", security)
 
     def test_report_tables_are_lean_and_plain(self) -> None:
         template = read_text(SKILL_ROOT / "templates" / "architecture-baseline.md")
@@ -171,21 +185,36 @@ class SkillContractTests(unittest.TestCase):
             self.assertNotIn("接受的代价", text)
             self.assertNotIn("复审条件", text)
 
-        collaboration_header = "| 必须共同遵守的规则 | 涉及对象 | 不满足时的系统结果 |"
-        self.assertIn(collaboration_header, template)
-        self.assertIn(collaboration_header, contracts)
+        self.assertIn("### 约束 1", template)
+        self.assertIn("### 约束 1", contracts)
         self.assertNotIn("| 兼容要求 |", contracts)
 
+        table_separator = re.compile(r"^\|(?:\s*:?-+:?\s*\|){2,}\s*$", re.MULTILINE)
+        report_tables = table_separator.findall(template)
+        self.assertLessEqual(
+            len(report_tables),
+            3,
+            "Formal report template should not encourage table fatigue",
+        )
+        self.assertIn("场景—适配策略—验收标准", template)
+        for wide_table_header in [
+            "| 产品场景 |",
+            "| 发生什么 | 系统必须怎样响应 | 怎样判断通过 |",
+            "| 安全问题 | 可能造成什么后果 | 解决办法 | 怎么验证 |",
+            "| 失败情况 | 用户或调用方看到什么 | 系统怎么处理 | 如何恢复 |",
+            "| 场景 | 前提和操作 | 预期结果 |",
+            "| 事项 | 对开发或上线的影响 | 下一步 |",
+        ]:
+            self.assertNotIn(wide_table_header, template)
+
         for heading in [
-            "## 3. 产品规格",
-            "## 4. 用户怎么使用",
-            "## 5. 系统边界与影响范围",
-            "## 6. 总体设计",
-            "## 7. 系统必须达到的质量要求",
-            "## 8. 安全问题和解决办法",
-            "## 9. 出错怎么办",
-            "## 10. 如何上线和回退",
-            "## 11. 如何验收",
+            "## 3. 总体设计",
+            "## 4. 系统必须达到的质量要求",
+            "## 5. 安全问题和解决办法",
+            "## 6. 出错怎么办",
+            "## 7. 如何上线和回退",
+            "## 8. 如何验收",
+            "## 9. 风险、待确认和后续详细设计",
         ]:
             self.assertIn(heading, template)
 
@@ -209,9 +238,12 @@ class SkillContractTests(unittest.TestCase):
         )
         gates = read_text(SKILL_ROOT / "eval" / "gates.md")
 
-        scenario_header = "| 发生什么 | 系统必须怎样响应 | 怎样判断通过 |"
-        self.assertIn(scenario_header, template)
-        self.assertIn(scenario_header, quality)
+        self.assertIn("**场景**", template)
+        self.assertIn("**适配策略**", template)
+        self.assertIn("**验收标准**", template)
+        self.assertIn("### 质量场景 1", quality)
+        self.assertIn("**适配策略**", quality)
+        self.assertIn("**验收标准**", quality)
         self.assertIn("ISO/IEC 25010:2023", quality)
         self.assertIn("SEI Quality Attribute Scenarios", quality)
         self.assertIn("没有编造性能、容量、可用率或恢复时间", gates)
@@ -277,6 +309,27 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("处理进行中操作、秘密或凭证", gates)
         self.assertIn("停止继续扩大风险", gates)
 
+    def test_failed_reviews_require_user_scope_confirmation(self) -> None:
+        skill = read_text(SKILL_ROOT / "SKILL.md")
+        workflow = read_text(SKILL_ROOT / "references" / "01-workflow.md")
+        reviewer = read_text(SKILL_ROOT / "agents" / "reviewer.md")
+        security_reviewer = read_text(
+            SKILL_ROOT / "agents" / "security-reviewer.md"
+        )
+        gates = read_text(SKILL_ROOT / "eval" / "gates.md")
+
+        for text in [skill, workflow, reviewer, security_reviewer, gates]:
+            self.assertIn("主要问题", text)
+            self.assertIn("最小修复", text)
+            self.assertIn("不修复后果", text)
+            self.assertIn("推荐选择", text)
+        self.assertIn("用户确认修复项或修改范围后", skill)
+        self.assertIn("用户确认前不改稿", workflow)
+        self.assertIn("不为完整而完整", gates)
+        self.assertIn("场景 10：独立评审不通过时先确认修复范围", read_text(
+            SKILL_ROOT / "eval" / "scenarios.md"
+        ))
+
     def test_behavior_scenarios_cover_fast_paths_and_security(self) -> None:
         scenarios = read_text(SKILL_ROOT / "eval" / "scenarios.md")
         headings = re.findall(r"^## 场景 \d+：", scenarios, re.MULTILINE)
@@ -290,6 +343,7 @@ class SkillContractTests(unittest.TestCase):
             "安全影响不显著",
             "workflow_call 十层完整报告",
             "质量要求不能写成口号",
+            "独立评审不通过时先确认修复范围",
         ]:
             self.assertIn(behavior, scenarios)
 
