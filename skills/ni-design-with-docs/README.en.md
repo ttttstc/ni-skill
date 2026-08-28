@@ -2,77 +2,109 @@
 
 [中文](./README.md) | English
 
-> Turn ambiguous product or cloud-service requirements into an engineering-reviewable Markdown architecture baseline through source documents, interviews, public evidence, and independent review.
+> Provide decision-relevant research, align with the user through interviews, derive the smallest sufficient product and high-level architecture from first principles, and pass independent architecture and security reviews.
 
-`ni-design-with-docs` is for product owners, platform architects, and technical leads. It establishes a factual and conceptual baseline before closing the important unknowns in scope, current state, contracts, and constraints. The final result is a product architecture baseline that passes the G0–G10 gates—not a long document generated before the design is understood.
+`ni-design-with-docs` V1 is for new product or platform requirements. It does not analyze an existing codebase or expand an ambiguous request directly into a long report. It first closes the decisions that change product behavior, system boundaries, impact scope, high-level responsibilities, quality, security, or acceptance.
 
 ## Quick start
-
-First install `ni-design-with-docs` in the current Agent's skills directory. See the [ni-skill root README](../../README.md) for complete installation instructions.
 
 Codex:
 
 ```text
-$ni-design-with-docs 我需要为平台支持某项新能力。目标是……；当前已支持……；相关产品、架构和接口资料如下……
+$ni-design-with-docs 我需要为平台支持某项新能力。目标是……；已知业务和平台约束如下……
 ```
 
 Claude Code:
 
 ```text
-/ni-design-with-docs 我需要为平台支持某项新能力。目标是……；当前已支持……；相关产品、架构和接口资料如下……
+/ni-design-with-docs 我需要为平台支持某项新能力。目标是……；已知业务和平台约束如下……
 ```
 
-The first response should establish the factual baseline, align the core concepts that affect the design, and ask the first batch of 3–5 architecture questions. The formal baseline is produced only after the information has converged.
+The first substantive response must provide a current understanding, decision-relevant research input, and the first 3–5 questions. It must not start architecture design.
 
-## When to use it
+## Core guarantees
 
-| Good fit | Not a fit |
-|---|---|
-| Creating a product, platform, or cloud-service capability | Writing implementation code or a complete PRD |
-| Making a structural enhancement to an existing capability | Designing database tables, classes, methods, or internal DTOs |
-| Supporting a third-party protocol, ecosystem, or product behavior | Reverse-engineering an entire codebase by default |
-| Converging top-level design from multiple product, architecture, or interface documents | Comparing only two local technical options |
-| Defining product shape, L0/L1, major contracts, global constraints, and acceptance | Replacing internal facts and business decisions with vague “best practices” |
-
-## What it delivers
-
-The final Markdown is tailored to the problem, but it cannot omit design-critical information:
-
-| Design area | Result |
-|---|---|
-| Problem and scope | Background, goals, non-goals, users, and successful outcomes |
-| Facts and evidence | Confirmed facts, assumptions, unknowns, public sources, and capability gaps |
-| Product and architecture | Product shape, L0/L1, first-level module responsibilities, and necessary views |
-| Contracts and constraints | Major interfaces, permissions, data, compatibility, reliability, capacity, and evolution boundaries |
-| Verification | Test scenarios, observable acceptance criteria, risks, open questions, and detailed-design boundaries |
-| Independent review | A G0–G10 result for every gate; the formal version is released only after all gates pass |
+- Design starts only after an interview, an alignment summary, and explicit user confirmation.
+- The user may accept every recommendation in a round or authorize recommendations for all remaining branches; no decision is omitted.
+- Research process, interview transcripts, tutorial terminology, review output, and skill policy remain in the workbench.
+- The formal report uses plain language, includes a directly locatable product specification, and focuses on user outcomes, system boundaries and impact scope, key decisions, the main flow, verifiable quality requirements, concrete security problems, failure handling, rollout, and acceptance.
+- After the interview, the designer derives system boundaries from confirmed input. The user is not asked to draw the architecture, and code is not scanned to invent internal facts.
+- The design chooses the smallest set of responsibilities and relationships that completely solves the problem.
+- Main flows use UML sequence or activity diagrams, core states use UML state diagrams, cross-boundary data uses data-flow diagrams, and multi-module responsibilities use a module architecture relationship diagram. L0 and L1 are conditional.
+- The report is Chinese-first and does not invent unnecessary modules or terminology.
+- Formal delivery requires independent architecture and security reviews.
 
 ## Workflow
 
-1. Understand the task and source material, then establish a factual baseline.
-2. Align core concepts and run staged batch interviews.
-3. Analyze relevant documents and define current-state capability gaps.
-4. Research public sources and converge the key architecture decisions.
-5. Design the product shape, L0/L1, necessary views, major interfaces, and global constraints.
-6. Derive tests and acceptance criteria, then produce the Markdown draft.
-7. Run independent review and revise until the formal baseline can be released.
+```text
+任务与证据准备
+  → 调研输入与分轮访谈
+  → 对齐摘要
+  → 推荐决策清单与用户确认
+  → 最小充分设计
+  → 正式草稿
+  → 独立架构评审 + 独立安全评审
+  → 正式方案
+```
 
-Each round usually asks only 3–5 questions at the same decision level, with a maximum of 7 for complex cases. Information already supplied by the user is not asked again. Questions that do not change boundaries, contracts, constraints, or acceptance are left to detailed design.
+“Use every recommendation in this round” closes only the current questions. The user may also authorize recommendations for all remaining branches to reduce back-and-forth. The skill still traverses the decision tree and records each choice, rationale, and impact.
 
-## Source and evidence rules
+When the user says to skip the interview and use recommendations, the skill enters the recommendation fast path instead of skipping decisions. The Agent investigates facts it can discover. User goals, internal authority, commercial commitments, or compliance decisions that lack a reliable recommendation still require a question. Every choice enters the alignment summary, and design starts only after confirmation.
 
-- Product, architecture, interface, and design documents are analyzed only where they directly affect the current capability.
-- The skill does not scan the entire codebase by default; code analysis enters scope only when the user explicitly requests it.
-- Public research prioritizes official standards, official product documentation, official reference implementations, and design records.
-- Industry practice is evidence, not an automatic user constraint.
-- Unverified current-state claims and metrics remain assumptions, unknowns, or items to confirm; numbers are never invented.
-- Important sources stay near the design judgment they support, with an explanation of how the evidence affects the decision.
+## Research and report boundary
 
-## Review and degradation
+Research before the interview answers only questions that can change scope, collaboration constraints, quality, security, or acceptance. It prioritizes user-provided material, official standards, official product documentation, and official reference implementations.
 
-During research, 2–4 non-overlapping questions are preferably delegated to independent subagents for parallel evidence collection. If research subagents are unavailable, the main agent may investigate the questions sequentially, but it must mark the degradation explicitly and still check sources, versions, and conflicts.
+The formal report has no default research-process, interview-transcript, or tutorial-glossary section. An external source appears only where it supports a material fact or decision.
 
-The independent review before formal delivery cannot degrade into self-review. If the runtime cannot start an independent review subagent, the result must be `BLOCKED`; it cannot claim that G0–G10 passed.
+Non-goals contain only user-confirmed business or product scope. The skill's own implementation-depth policy must not be presented as a project non-goal.
+
+## Security review
+
+Every design determines security applicability. Changes involving identity, permissions, sensitive data, secrets, external input, trust boundaries, high-value operations, or resource risk must:
+
+- identify assets, actors, entry points, data flows, and trust boundaries;
+- analyze the main threats and abuse paths;
+- locate controls in product behavior, responsibilities, collaboration constraints, or runtime paths;
+- state residual risk and ownership;
+- define executable security acceptance scenarios;
+- pass an independent security review.
+
+When the security impact is not material, the report gives a short, concrete rationale. The security reviewer validates the rationale instead of requiring a generic checklist.
+
+## Formal deliverable
+
+The tailored Markdown design selects only relevant content from:
+
+- a 2–3 sentence overall design conclusion, goals, and business scope;
+- user interaction, state, errors, and recovery;
+- product objects, entry points, core rules, and user or caller-visible results;
+- system boundaries and impact scope;
+- key product and architecture decisions;
+- necessary responsibility, runtime, data, and collaboration constraints;
+- UML sequence/activity diagrams, UML state diagrams, data-flow diagrams, and module architecture relationship diagrams when applicable;
+- quality requirements stated as what happens, how the system must respond, and how to verify it;
+- security problems, impact, solutions, and verification;
+- failure handling and troubleshooting;
+- rollout, compatibility, and rollback;
+- acceptance, risks, and engineering next steps.
+
+The template is not a completeness checklist. A section should be removed when its absence cannot change engineering understanding, collaboration constraints, security, or acceptance.
+
+## Quality gates
+
+- G0: user alignment
+- G1: complete product behavior
+- G2: system boundaries and impact scope
+- G3: architecture decisions and responsibilities
+- G4: runtime, data, and collaboration constraints
+- G5: security and trust boundaries
+- G6: quality, failure, and operability
+- G7: evolution and reversibility
+- G8: acceptance and traceability
+- G9: readability and maintainability
+
+The architecture reviewer owns G0–G4 and G6–G9. The security reviewer owns G5. Both must pass before release.
 
 ## Structure
 
@@ -84,9 +116,11 @@ skills/ni-design-with-docs/
 ├── agents/
 │   ├── openai.yaml
 │   ├── researcher.md
-│   └── reviewer.md
+│   ├── reviewer.md
+│   └── security-reviewer.md
 ├── eval/
-│   └── gates.md
+│   ├── gates.md
+│   └── scenarios.md
 ├── references/
 │   ├── 01-workflow.md
 │   ├── 02-concepts-and-interview.md
@@ -94,7 +128,8 @@ skills/ni-design-with-docs/
 │   ├── 04-architecture-design.md
 │   ├── 05-views-interfaces-constraints.md
 │   ├── 06-testing-and-output.md
-│   └── 07-writing-style.md
+│   ├── 07-writing-style.md
+│   └── 08-security-review.md
 ├── templates/
 │   └── architecture-baseline.md
 └── tests/
@@ -109,6 +144,8 @@ Run from the repository root:
 python -m unittest skills/ni-design-with-docs/tests/test_skill_contract.py
 python skills/ni-readme-guide/scripts/audit_readme.py skills/ni-design-with-docs
 ```
+
+See [eval/scenarios.md](./eval/scenarios.md) for behavioral forward-test scenarios.
 
 ## License
 
