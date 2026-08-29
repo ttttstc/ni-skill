@@ -171,6 +171,73 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("有可直接定位的产品方案", gates)
         self.assertIn("有独立可定位的系统规格", gates)
 
+    def test_current_target_delta_is_conditional(self) -> None:
+        skill = read_text(SKILL_ROOT / "SKILL.md")
+        template = read_text(SKILL_ROOT / "templates" / "architecture-baseline.md")
+        architecture = read_text(
+            SKILL_ROOT / "references" / "04-architecture-design.md"
+        )
+        gates = read_text(SKILL_ROOT / "eval" / "gates.md")
+        scenarios = read_text(SKILL_ROOT / "eval" / "scenarios.md")
+
+        for text in [skill, template, architecture, gates]:
+            self.assertIn("当前", text)
+            self.assertIn("目标", text)
+        self.assertIn("当前与目标差异（仅增量需求）", template)
+        self.assertIn("不生成空差异小节", skill)
+        self.assertIn("全新能力或没有有意义现状时", architecture)
+        self.assertIn("已有平台能力增量修改", scenarios)
+        self.assertIn("全新能力不机械生成差异", scenarios)
+        self.assertIn("不生成空的“当前与目标差异”小节", scenarios)
+
+    def test_system_specification_is_the_only_behavior_source(self) -> None:
+        skill = read_text(SKILL_ROOT / "SKILL.md")
+        template = read_text(SKILL_ROOT / "templates" / "architecture-baseline.md")
+        architecture = read_text(
+            SKILL_ROOT / "references" / "04-architecture-design.md"
+        )
+        views = read_text(
+            SKILL_ROOT / "references" / "05-views-interfaces-constraints.md"
+        )
+        gates = read_text(SKILL_ROOT / "eval" / "gates.md")
+
+        for text in [skill, template, architecture, gates]:
+            self.assertIn("唯一", text)
+            self.assertIn("行为", text)
+        self.assertIn("不新增独立 Story、行为规格或 Gherkin 章节", skill)
+        self.assertIn("Given / When / Then 是可选表达工具", views)
+        self.assertIn("不描述内部模块调用", skill)
+        for forbidden_heading in ["### Story", "### 行为规格", "### Behavior Spec"]:
+            self.assertNotIn(forbidden_heading, template)
+
+    def test_acceptance_uses_deterministic_main_scenarios(self) -> None:
+        skill = read_text(SKILL_ROOT / "SKILL.md")
+        template = read_text(SKILL_ROOT / "templates" / "architecture-baseline.md")
+        output = read_text(
+            SKILL_ROOT / "references" / "06-testing-and-output.md"
+        )
+        gates = read_text(SKILL_ROOT / "eval" / "gates.md")
+        reviewer = read_text(SKILL_ROOT / "agents" / "reviewer.md")
+
+        for label in ["覆盖要求", "前置条件", "操作", "通过条件"]:
+            self.assertIn(label, template)
+            self.assertIn(label, output)
+            self.assertIn(label, gates)
+            self.assertIn(label, reviewer)
+        for signal in ["状态", "数量", "阈值", "一致性"]:
+            self.assertIn(signal, skill)
+            self.assertIn(signal, output)
+            self.assertIn(signal, gates)
+        self.assertIn("设计级主场景", output)
+        self.assertIn("不是详细测试设计", output)
+        self.assertIn("不得为了形式完整生成来源不明的 P95", output)
+        self.assertIn("没有为了形式完整编造性能", gates)
+        self.assertIn("兼容与回归要求", gates)
+        self.assertIn("等价类", output)
+        self.assertIn("自动化实现", gates)
+        self.assertIn("唯一行为真源", reviewer)
+        self.assertIn("没有展开详细测试或编造数值", reviewer)
+
     def test_security_has_dedicated_reference_reviewer_and_gate(self) -> None:
         security = read_text(SKILL_ROOT / "references" / "08-security-review.md")
         reviewer = read_text(SKILL_ROOT / "agents" / "security-reviewer.md")
@@ -388,10 +455,11 @@ class SkillContractTests(unittest.TestCase):
             "交互复杂但系统改动简单",
             "高安全风险必须阻断",
             "安全影响不显著",
-            "workflow_call 十层完整报告",
-            "质量要求不能写成口号",
+            "已有平台能力增量修改",
+            "质量指标未知时不编造阈值",
             "结论先行且不重复",
             "独立评审不通过时先确认修复范围",
+            "全新能力不机械生成差异",
         ]:
             self.assertIn(behavior, scenarios)
 
