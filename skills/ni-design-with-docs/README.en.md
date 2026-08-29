@@ -4,7 +4,7 @@
 
 > Provide decision-relevant research, align with the user through interviews, derive the smallest sufficient product and high-level architecture from first principles, and pass independent architecture and security reviews.
 
-`ni-design-with-docs` V1 is for new product or platform requirements. It does not analyze an existing codebase or expand an ambiguous request directly into a long report. It first closes the decisions that change product behavior, system boundaries, impact scope, high-level responsibilities, quality, security, or acceptance.
+`ni-design-with-docs` V1 is for new or incremental product and platform requirements. It does not analyze an existing codebase or expand an ambiguous request directly into a long report. It first closes the decisions that change product behavior, system boundaries, impact scope, high-level responsibilities, quality, security, or acceptance.
 
 ## Quick start
 
@@ -31,8 +31,11 @@ The first substantive response must provide a current understanding, decision-re
 - After the interview, the designer derives system boundaries from confirmed input. The user is not asked to draw the architecture, and code is not scanned to invent internal facts.
 - The design chooses the smallest set of responsibilities and relationships that completely solves the problem.
 - The report has six top-level chapters. Overall design moves from conclusion to product plan, boundaries and responsibilities, system specification, flow/data/state, and key decisions and collaboration constraints.
+- Incremental changes describe current behavior, target behavior, and design impact only when the delta matters; new capabilities do not get an empty delta section.
+- The system specification is the only source of truth for system behavior and constraints. There is no separate Story or behavior-specification layer, and Given/When/Then is optional for complex observable scenarios.
 - Main flows use UML sequence or activity diagrams, core states use UML state diagrams, cross-boundary data uses data-flow diagrams, and multi-module responsibilities use a module architecture relationship diagram. L0 and L1 are conditional. Key decisions, responsibilities, and collaboration constraints remain authoritative in text instead of existing only in diagrams.
-- The formal report normally keeps 1–2 tables and never more than 3. Quality, security, failure, and acceptance content uses direct blocks such as what-happens/system-response/how-to-verify instead of wide tables or abstract labels.
+- The formal report normally keeps 1–2 tables and never more than 3. Quality, security, and failure content uses direct blocks; acceptance contains only design-level main scenarios with coverage, preconditions, actions, and explicit pass conditions.
+- PASS/FAIL uses state, count, confirmed threshold, consistency, or another deterministic signal. The skill does not invent performance, capacity, or recovery numbers, and detailed test design remains downstream.
 - The report is Chinese-first and does not invent unnecessary modules or terminology.
 - Independent reviews focus on material contradictions. If a review fails, the skill lists the conclusion, minimum fixes, impact of not fixing, and recommendation for user confirmation before editing and re-reviewing.
 - Formal delivery requires independent architecture and security reviews.
@@ -80,6 +83,7 @@ When the security impact is not material, the report gives a short, concrete rat
 The tailored Markdown design uses six top-level chapters and selects only relevant detail within them:
 
 - a 2–3 sentence overall design conclusion, goals, and business scope;
+- a current/target delta when an existing capability is changing and the delta matters;
 - a complete product plan covering users, problems, entry points, actions, states, feedback, and support boundaries;
 - system boundaries, impact scope, and responsibilities;
 - system rules for permissions, data, states, failures, and architecture-changing hard limits;
@@ -90,7 +94,7 @@ The tailored Markdown design uses six top-level chapters and selects only releva
 - security problems, impact, solutions, and verification;
 - failure handling and troubleshooting;
 - rollout, compatibility, and rollback;
-- acceptance, risks, and engineering next steps.
+- deterministic design-level acceptance scenarios, risks, and engineering next steps.
 
 The template is not a completeness checklist. Empty subsections may be merged or removed, while the six top-level chapters and their conclusion-to-detail order stay stable.
 
