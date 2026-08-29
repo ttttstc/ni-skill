@@ -27,11 +27,12 @@ The first substantive response must provide a current understanding, decision-re
 - Design starts only after an interview, an alignment summary, and explicit user confirmation.
 - The user may accept every recommendation in a round or authorize recommendations for all remaining branches; no decision is omitted.
 - Research process, interview transcripts, tutorial terminology, review output, and skill policy remain in the workbench.
-- The formal report uses plain language, includes a directly locatable product specification, and focuses on user outcomes, system boundaries and impact scope, key decisions, the main flow, verifiable quality requirements, concrete security problems, failure handling, rollout, and acceptance.
+- The formal report uses plain language, includes a directly locatable product plan and system specification, and focuses on user outcomes, system boundaries and impact scope, key decisions, the main flow, verifiable quality requirements, concrete security problems, failure handling, rollout, and acceptance.
 - After the interview, the designer derives system boundaries from confirmed input. The user is not asked to draw the architecture, and code is not scanned to invent internal facts.
 - The design chooses the smallest set of responsibilities and relationships that completely solves the problem.
-- The overall-design chapter contains the system specification (product specification), user usage, system boundaries and impact scope, overall approach, and the required views. Main flows use UML sequence or activity diagrams, core states use UML state diagrams, cross-boundary data uses data-flow diagrams, and multi-module responsibilities use a module architecture relationship diagram. L0 and L1 are conditional.
-- The formal report normally keeps 1–2 tables and never more than 3. Scenarios, quality, security, failure, and acceptance content use scene/adaptation-strategy/acceptance-criteria blocks instead of wide tables with long cells.
+- The report has six top-level chapters. Overall design moves from conclusion to product plan, boundaries and responsibilities, system specification, flow/data/state, and key decisions and collaboration constraints.
+- Main flows use UML sequence or activity diagrams, core states use UML state diagrams, cross-boundary data uses data-flow diagrams, and multi-module responsibilities use a module architecture relationship diagram. L0 and L1 are conditional. Key decisions, responsibilities, and collaboration constraints remain authoritative in text instead of existing only in diagrams.
+- The formal report normally keeps 1–2 tables and never more than 3. Quality, security, failure, and acceptance content uses direct blocks such as what-happens/system-response/how-to-verify instead of wide tables or abstract labels.
 - The report is Chinese-first and does not invent unnecessary modules or terminology.
 - Independent reviews focus on material contradictions. If a review fails, the skill lists the conclusion, minimum fixes, impact of not fixing, and recommendation for user confirmation before editing and re-reviewing.
 - Formal delivery requires independent architecture and security reviews.
@@ -76,22 +77,22 @@ When the security impact is not material, the report gives a short, concrete rat
 
 ## Formal deliverable
 
-The tailored Markdown design selects only relevant content from:
+The tailored Markdown design uses six top-level chapters and selects only relevant detail within them:
 
 - a 2–3 sentence overall design conclusion, goals, and business scope;
-- user interaction, state, errors, and recovery;
-- product objects, entry points, core rules, and user or caller-visible results;
-- system boundaries and impact scope;
+- a complete product plan covering users, problems, entry points, actions, states, feedback, and support boundaries;
+- system boundaries, impact scope, and responsibilities;
+- system rules for permissions, data, states, failures, and architecture-changing hard limits;
 - key product and architecture decisions;
 - necessary responsibility, runtime, data, and collaboration constraints;
 - UML sequence/activity diagrams, UML state diagrams, data-flow diagrams, and module architecture relationship diagrams when applicable;
-- quality requirements stated as scene, adaptation strategy, and acceptance criteria blocks;
+- quality requirements stated as what-happens, system-response, and how-to-verify blocks;
 - security problems, impact, solutions, and verification;
 - failure handling and troubleshooting;
 - rollout, compatibility, and rollback;
 - acceptance, risks, and engineering next steps.
 
-The template is not a completeness checklist. A section should be removed when its absence cannot change engineering understanding, collaboration constraints, security, or acceptance.
+The template is not a completeness checklist. Empty subsections may be merged or removed, while the six top-level chapters and their conclusion-to-detail order stay stable.
 
 ## Quality gates
 
