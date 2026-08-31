@@ -13,6 +13,7 @@ description: |
 - 输入可以是单独的 URL，也可以是包含 URL 的完整抖音分享文案；从文案中提取第一个 `http(s)` URL。
 - 先检查本地依赖。缺少 `ffmpeg`、`whisper-cli`、Whisper 模型、Playwright 或 Chromium 时，先通过脚本下载/安装；不能因为依赖缺失直接切换到云端转录。
 - 只交付一个 `.md` 文件。不得调用 SRT 输出参数，不生成 `.srt` 文件，也不把字幕时间轴当成最终输出。
+- 媒体、WAV 和 Whisper 中间 TXT 必须放在一次性私有临时目录；成功、失败或中断退出时都自动删除，不提供保留临时文件或指定工作目录的参数。依赖安装缓存是持久缓存，不属于转录临时文件。
 - Markdown 必须保留原始来源 URL、捕获时间、语言、模型和 `local whisper.cpp` 标识；不要把带签名的临时媒体 URL 写入 Markdown 或打印出来。
 - 默认只做转录和明显的术语噪声清理，不摘要、不翻译、不改写观点。若用户另外要求摘要或翻译，先把它视为后续独立任务。
 - 只处理公开可访问的媒体。不绕过登录、验证码、付费墙或访问控制；捕获不到媒体流时明确报告失败原因。
@@ -29,7 +30,6 @@ python ${SKILL_DIR}/scripts/video_to_md.py "<视频 URL 或完整分享文案>" 
 
 ```bash
 python ${SKILL_DIR}/scripts/video_to_md.py "<URL>" --model-size small -o transcript.md
-python ${SKILL_DIR}/scripts/video_to_md.py "<URL>" --keep-work
 ```
 
 `${SKILL_DIR}` 是本 `SKILL.md` 所在目录。Windows 首次运行会在 `NI_VIDEO2MD_HOME`（未设置时为 `%LOCALAPPDATA%\\ni-video2md`）缓存便携版 ffmpeg、Whisper.cpp 和模型；同时复用已安装的 Chrome/Edge，没有可用浏览器时才下载 Playwright Chromium。脚本只下载公开依赖和视频，不需要 OpenAI API key。
@@ -47,9 +47,9 @@ python ${SKILL_DIR}/scripts/video_to_md.py "<URL>" --keep-work
 ## 运行边界
 
 1. 提取 URL，使用无头浏览器打开公开页面并捕获媒体流。
-2. 下载媒体到临时目录，使用 `ffmpeg` 转成 16 kHz、单声道 WAV。
+2. 在一次性临时目录下载媒体，使用 `ffmpeg` 转成 16 kHz、单声道 WAV；流程结束后删除整个目录。
 3. 使用本地 `whisper-cli` 和本地模型转录；默认 `small`，语言默认 `zh`。
-4. 清理临时媒体和中间文件，只把 Markdown 写到用户指定路径。
+4. 只把 Markdown 写到用户指定路径；成功或失败都不留下媒体、WAV、TXT 等中间文件。
 
 脚本针对当前抖音页面的动态媒体流实现，未把旧版页面数据解析器或 `dyt` 作为必需依赖。页面结构、地区限制或登录状态变化时，必须把它报告为访问/兼容性失败，不能伪造文字稿。
 
@@ -81,4 +81,5 @@ language: "zh"
 - 转录过程没有云端 Whisper/API 调用，且不会输出 API key、Cookie 或签名媒体 URL。
 - 结果是一个非空 `.md` 文件，包含来源、捕获时间、模型、语言和文字稿。
 - 输出目录中没有由本 skill 生成的 `.srt` 文件。
+- 转换结束后，运行期间创建的一次性临时目录和其中的媒体、WAV、TXT 均不存在；输出路径之外不留下转录中间文件。
 - 失败场景明确可区分为依赖、网络/媒体、浏览器、音频转换或转录失败。

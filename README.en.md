@@ -158,6 +158,8 @@ It supports text, PDFs, books, reports, slides, charts, video, audio, and transc
 python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o transcript.md
 ```
 
+Media, WAV, and Whisper intermediate TXT files live only in a one-shot temporary directory and are deleted after success or failure; only the Markdown output and dependency cache persist.
+
 Automatic dependency downloads currently cover Windows x64. On other platforms, point `NI_VIDEO2MD_FFMPEG`, `NI_VIDEO2MD_WHISPER_CLI`, `NI_VIDEO2MD_MODEL`, and `NI_VIDEO2MD_BROWSER` at existing local tools. Video and public dependency downloads use network bandwidth, but speech recognition runs locally.
 
 ### ni-readme-guide

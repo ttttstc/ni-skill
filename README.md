@@ -156,6 +156,8 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o transcript.md
 ```
 
+转换期间的媒体、WAV 和 Whisper 中间 TXT 只写入一次性临时目录，成功或失败后自动删除；仅保留 Markdown 输出和依赖缓存。
+
 默认支持 Windows x64 的依赖自动下载；其他平台可通过 `NI_VIDEO2MD_FFMPEG`、`NI_VIDEO2MD_WHISPER_CLI`、`NI_VIDEO2MD_MODEL` 和 `NI_VIDEO2MD_BROWSER` 指向已有本地工具。视频和公开依赖下载会消耗网络流量，但语音识别在本机完成。
 
 ### ni-readme-guide
