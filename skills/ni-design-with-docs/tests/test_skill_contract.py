@@ -146,8 +146,8 @@ class SkillContractTests(unittest.TestCase):
             "### 3.1 总体设计结论",
             "### 3.2 产品方案",
             "### 3.3 系统边界、影响范围与责任",
-            "### 3.4 系统规格",
-            "### 3.5 主要流程、数据与状态",
+            "### 3.4 主要流程、数据与状态",
+            "### 3.5 系统规格",
             "### 3.6 关键决定与协作约束",
         ]
         indexes = [template.index(heading) for heading in ordered_sections]
@@ -399,6 +399,76 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("不把写文档、帮助研发、统一认知或建设能力当目标", architecture)
         self.assertIn("这些是文档用途，不是产品目标", style)
         self.assertIn("没有把文档用途或研发过程当成产品目标", gates)
+
+    def test_transfer_contract_is_explicit_and_conditional(self) -> None:
+        skill = read_text(SKILL_ROOT / "SKILL.md")
+        interview = read_text(
+            SKILL_ROOT / "references" / "02-concepts-and-interview.md"
+        )
+        architecture = read_text(
+            SKILL_ROOT / "references" / "04-architecture-design.md"
+        )
+        views = read_text(
+            SKILL_ROOT / "references" / "05-views-interfaces-constraints.md"
+        )
+        template = read_text(SKILL_ROOT / "templates" / "architecture-baseline.md")
+        gates = read_text(SKILL_ROOT / "eval" / "gates.md")
+        security = read_text(SKILL_ROOT / "agents" / "security-reviewer.md")
+
+        for text in [skill, interview, architecture, views, template, gates]:
+            self.assertIn("传递", text)
+        for phrase in [
+            "关键传递项清单",
+            "输入、上下文、凭证、Secret 和结果传递",
+            "来源和接收方",
+            "继承或覆盖",
+            "缺失或非法",
+            "可观察结果",
+            "传递契约",
+            "作用域",
+        ]:
+            combined = "\n".join(
+                [skill, interview, architecture, views, template, gates, security]
+            )
+            self.assertIn(phrase, combined)
+        self.assertIn("不适用", interview)
+        self.assertIn("未知项回到 P1/P2", interview)
+        self.assertIn("Secret", security)
+
+    def test_formal_report_has_content_firewall(self) -> None:
+        skill = read_text(SKILL_ROOT / "SKILL.md")
+        template = read_text(SKILL_ROOT / "templates" / "architecture-baseline.md")
+        style = read_text(SKILL_ROOT / "references" / "07-writing-style.md")
+        gates = read_text(SKILL_ROOT / "eval" / "gates.md")
+        combined = "\n".join([skill, template, style, gates])
+
+        for phrase in [
+            "作者推导",
+            "报告策略",
+            "面向读者",
+            "背景可以保留",
+            "当前事实、直接影响和本次变化",
+            "正式报告只呈现方案事实和客观设计结论",
+            "一个句子只表达一个主要判断",
+        ]:
+            self.assertIn(phrase, combined)
+        for heading in ["## 访谈记录", "## 调研过程", "## 独立评审记录"]:
+            self.assertNotIn(heading, template)
+
+    def test_eval_covers_transfer_and_report_boundary(self) -> None:
+        scenarios = read_text(SKILL_ROOT / "eval" / "scenarios.md")
+        self.assertIn("场景 12：跨边界传递契约不能遗漏", scenarios)
+        for phrase in [
+            "输入",
+            "上下文",
+            "Token",
+            "Secret",
+            "成功",
+            "未授权",
+            "不泄露",
+            "报告策略",
+        ]:
+            self.assertIn(phrase, scenarios)
 
     def test_design_review_does_not_require_implementation_evidence(self) -> None:
         reviewer = read_text(SKILL_ROOT / "agents" / "reviewer.md")

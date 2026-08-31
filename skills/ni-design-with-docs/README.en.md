@@ -27,12 +27,13 @@ The first substantive response must provide a current understanding, decision-re
 - Design starts only after an interview, an alignment summary, and explicit user confirmation.
 - The user may accept every recommendation in a round or authorize recommendations for all remaining branches; no decision is omitted.
 - Research process, interview transcripts, tutorial terminology, review output, and skill policy remain in the workbench.
-- The formal report uses plain language, includes a directly locatable product plan and system specification, and focuses on user outcomes, system boundaries and impact scope, key decisions, the main flow, verifiable quality requirements, concrete security problems, failure handling, rollout, and acceptance.
+- The formal report uses concise language and presents only solution facts, objective design conclusions, and observable results. It includes a directly locatable product plan and system specification, covering user outcomes, system boundaries and impact scope, key decisions, the main flow, verifiable quality requirements, concrete security problems, failure handling, rollout, and acceptance.
 - After the interview, the designer derives system boundaries from confirmed input. The user is not asked to draw the architecture, and code is not scanned to invent internal facts.
 - The design chooses the smallest set of responsibilities and relationships that completely solves the problem.
-- The report has six top-level chapters. Overall design moves from conclusion to product plan, boundaries and responsibilities, system specification, flow/data/state, and key decisions and collaboration constraints.
+- The report has six top-level chapters. Overall design moves from conclusion to product plan, boundaries and responsibilities, flow/data/state, system specification, and key decisions and collaboration constraints.
 - Incremental changes describe current behavior, target behavior, and design impact only when the delta matters; new capabilities do not get an empty delta section.
 - The system specification is the only source of truth for system behavior and constraints. There is no separate Story or behavior-specification layer, and Given/When/Then is optional for complex observable scenarios.
+- For applicable inputs, call arguments, context, tokens, secrets, outputs, states, and errors, the system specification states the source and receiver, scope, inheritance or override, transformation, validation, missing or invalid behavior, lifecycle, and observable result. Non-applicable or unknown items are explicit.
 - Main flows use UML sequence or activity diagrams, core states use UML state diagrams, cross-boundary data uses data-flow diagrams, and multi-module responsibilities use a module architecture relationship diagram. L0 and L1 are conditional. Key decisions, responsibilities, and collaboration constraints remain authoritative in text instead of existing only in diagrams.
 - The formal report normally keeps 1–2 tables and never more than 3. Quality, security, and failure content uses direct blocks; acceptance contains only design-level main scenarios with coverage, preconditions, actions, and explicit pass conditions.
 - PASS/FAIL uses state, count, confirmed threshold, consistency, or another deterministic signal. The skill does not invent performance, capacity, or recovery numbers, and detailed test design remains downstream.
@@ -61,7 +62,7 @@ When the user says to skip the interview and use recommendations, the skill ente
 
 Research before the interview answers only questions that can change scope, collaboration constraints, quality, security, or acceptance. It prioritizes user-provided material, official standards, official product documentation, and official reference implementations.
 
-The formal report has no default research-process, interview-transcript, or tutorial-glossary section. An external source appears only where it supports a material fact or decision.
+The formal report has no default research-process, interview-transcript, or tutorial-glossary section. An external source appears only where it supports a material fact or decision. The report excludes author reasoning, alignment status, rejected alternatives, reporting strategy, and reader-value explanations; background keeps only current facts, direct impact, and the change in scope.
 
 Non-goals contain only user-confirmed business or product scope. The skill's own implementation-depth policy must not be presented as a project non-goal.
 
@@ -94,7 +95,7 @@ The tailored Markdown design uses six top-level chapters and selects only releva
 - security problems, impact, solutions, and verification;
 - failure handling and troubleshooting;
 - rollout, compatibility, and rollback;
-- deterministic design-level acceptance scenarios, risks, and engineering next steps.
+- deterministic design-level acceptance scenarios, risks, and next steps for detailed design.
 
 The template is not a completeness checklist. Empty subsections may be merged or removed, while the six top-level chapters and their conclusion-to-detail order stay stable.
 
