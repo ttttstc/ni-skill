@@ -1,0 +1,4 @@
+interface:
+  display_name: "ni-video2md"
+  short_description: "把抖音视频本地转录并保存为可读的 Markdown 文字稿"
+  default_prompt: "使用 $ni-video2md 把这个视频转成本地 Markdown 文字稿。"
