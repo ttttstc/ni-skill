@@ -119,7 +119,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 阶段 | Skill | 能力 |
 |------|-------|------|
 | 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
-| 视频 | [`ni-video2md`](./skills/ni-video2md) | 将公开视频通过本地 Whisper 转为 Markdown 文字稿，不生成 SRT |
+| 视频 | [`ni-video2md`](./skills/ni-video2md) | 将公开视频通过本地 Whisper 转为“全文概括-作者.md”文字稿，不生成 SRT |
 | 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
 | 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
 | 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
@@ -150,13 +150,15 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 
 ### ni-video2md
 
-`ni-video2md` 将抖音等公开视频 URL 或分享文案转成本地 Whisper 生成的 Markdown 文字稿。它优先使用本地 `whisper.cpp`，首次运行如果缺少 ffmpeg、Whisper.cpp、模型或浏览器依赖，会先下载/安装并缓存；安装或发现 ffmpeg、Whisper.cpp 后会自动把可执行文件目录加入当前进程 PATH，并在 Windows 写入当前用户 PATH；不调用云端转录 API，也不生成 SRT。
+`ni-video2md` 将抖音等公开视频 URL 或分享文案转成本地 Whisper 生成的 Markdown 文字稿。它优先使用本地 `whisper.cpp`，首次运行如果缺少 ffmpeg、Whisper.cpp、模型或浏览器依赖，会先下载/安装并缓存；安装或发现 ffmpeg、Whisper.cpp 后会自动把可执行文件目录加入当前进程 PATH，并在 Windows 写入当前用户 PATH；不调用云端转录 API，也不生成 SRT。文字稿会基于全文用本地抽取式算法生成一句话概括，标题、一级标题和文件名统一为“概括-作者”；交付后可将 Markdown 安全复制到用户指定的归档路径。
 
 ```bash
-python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o transcript.md
+python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o ./transcripts
 ```
 
 转换期间的媒体、WAV 和 Whisper 中间 TXT 只写入一次性临时目录，成功或失败后自动删除；仅保留 Markdown 输出和依赖缓存。
+
+`-o` 用于指定输出目录（传入 `.md` 路径时取其父目录），最终文件名始终是生成的“概括-作者.md”。返回 Markdown 后，先询问用户是否归档；确认后运行 `skills/ni-video2md/scripts/archive_markdown.py`，目标已存在时不会覆盖，原文件也会保留。
 
 默认支持 Windows x64 的依赖自动下载；其他平台可通过 `NI_VIDEO2MD_FFMPEG`、`NI_VIDEO2MD_WHISPER_CLI`、`NI_VIDEO2MD_MODEL` 和 `NI_VIDEO2MD_BROWSER` 指向已有本地工具。视频和公开依赖下载会消耗网络流量，但语音识别在本机完成。
 
