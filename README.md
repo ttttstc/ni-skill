@@ -2,17 +2,18 @@
 
 中文 | [English](./README.en.md)
 
-> 面向内容创作、陌生领域学习、产品架构基线、首层软件架构决策与审核制 3D 资产生产的技能矩阵。
+> 面向内容创作、视频转写、陌生领域学习、产品架构基线、首层软件架构决策与审核制 3D 资产生产的技能矩阵。
 
-ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、调研、陌生领域学习、灵魂挖掘、写作、排版、预检、配图、发布、产品架构基线、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
+ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、视频转写、调研、陌生领域学习、灵魂挖掘、写作、排版、预检、配图、发布、产品架构基线、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
 
 ---
 
 ## 环境要求
 
 - **Codex** / **Claude Code** / 任何能从本地 skills 目录加载 skill 的 AI agent 运行时
-- **Python 3.10+** —— `ni-draft` 推送微信草稿时需要
+- **Python 3.10+** —— `ni-draft` 推送微信草稿、`ni-video2md` 运行本地转写脚本时需要
 - **Node.js + Chrome** —— `ni-url2md` 抓取网页时需要
+- **Chrome/Edge 或可下载的 Chromium** —— `ni-video2md` 抓取抖音公开媒体流时需要
 - **图像生成、浏览器控制与可用的图生 3D 服务** —— `ni-3d-model` 需要；登录状态与免费额度取决于所选服务
 
 各 skill 的具体依赖见对应的 `SKILL.md`。
@@ -36,7 +37,7 @@ for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
-  ni-design-with-docs think-like-architect
+  ni-design-with-docs ni-video2md think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -51,7 +52,7 @@ $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
-  "ni-design-with-docs", "think-like-architect"
+  "ni-design-with-docs", "ni-video2md", "think-like-architect"
 )
 foreach ($skill in $skills) {
   Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
@@ -118,6 +119,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 阶段 | Skill | 能力 |
 |------|-------|------|
 | 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
+| 视频 | [`ni-video2md`](./skills/ni-video2md) | 将公开视频通过本地 Whisper 转为“全文概括-作者.md”文字稿，不生成 SRT |
 | 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
 | 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
 | 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
@@ -145,6 +147,20 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 调用方式：在新的代理会话中输入 `$ni-fde-copilot`，附上专业资料，说明会议或学习目标，并要求先输出学习蓝图，确认后再写完整指南。
 
 它支持文本、PDF、书籍、报告、PPT、图表、视频、音频和转录，但实际读取能力取决于当前代理环境。无法读取的范围会被明确阻断，不会假装已经处理。完整使用方式、证据边界与验证说明见[中文说明](./skills/ni-fde-copilot/README.md)和[英文说明](./skills/ni-fde-copilot/README.en.md)。
+
+### ni-video2md
+
+`ni-video2md` 将抖音等公开视频 URL 或分享文案转成本地 Whisper 生成的 Markdown 文字稿。它优先使用本地 `whisper.cpp`，首次运行如果缺少 ffmpeg、Whisper.cpp、模型或浏览器依赖，会先下载/安装并缓存；安装或发现 ffmpeg、Whisper.cpp 后会自动把可执行文件目录加入当前进程 PATH，并在 Windows 写入当前用户 PATH；不调用云端转录 API，也不生成 SRT。文字稿会基于全文用本地抽取式算法生成一句话概括，标题、一级标题和文件名统一为“概括-作者”；交付后可将 Markdown 安全复制到用户指定的归档路径。
+
+```bash
+python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o ./transcripts
+```
+
+转换期间的媒体、WAV 和 Whisper 中间 TXT 只写入一次性临时目录，成功或失败后自动删除；仅保留 Markdown 输出和依赖缓存。
+
+`-o` 用于指定输出目录（传入 `.md` 路径时取其父目录），最终文件名始终是生成的“概括-作者.md”。返回 Markdown 后，先询问用户是否归档；确认后运行 `skills/ni-video2md/scripts/archive_markdown.py`，目标已存在时不会覆盖，原文件也会保留。
+
+默认支持 Windows x64 的依赖自动下载；其他平台可通过 `NI_VIDEO2MD_FFMPEG`、`NI_VIDEO2MD_WHISPER_CLI`、`NI_VIDEO2MD_MODEL` 和 `NI_VIDEO2MD_BROWSER` 指向已有本地工具。视频和公开依赖下载会消耗网络流量，但语音识别在本机完成。
 
 ### ni-readme-guide
 
@@ -249,6 +265,7 @@ ni-draft              push to the WeChat draft inbox
 - 挖掘文章角度 → `ni-insight`
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
+- 将视频 URL 或分享文案转成本地 Markdown 文字稿 → `ni-video2md`
 - 把专业资料转化为可对话级学习指南 → `ni-fde-copilot`
 - 做一张 ZINE 风格极简海报 → `ni-poster`
 - 按主题先审多视图、再生成并验收 GLB → `ni-3d-model`
@@ -292,6 +309,18 @@ wechat:
 | `URL_CHROME_PATH` | 指定 Chrome 可执行文件路径 |
 | `URL_DATA_DIR` | 指定默认输出目录 |
 | `URL_CHROME_PROFILE_DIR` | 指定 Chrome 配置目录以保留登录态 |
+
+### 视频转 Markdown（ni-video2md）
+
+可选环境变量：
+
+| 变量 | 用途 |
+|------|------|
+| `NI_VIDEO2MD_HOME` | 工具、模型和下载缓存目录 |
+| `NI_VIDEO2MD_FFMPEG` / `FFMPEG_PATH` | 指定 ffmpeg 可执行文件 |
+| `NI_VIDEO2MD_WHISPER_CLI` / `WHISPER_CLI` | 指定 whisper-cli 可执行文件 |
+| `NI_VIDEO2MD_MODEL` / `WHISPER_MODEL` | 指定本地 Whisper `ggml-*.bin` 模型 |
+| `NI_VIDEO2MD_BROWSER` / `BROWSER_PATH` | 指定 Chrome、Edge 或 Chromium 可执行文件 |
 
 ---
 
