@@ -16,6 +16,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -32,6 +33,9 @@ DEFAULT_PROMPT = (
     "Skill、SOP、Data Infra、Harness、Evaluation、FDE、ToB、RPA。"
 )
 DEFAULT_USER_AGENT = "ni-video2md/0.1"
+UNKNOWN_AUTHOR = "未知作者"
+SUMMARY_MAX_LENGTH = 80
+AUTHOR_MAX_LENGTH = 32
 URL_TRAILING_CHARS = ".,;:!?)]}>，。；：！？）》】”’"
 TIMESTAMP_LINE = re.compile(
     r"^\[?\d{2}:\d{2}:\d{2}(?:[.,]\d{3})?\s*(?:-->|-)?\s*"
@@ -51,6 +55,7 @@ class CapturedPage:
     media_urls: tuple[str, ...]
     user_agent: str
     cookie_header: str
+    author: str = UNKNOWN_AUTHOR
 
 
 def cache_root() -> Path:
@@ -75,22 +80,34 @@ def extract_source_url(source: str) -> str:
     return urls[0].rstrip(URL_TRAILING_CHARS)
 
 
+def normalize_title_component(value: str, fallback: str, limit: int) -> str:
+    normalized = re.sub(r"[\x00-\x1f<>:\"/\\|?*]", "-", value)
+    normalized = re.sub(r"\s+", " ", normalized).strip().rstrip(" .")
+    normalized = normalized or fallback
+    normalized = normalized[:limit].rstrip(" .-")
+    return normalized or fallback
+
+
 def safe_filename(value: str, fallback: str = "video-transcript") -> str:
-    normalized = re.sub(r"[^\w\-\u4e00-\u9fff.]+", "-", value.strip())
-    normalized = normalized.strip("-._")
-    return (normalized or fallback)[:100]
+    return normalize_title_component(value, fallback, 120)
+
+
+def build_document_title(summary: str, author: str) -> str:
+    summary_part = normalize_title_component(summary, "视频内容概述", SUMMARY_MAX_LENGTH)
+    author_part = normalize_title_component(author, UNKNOWN_AUTHOR, AUTHOR_MAX_LENGTH)
+    return f"{summary_part}-{author_part}"
 
 
 def normalize_output_path(value: str | None, title: str) -> Path:
+    filename = f"{safe_filename(title)}.md"
     if value:
-        output = Path(value).expanduser()
-        if output.suffix.lower() != ".md":
-            if output.suffix:
-                raise ValueError("输出文件必须使用 .md 扩展名。")
-            output = output.with_suffix(".md")
-        return output
+        requested = Path(value).expanduser()
+        if requested.suffix.lower() not in {"", ".md"}:
+            raise ValueError("输出路径必须是目录或使用 .md 扩展名的路径。")
+        output_dir = requested.parent if requested.suffix.lower() == ".md" else requested
+        return output_dir / filename
 
-    return Path.cwd() / f"{safe_filename(title)}.md"
+    return Path.cwd() / filename
 
 
 def yaml_string(value: str) -> str:
@@ -110,21 +127,100 @@ def clean_transcript(text: str) -> str:
     return "\n".join(lines)
 
 
+def split_transcript_sentences(text: str) -> list[str]:
+    sentences: list[str] = []
+    for raw_line in text.splitlines():
+        line = re.sub(r"\s+", " ", raw_line).strip()
+        if not line:
+            continue
+        parts = re.split(r"(?<=[。！？!?；;])|(?<=[.])\s+", line)
+        sentences.extend(part.strip() for part in parts if part.strip())
+    return sentences
+
+
+def summary_terms(sentence: str) -> list[str]:
+    terms = [
+        token.lower()
+        for token in re.findall(r"[A-Za-z][A-Za-z0-9_+#.-]*|\d+(?:\.\d+)?", sentence)
+        if len(token) > 1
+    ]
+    for run in re.findall(r"[\u4e00-\u9fff]+", sentence):
+        terms.extend(run[index : index + 2] for index in range(len(run) - 1))
+    return terms
+
+
+def one_sentence_summary(value: str) -> str:
+    summary = re.sub(r"\s+", " ", value).strip()
+    if len(summary) > SUMMARY_MAX_LENGTH:
+        summary = summary[:SUMMARY_MAX_LENGTH].rstrip("，,、:：;； ") + "…"
+    if not summary.endswith(("。", "！", "？", "!", "?", "…", ".")):
+        summary += "。"
+    return summary
+
+
+def summarize_transcript(transcript: str) -> str:
+    cleaned = clean_transcript(transcript)
+    sentences = split_transcript_sentences(cleaned)
+    if not sentences:
+        raise Video2MdError("无法从文字稿生成一句话概括。")
+    if len(sentences) == 1:
+        return one_sentence_summary(sentences[0])
+
+    frequencies: Counter[str] = Counter()
+    sentence_terms: list[set[str]] = []
+    for sentence in sentences:
+        terms = set(summary_terms(sentence))
+        sentence_terms.append(terms)
+        frequencies.update(terms)
+
+    scored = []
+    for index, (sentence, terms) in enumerate(zip(sentences, sentence_terms)):
+        coverage = sum(frequencies[term] for term in terms)
+        length_bonus = min(len(sentence), SUMMARY_MAX_LENGTH) / SUMMARY_MAX_LENGTH
+        opening_bonus = 0.15 * (1 - index / len(sentences))
+        thesis_bonus = 0.8 if re.search(
+            r"(?:不能|不是|关键|核心|本质|真正|需要|应该|因为|所以|为什么|如何)", sentence
+        ) else 0
+        supporting_penalty = 0.35 * sentence.count("、")
+        if re.match(r"(?:还要|此外|另外|同时|具体来说|包括)", sentence):
+            supporting_penalty += 0.8
+        scored.append(
+            (coverage + length_bonus + opening_bonus + thesis_bonus - supporting_penalty, -index, sentence)
+        )
+    return one_sentence_summary(max(scored)[2])
+
+
+def normalize_author(value: str) -> str:
+    return normalize_title_component(value, UNKNOWN_AUTHOR, AUTHOR_MAX_LENGTH)
+
+
+def extract_author_hint(source: str) -> str:
+    match = re.search(r"【\s*([^】]{1,80}?)\s*的作品】", source)
+    return normalize_author(match.group(1)) if match else UNKNOWN_AUTHOR
+
+
 def render_markdown(
     *,
     source_url: str,
     title: str,
+    summary: str,
+    author: str,
     captured_at: str,
     model: str,
     language: str,
     transcript: str,
 ) -> str:
-    heading = title.strip() or "视频文字稿"
+    expected_title = build_document_title(summary, author)
+    heading = title.strip() or expected_title
+    if heading != expected_title:
+        raise ValueError("Markdown 标题必须使用“一句话概括-作者”格式。")
     return "\n".join(
         [
             "---",
             f"source: {yaml_string(source_url)}",
             f"title: {yaml_string(heading)}",
+            f"summary: {yaml_string(summary)}",
+            f"author: {yaml_string(author)}",
             f"captured_at: {yaml_string(captured_at)}",
             'transcription: "local whisper.cpp"',
             f"model: {yaml_string(model)}",
@@ -565,6 +661,39 @@ def capture_page(source_url: str) -> CapturedPage:
                 f"{cookie['name']}={cookie['value']}" for cookie in cookies if cookie.get("name")
             )
             title = page.title().strip() or "视频文字稿"
+            try:
+                detected_author = page.evaluate(
+                    """() => {
+                        const selectors = [
+                            'meta[name="author"]',
+                            'meta[property="og:author"]',
+                            'meta[property="article:author"]',
+                            '[data-e2e="video-author-nickname"]',
+                            '[data-e2e="video-author-name"]',
+                            '[data-e2e="video-author"]',
+                            '[data-e2e="user-info"] a',
+                            'a[href*="/user/"]'
+                        ];
+                        for (const selector of selectors) {
+                            const element = document.querySelector(selector);
+                            if (!element) continue;
+                            const value = element.getAttribute('content') || element.textContent || '';
+                            if (value.trim()) return value.trim();
+                        }
+                        for (const element of document.querySelectorAll('script[type="application/ld+json"]')) {
+                            try {
+                                const data = JSON.parse(element.textContent || '');
+                                const author = Array.isArray(data) ? data[0]?.author : data?.author;
+                                const name = Array.isArray(author) ? author[0]?.name : author?.name;
+                                if (typeof name === 'string' && name.trim()) return name.trim();
+                            } catch (_) {}
+                        }
+                        return '';
+                    }"""
+                )
+            except Exception:
+                detected_author = ""
+            author = normalize_author(detected_author) if isinstance(detected_author, str) else UNKNOWN_AUTHOR
             canonical_url = page.url if page.url.startswith("http") else source_url
             return CapturedPage(
                 source_url=source_url,
@@ -573,6 +702,7 @@ def capture_page(source_url: str) -> CapturedPage:
                 media_urls=tuple(media_urls),
                 user_agent=user_agent,
                 cookie_header=cookie_header,
+                author=author,
             )
         finally:
             browser.close()
@@ -736,7 +866,11 @@ def build_parser() -> argparse.ArgumentParser:
         description="将抖音视频 URL 或分享文案通过本地 Whisper 转成 Markdown 文字稿。"
     )
     parser.add_argument("source", help="视频 URL，或包含 URL 的完整分享文案")
-    parser.add_argument("-o", "--output", help="Markdown 输出路径；默认写入当前目录")
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="Markdown 输出目录，或用于确定目录的 .md 路径；文件名始终按概括-作者生成",
+    )
     parser.add_argument("--model-size", choices=tuple(WHISPER_MODEL_URLS), default="small")
     parser.add_argument("--language", default="zh", help="Whisper 语言代码，默认 zh")
     return parser
@@ -759,13 +893,18 @@ def main(argv: list[str] | None = None) -> int:
             model,
             args.language,
         )
-        output = normalize_output_path(args.output, capture.title)
+        author = capture.author if capture.author != UNKNOWN_AUTHOR else extract_author_hint(args.source)
+        summary = summarize_transcript(transcript)
+        document_title = build_document_title(summary, author)
+        output = normalize_output_path(args.output, document_title)
         output.parent.mkdir(parents=True, exist_ok=True)
         from datetime import datetime, timezone
 
         markdown = render_markdown(
             source_url=capture.canonical_url,
-            title=capture.title,
+            title=document_title,
+            summary=summary,
+            author=author,
             captured_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
             model=args.model_size,
             language=args.language,

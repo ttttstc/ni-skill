@@ -14,6 +14,13 @@ video_to_md = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = video_to_md
 SPEC.loader.exec_module(video_to_md)
 
+ARCHIVE_SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "archive_markdown.py"
+ARCHIVE_SPEC = importlib.util.spec_from_file_location("archive_markdown", ARCHIVE_SCRIPT)
+assert ARCHIVE_SPEC and ARCHIVE_SPEC.loader
+archive_markdown = importlib.util.module_from_spec(ARCHIVE_SPEC)
+sys.modules[ARCHIVE_SPEC.name] = archive_markdown
+ARCHIVE_SPEC.loader.exec_module(archive_markdown)
+
 
 class VideoToMarkdownTests(unittest.TestCase):
     def test_extracts_url_from_share_text_and_strips_punctuation(self) -> None:
@@ -28,21 +35,31 @@ class VideoToMarkdownTests(unittest.TestCase):
             video_to_md.extract_source_url("没有链接")
 
     def test_output_path_is_markdown_only(self) -> None:
+        title = video_to_md.build_document_title("一句话概括。", "作者")
         self.assertEqual(
-            Path("transcript.md"),
-            video_to_md.normalize_output_path("transcript", "ignored"),
+            Path(f"{title}.md"),
+            video_to_md.normalize_output_path("transcript.md", title),
+        )
+        self.assertEqual(
+            Path("archive") / f"{title}.md",
+            video_to_md.normalize_output_path("archive", title),
         )
         with self.assertRaises(ValueError):
-            video_to_md.normalize_output_path("transcript.srt", "ignored")
+            video_to_md.normalize_output_path("transcript.srt", title)
 
     def test_cleans_timestamps_but_keeps_transcript_lines(self) -> None:
         raw = "[00:00:00.000 --> 00:00:01.000] 你好\n\n这是第二句"
         self.assertEqual("你好\n这是第二句", video_to_md.clean_transcript(raw))
 
     def test_markdown_has_local_metadata_and_no_srt_output_contract(self) -> None:
+        summary = "企业采购 AI Agent 不能只按单价判断。"
+        author = "VA7"
+        title = video_to_md.build_document_title(summary, author)
         markdown = video_to_md.render_markdown(
             source_url="https://www.douyin.com/video/123",
-            title="测试视频",
+            title=title,
+            summary=summary,
+            author=author,
             captured_at="2026-08-31T00:00:00+00:00",
             model="small",
             language="zh",
@@ -50,9 +67,55 @@ class VideoToMarkdownTests(unittest.TestCase):
         )
         self.assertIn('transcription: "local whisper.cpp"', markdown)
         self.assertIn('model: "small"', markdown)
+        self.assertIn(f'title: "{title}"', markdown)
+        self.assertIn(f'summary: "{summary}"', markdown)
+        self.assertIn('author: "VA7"', markdown)
+        self.assertIn(f"# {title}", markdown)
         self.assertIn("## 文字稿", markdown)
         self.assertNotIn(".srt", markdown)
         self.assertNotIn("-osrt", markdown)
+
+    def test_summary_is_one_sentence_and_uses_transcript_content(self) -> None:
+        transcript = (
+            "今天先聊一个常见误区。"
+            "企业采购 AI Agent 不能只按一个 Agent 多少钱来判断。"
+            "还要看知识库、ERP、工单系统、权限管理和操作追责。"
+        )
+        summary = video_to_md.summarize_transcript(transcript)
+        self.assertIn("企业采购 AI Agent", summary)
+        self.assertTrue(summary.endswith(("。", "！", "？", "!", "?", "…", ".")))
+        self.assertEqual(1, len(video_to_md.split_transcript_sentences(summary)))
+
+    def test_document_title_uses_summary_and_author(self) -> None:
+        self.assertEqual(
+            "企业采购 AI Agent 不能只按单价判断。-VA7",
+            video_to_md.build_document_title("企业采购 AI Agent 不能只按单价判断。", "VA7"),
+        )
+        self.assertEqual(
+            "视频内容概述-未知作者",
+            video_to_md.build_document_title("", ""),
+        )
+
+    def test_extracts_author_hint_from_share_text(self) -> None:
+        self.assertEqual(
+            "VA7",
+            video_to_md.extract_author_hint("看看【VA7的作品】分享 https://v.douyin.com/test/"),
+        )
+
+    def test_archives_markdown_without_deleting_or_overwriting(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source = root / "generated.md"
+            archive_dir = root / "archive"
+            source.write_text("# 文字稿\n", encoding="utf-8")
+
+            target = archive_markdown.archive_markdown(source, archive_dir)
+
+            self.assertEqual((archive_dir / source.name).resolve(), target)
+            self.assertEqual("# 文字稿\n", source.read_text(encoding="utf-8"))
+            self.assertEqual(source.read_text(encoding="utf-8"), target.read_text(encoding="utf-8"))
+            with self.assertRaises(archive_markdown.ArchiveError):
+                archive_markdown.archive_markdown(source, archive_dir)
 
     def test_removes_transient_work_dir_after_success(self) -> None:
         capture = video_to_md.CapturedPage(
@@ -62,6 +125,7 @@ class VideoToMarkdownTests(unittest.TestCase):
             media_urls=("https://example.com/media.mp4",),
             user_agent="test-agent",
             cookie_header="",
+            author="作者",
         )
         work_dirs: list[Path] = []
 
@@ -74,6 +138,7 @@ class VideoToMarkdownTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as output_dir:
             output = Path(output_dir) / "result.md"
+            expected_output = Path(output_dir) / "本地转录。-作者.md"
             with patch.object(video_to_md, "ensure_ffmpeg", return_value=Path("ffmpeg")), \
                 patch.object(video_to_md, "ensure_whisper_cli", return_value=Path("whisper-cli")), \
                 patch.object(video_to_md, "ensure_model", return_value=Path("model.bin")), \
@@ -88,7 +153,8 @@ class VideoToMarkdownTests(unittest.TestCase):
 
             self.assertEqual(1, len(work_dirs))
             self.assertFalse(work_dirs[0].exists())
-            self.assertTrue(output.is_file())
+            self.assertFalse(output.exists())
+            self.assertTrue(expected_output.is_file())
 
     def test_removes_transient_work_dir_after_failure(self) -> None:
         capture = video_to_md.CapturedPage(
@@ -98,6 +164,7 @@ class VideoToMarkdownTests(unittest.TestCase):
             media_urls=("https://example.com/media.mp4",),
             user_agent="test-agent",
             cookie_header="",
+            author="作者",
         )
         work_dirs: list[Path] = []
 

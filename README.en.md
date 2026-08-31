@@ -121,7 +121,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Stage | Skill | Capability |
 |-------|-------|------------|
 | Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
-| Video | [`ni-video2md`](./skills/ni-video2md) | Transcribe public videos to Markdown with local Whisper; no SRT output |
+| Video | [`ni-video2md`](./skills/ni-video2md) | Transcribe public videos to `full-summary-author.md` with local Whisper; no SRT output |
 | Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
 | Domain learning | [`ni-fde-copilot`](./skills/ni-fde-copilot) | Turn expert-oriented source material into a gated learning blueprint and conversation-ready guide |
 | Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
@@ -152,13 +152,15 @@ It supports text, PDFs, books, reports, slides, charts, video, audio, and transc
 
 ### ni-video2md
 
-`ni-video2md` turns public Douyin video URLs or share text into Markdown transcripts using local Whisper. It prefers local `whisper.cpp`; on first run it downloads and caches missing ffmpeg, Whisper.cpp, the model, or browser dependencies. After finding or installing ffmpeg and Whisper.cpp, it adds their executable directories to the current process PATH and persists them in the Windows user PATH. It does not call a cloud transcription API and does not generate SRT files.
+`ni-video2md` turns public Douyin video URLs or share text into Markdown transcripts using local Whisper. It prefers local `whisper.cpp`; on first run it downloads and caches missing ffmpeg, Whisper.cpp, the model, or browser dependencies. After finding or installing ffmpeg and Whisper.cpp, it adds their executable directories to the current process PATH and persists them in the Windows user PATH. It does not call a cloud transcription API and does not generate SRT files. The transcript gets a local extractive one-sentence summary based on the full text, and the document title, H1, and filename all use `summary-author`; the Markdown can then be safely copied to a user-selected archive path.
 
 ```bash
-python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o transcript.md
+python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o ./transcripts
 ```
 
 Media, WAV, and Whisper intermediate TXT files live only in a one-shot temporary directory and are deleted after success or failure; only the Markdown output and dependency cache persist.
+
+`-o` selects the output directory (when given an `.md` path, its parent directory is used), while the generated `summary-author.md` name is always enforced. After returning the Markdown, ask whether to archive it; if confirmed, run `skills/ni-video2md/scripts/archive_markdown.py`. Existing archive targets are never overwritten, and the original file is retained.
 
 Automatic dependency downloads currently cover Windows x64. On other platforms, point `NI_VIDEO2MD_FFMPEG`, `NI_VIDEO2MD_WHISPER_CLI`, `NI_VIDEO2MD_MODEL`, and `NI_VIDEO2MD_BROWSER` at existing local tools. Video and public dependency downloads use network bandwidth, but speech recognition runs locally.
 
