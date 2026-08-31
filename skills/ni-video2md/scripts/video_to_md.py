@@ -159,10 +159,10 @@ def download_file(url: str, target: Path, *, headers: dict[str, str] | None = No
                 if not chunk:
                     break
                 stream.write(chunk)
+        partial.replace(target)
     except (OSError, urllib.error.URLError, urllib.error.HTTPError) as exc:
         partial.unlink(missing_ok=True)
         raise Video2MdError("下载公开依赖失败，请检查网络，或手动准备该依赖。") from exc
-    partial.replace(target)
 
 
 def fetch_json(url: str) -> dict[str, Any]:
@@ -633,6 +633,31 @@ def transcribe(whisper_cli: Path, model: Path, wav: Path, output_base: Path, lan
     return clean_transcript(text_path.read_text(encoding="utf-8"))
 
 
+def transcribe_with_temporary_files(
+    capture: CapturedPage,
+    ffmpeg: Path,
+    whisper_cli: Path,
+    model: Path,
+    language: str,
+) -> str:
+    """Download and transcribe media inside a directory removed on exit."""
+
+    with tempfile.TemporaryDirectory(prefix="ni-video2md-") as temporary_name:
+        work_dir = Path(temporary_name)
+        media = work_dir / "source.mp4"
+        wav = work_dir / "source.wav"
+        transcript_base = work_dir / "transcript"
+        download_media(capture, media)
+        convert_to_wav(ffmpeg, media, wav)
+        return transcribe(
+            whisper_cli,
+            model,
+            wav,
+            transcript_base,
+            language,
+        )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="将抖音视频 URL 或分享文案通过本地 Whisper 转成 Markdown 文字稿。"
@@ -641,15 +666,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-o", "--output", help="Markdown 输出路径；默认写入当前目录")
     parser.add_argument("--model-size", choices=tuple(WHISPER_MODEL_URLS), default="small")
     parser.add_argument("--language", default="zh", help="Whisper 语言代码，默认 zh")
-    parser.add_argument(
-        "--keep-work",
-        action="store_true",
-        help="保留下载的媒体、WAV 和 Whisper 临时文件，便于排查；默认任务结束后清理",
-    )
-    parser.add_argument(
-        "--work-dir",
-        help="指定临时工作目录；指定后不会自动清理其中的媒体和中间文件",
-    )
     return parser
 
 
@@ -662,48 +678,29 @@ def main(argv: list[str] | None = None) -> int:
         model = ensure_model(args.model_size)
         capture = capture_page(source_url)
 
-        if args.work_dir:
-            work_dir = Path(args.work_dir).expanduser().resolve()
-            work_dir.mkdir(parents=True, exist_ok=True)
-            cleanup = False
-        else:
-            work_dir = Path(tempfile.mkdtemp(prefix="ni-video2md-"))
-            cleanup = not args.keep_work
+        print("正在下载视频音频并进行本地转录…", file=sys.stderr)
+        transcript = transcribe_with_temporary_files(
+            capture,
+            ffmpeg,
+            whisper_cli,
+            model,
+            args.language,
+        )
+        output = normalize_output_path(args.output, capture.title)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        from datetime import datetime, timezone
 
-        try:
-            print("正在下载视频音频并进行本地转录…", file=sys.stderr)
-            media = work_dir / "source.mp4"
-            wav = work_dir / "source.wav"
-            transcript_base = work_dir / "transcript"
-            download_media(capture, media)
-            convert_to_wav(ffmpeg, media, wav)
-            transcript = transcribe(
-                whisper_cli,
-                model,
-                wav,
-                transcript_base,
-                args.language,
-            )
-            output = normalize_output_path(args.output, capture.title)
-            output.parent.mkdir(parents=True, exist_ok=True)
-            from datetime import datetime, timezone
-
-            markdown = render_markdown(
-                source_url=capture.canonical_url,
-                title=capture.title,
-                captured_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                model=args.model_size,
-                language=args.language,
-                transcript=transcript,
-            )
-            output.write_text(markdown, encoding="utf-8")
-            print(f"已保存 Markdown：{output}")
-            return 0
-        finally:
-            if cleanup:
-                shutil.rmtree(work_dir, ignore_errors=True)
-            elif not args.work_dir:
-                print(f"已保留临时文件：{work_dir}", file=sys.stderr)
+        markdown = render_markdown(
+            source_url=capture.canonical_url,
+            title=capture.title,
+            captured_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            model=args.model_size,
+            language=args.language,
+            transcript=transcript,
+        )
+        output.write_text(markdown, encoding="utf-8")
+        print(f"已保存 Markdown：{output}")
+        return 0
     except (ValueError, Video2MdError) as exc:
         print(f"错误：{exc}", file=sys.stderr)
         return 2
