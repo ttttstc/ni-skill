@@ -11,7 +11,7 @@ description: |
 ## 不可变要求
 
 - 输入可以是单独的 URL，也可以是包含 URL 的完整抖音分享文案；从文案中提取第一个 `http(s)` URL。
-- 先检查本地依赖。缺少 `ffmpeg`、`whisper-cli`、Whisper 模型、Playwright 或 Chromium 时，先通过脚本下载/安装；不能因为依赖缺失直接切换到云端转录。
+- 先检查本地依赖。缺少 `ffmpeg`、`whisper-cli`、Whisper 模型、Playwright 或 Chromium 时，先通过脚本下载/安装；找到或安装可执行文件后，把其目录加入当前进程 `PATH`，Windows 同步写入当前用户 `PATH`；不能因为依赖缺失直接切换到云端转录。
 - 只交付一个 `.md` 文件。不得调用 SRT 输出参数，不生成 `.srt` 文件，也不把字幕时间轴当成最终输出。
 - 媒体、WAV 和 Whisper 中间 TXT 必须放在一次性私有临时目录；成功、失败或中断退出时都自动删除，不提供保留临时文件或指定工作目录的参数。依赖安装缓存是持久缓存，不属于转录临时文件。
 - Markdown 必须保留原始来源 URL、捕获时间、语言、模型和 `local whisper.cpp` 标识；不要把带签名的临时媒体 URL 写入 Markdown 或打印出来。
@@ -32,7 +32,7 @@ python ${SKILL_DIR}/scripts/video_to_md.py "<视频 URL 或完整分享文案>" 
 python ${SKILL_DIR}/scripts/video_to_md.py "<URL>" --model-size small -o transcript.md
 ```
 
-`${SKILL_DIR}` 是本 `SKILL.md` 所在目录。Windows 首次运行会在 `NI_VIDEO2MD_HOME`（未设置时为 `%LOCALAPPDATA%\\ni-video2md`）缓存便携版 ffmpeg、Whisper.cpp 和模型；同时复用已安装的 Chrome/Edge，没有可用浏览器时才下载 Playwright Chromium。脚本只下载公开依赖和视频，不需要 OpenAI API key。
+`${SKILL_DIR}` 是本 `SKILL.md` 所在目录。Windows 首次运行会在 `NI_VIDEO2MD_HOME`（未设置时为 `%LOCALAPPDATA%\\ni-video2md`）缓存便携版 ffmpeg、Whisper.cpp 和模型；安装或发现 ffmpeg、Whisper.cpp 后会自动把可执行文件目录加入当前进程 `PATH`，并持久化到当前用户 `PATH`，同时复用已安装的 Chrome/Edge，没有可用浏览器时才下载 Playwright Chromium。已经打开的终端或 agent 需要重启后才能读取新的用户 `PATH`。脚本只下载公开依赖和视频，不需要 OpenAI API key。
 
 支持的环境变量：
 
@@ -78,6 +78,7 @@ language: "zh"
 
 - 输入为 URL 或分享文案时，能提取并打开公开视频链接。
 - 依赖缺失时先下载/安装，缓存后可复用；设置环境变量时优先使用用户指定路径。
+- 找到或下载 ffmpeg、whisper-cli 后，当前进程可以直接通过 `PATH` 找到它们；Windows 新开的终端或 agent 可以读取持久化的用户 `PATH`。
 - 转录过程没有云端 Whisper/API 调用，且不会输出 API key、Cookie 或签名媒体 URL。
 - 结果是一个非空 `.md` 文件，包含来源、捕获时间、模型、语言和文字稿。
 - 输出目录中没有由本 skill 生成的 `.srt` 文件。
