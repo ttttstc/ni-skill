@@ -7,6 +7,7 @@ on:
       - "skills/ni-fde-copilot/**"
       - "skills/ni-design-with-docs/**"
       - "skills/ni-readme-guide/**"
+      - "skills/ni-video2md/**"
       - ".codex-plugin/plugin.json"
       - ".claude-plugin/marketplace.json"
       - "README.md"
@@ -20,6 +21,7 @@ on:
       - "skills/ni-fde-copilot/**"
       - "skills/ni-design-with-docs/**"
       - "skills/ni-readme-guide/**"
+      - "skills/ni-video2md/**"
       - ".codex-plugin/plugin.json"
       - ".claude-plugin/marketplace.json"
       - "README.md"
@@ -44,6 +46,7 @@ jobs:
           python -m unittest discover -s skills/ni-fde-copilot/tests -v
           python -m unittest discover -s skills/ni-design-with-docs/tests -v
           python -m unittest discover -s skills/ni-readme-guide/tests -v
+          python -m unittest discover -s skills/ni-video2md/tests -v
       - name: Audit bilingual READMEs
         run: |
           python skills/ni-readme-guide/scripts/audit_readme.py .

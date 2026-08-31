@@ -2,17 +2,18 @@
 
 [中文](./README.md) | English
 
-> A skill suite for content creation, conversation-ready domain learning, product architecture baselines, first-cut software architecture, and review-gated 3D asset production.
+> A skill suite for content creation, local video transcription, conversation-ready domain learning, product architecture baselines, first-cut software architecture, and review-gated 3D asset production.
 
-ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code, and similar runtimes), spanning source capture, research, domain learning, insight, writing, layout, preflight, imagery, publishing, product architecture baselines, first-principles architecture decisions, and review-gated multiview-to-GLB production. Each skill works standalone, and `ni-article-workflow` orchestrates the content skills into a complete pipeline.
+ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code, and similar runtimes), spanning source capture, local video transcription, research, domain learning, insight, writing, layout, preflight, imagery, publishing, product architecture baselines, first-principles architecture decisions, and review-gated multiview-to-GLB production. Each skill works standalone, and `ni-article-workflow` orchestrates the content skills into a complete pipeline.
 
 ---
 
 ## Requirements
 
 - **Codex** / **Claude Code** / any AI agent runtime that loads skills from a local skills directory
-- **Python 3.10+** — required by `ni-draft` for pushing WeChat drafts
+- **Python 3.10+** — required by `ni-draft` for pushing WeChat drafts and by `ni-video2md` for local transcription
 - **Node.js + Chrome** — required by `ni-url2md` for web scraping
+- **Chrome/Edge or a downloadable Chromium** — required by `ni-video2md` to capture public Douyin media streams
 - **Image generation + browser control + an available image-to-3D service** — required by `ni-3d-model`; login and free quota depend on the selected provider
 
 See each skill's `SKILL.md` for its specific dependencies.
@@ -36,7 +37,7 @@ for skill in \
   ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
-  ni-design-with-docs think-like-architect
+  ni-design-with-docs ni-video2md think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -51,7 +52,7 @@ $skills = @(
   "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
-  "ni-design-with-docs", "think-like-architect"
+  "ni-design-with-docs", "ni-video2md", "think-like-architect"
 )
 foreach ($skill in $skills) {
   Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
@@ -120,6 +121,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Stage | Skill | Capability |
 |-------|-------|------------|
 | Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
+| Video | [`ni-video2md`](./skills/ni-video2md) | Transcribe public videos to Markdown with local Whisper; no SRT output |
 | Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
 | Domain learning | [`ni-fde-copilot`](./skills/ni-fde-copilot) | Turn expert-oriented source material into a gated learning blueprint and conversation-ready guide |
 | Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
@@ -147,6 +149,16 @@ Each skill can be used standalone. `ni-article-workflow` orchestrates the conten
 To invoke it, enter `$ni-fde-copilot` in a new Agent session, attach the professional sources, describe the meeting or learning goal, and ask for the Learning Blueprint before the full guide.
 
 It supports text, PDFs, books, reports, slides, charts, video, audio, and transcripts, subject to the tools available in the current Agent environment. Inaccessible scope is blocked explicitly instead of being treated as processed. See the [Chinese guide](./skills/ni-fde-copilot/README.md) and [English guide](./skills/ni-fde-copilot/README.en.md) for usage, evidence boundaries, and validation details.
+
+### ni-video2md
+
+`ni-video2md` turns public Douyin video URLs or share text into Markdown transcripts using local Whisper. It prefers local `whisper.cpp`; on first run it downloads and caches missing ffmpeg, Whisper.cpp, the model, or browser dependencies. It does not call a cloud transcription API and does not generate SRT files.
+
+```bash
+python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o transcript.md
+```
+
+Automatic dependency downloads currently cover Windows x64. On other platforms, point `NI_VIDEO2MD_FFMPEG`, `NI_VIDEO2MD_WHISPER_CLI`, `NI_VIDEO2MD_MODEL`, and `NI_VIDEO2MD_BROWSER` at existing local tools. Video and public dependency downloads use network bandwidth, but speech recognition runs locally.
 
 ### ni-readme-guide
 
@@ -251,6 +263,7 @@ Describe what you need to trigger the matching skill:
 - Find an article angle → `ni-insight`
 - Lay out an article → `ni-formatter`
 - Scrape a URL into Markdown → `ni-url2md`
+- Turn a video URL or share text into a local Markdown transcript → `ni-video2md`
 - Turn professional sources into a conversation-ready learning guide → `ni-fde-copilot`
 - Make a minimal ZINE-style poster → `ni-poster`
 - Turn a theme into reviewed multiview images and a validated GLB → `ni-3d-model`
@@ -294,6 +307,18 @@ Optional environment variables:
 | `URL_CHROME_PATH` | Path to the Chrome executable |
 | `URL_DATA_DIR` | Default output directory |
 | `URL_CHROME_PROFILE_DIR` | Chrome profile directory, to persist login sessions |
+
+### Video to Markdown (`ni-video2md`)
+
+Optional environment variables:
+
+| Variable | Purpose |
+|----------|---------|
+| `NI_VIDEO2MD_HOME` | Tool, model, and download cache directory |
+| `NI_VIDEO2MD_FFMPEG` / `FFMPEG_PATH` | Path to the ffmpeg executable |
+| `NI_VIDEO2MD_WHISPER_CLI` / `WHISPER_CLI` | Path to the whisper-cli executable |
+| `NI_VIDEO2MD_MODEL` / `WHISPER_MODEL` | Path to a local Whisper `ggml-*.bin` model |
+| `NI_VIDEO2MD_BROWSER` / `BROWSER_PATH` | Path to Chrome, Edge, or Chromium |
 
 ---
 
