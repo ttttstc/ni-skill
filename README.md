@@ -150,7 +150,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 
 ### ni-video2md
 
-`ni-video2md` 将抖音等公开视频 URL 或分享文案转成本地 Whisper 生成的 Markdown 文字稿。它优先使用本地 `whisper.cpp`，首次运行如果缺少 ffmpeg、Whisper.cpp、模型或浏览器依赖，会先下载/安装并缓存；不调用云端转录 API，也不生成 SRT。
+`ni-video2md` 将抖音等公开视频 URL 或分享文案转成本地 Whisper 生成的 Markdown 文字稿。它优先使用本地 `whisper.cpp`，首次运行如果缺少 ffmpeg、Whisper.cpp、模型或浏览器依赖，会先下载/安装并缓存；安装或发现 ffmpeg、Whisper.cpp 后会自动把可执行文件目录加入当前进程 PATH，并在 Windows 写入当前用户 PATH；不调用云端转录 API，也不生成 SRT。
 
 ```bash
 python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o transcript.md

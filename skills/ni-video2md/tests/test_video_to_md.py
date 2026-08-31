@@ -1,4 +1,5 @@
 import importlib.util
+import os
 import sys
 import tempfile
 import unittest
@@ -131,6 +132,78 @@ class VideoToMarkdownTests(unittest.TestCase):
             {"name": "whisper-bin-x64.zip", "url": "windows"},
             video_to_md.select_whisper_asset(release, "Windows", "AMD64"),
         )
+
+    def test_append_path_entry_deduplicates_directories(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir).resolve()
+            initial = os.pathsep.join([str(directory.parent), str(directory)])
+            unchanged, changed = video_to_md.append_path_entry(initial, directory)
+            self.assertFalse(changed)
+            self.assertEqual(initial, unchanged)
+
+            new_directory = directory / "bin"
+            updated, changed = video_to_md.append_path_entry(initial, new_directory)
+            self.assertTrue(changed)
+            self.assertIn(str(new_directory.resolve()), updated.split(os.pathsep))
+
+    def test_exposes_executable_directory_to_current_process_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            executable = Path(temp_dir) / "whisper-cli.exe"
+            executable.write_bytes(b"test")
+            with patch.dict(video_to_md.os.environ, {"PATH": "existing"}, clear=True), \
+                patch.object(video_to_md, "persist_user_path", return_value=False) as persist:
+                video_to_md.expose_executable(executable, "whisper-cli")
+
+                self.assertIn(str(Path(temp_dir).resolve()), video_to_md.os.environ["PATH"].split(os.pathsep))
+                if os.name == "nt":
+                    persist.assert_called_once_with(Path(temp_dir).resolve())
+                else:
+                    persist.assert_not_called()
+
+    def test_persists_path_to_windows_user_environment(self) -> None:
+        class FakeRegistry:
+            HKEY_CURRENT_USER = object()
+            KEY_READ = 1
+            KEY_WRITE = 2
+            REG_SZ = 1
+            REG_EXPAND_SZ = 2
+
+            def __init__(self) -> None:
+                self.current = "existing"
+                self.updated: tuple[int, str] | None = None
+
+            def OpenKey(self, *_args: object) -> "FakeRegistry":
+                return self
+
+            def __enter__(self) -> "FakeRegistry":
+                return self
+
+            def __exit__(self, *_args: object) -> bool:
+                return False
+
+            def QueryValueEx(self, *_args: object) -> tuple[str, int]:
+                return self.current, self.REG_EXPAND_SZ
+
+            def SetValueEx(
+                self,
+                _key: object,
+                _name: str,
+                _reserved: int,
+                value_type: int,
+                value: str,
+            ) -> None:
+                self.updated = (value_type, value)
+
+        fake_registry = FakeRegistry()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir).resolve()
+            with patch.object(video_to_md.os, "name", "nt"), \
+                patch.dict(sys.modules, {"winreg": fake_registry}):
+                self.assertTrue(video_to_md.persist_user_path(directory))
+
+        self.assertIsNotNone(fake_registry.updated)
+        assert fake_registry.updated is not None
+        self.assertIn(str(directory), fake_registry.updated[1].split(os.pathsep))
 
 
 if __name__ == "__main__":

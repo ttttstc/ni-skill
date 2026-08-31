@@ -152,7 +152,7 @@ It supports text, PDFs, books, reports, slides, charts, video, audio, and transc
 
 ### ni-video2md
 
-`ni-video2md` turns public Douyin video URLs or share text into Markdown transcripts using local Whisper. It prefers local `whisper.cpp`; on first run it downloads and caches missing ffmpeg, Whisper.cpp, the model, or browser dependencies. It does not call a cloud transcription API and does not generate SRT files.
+`ni-video2md` turns public Douyin video URLs or share text into Markdown transcripts using local Whisper. It prefers local `whisper.cpp`; on first run it downloads and caches missing ffmpeg, Whisper.cpp, the model, or browser dependencies. After finding or installing ffmpeg and Whisper.cpp, it adds their executable directories to the current process PATH and persists them in the Windows user PATH. It does not call a cloud transcription API and does not generate SRT files.
 
 ```bash
 python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o transcript.md

@@ -226,10 +226,83 @@ def configured_executable(*names: str) -> Path | None:
     return None
 
 
+def normalized_path_entry(value: str | Path) -> str:
+    raw_value = str(value).strip().strip('"')
+    return os.path.normcase(os.path.normpath(os.path.expandvars(raw_value)))
+
+
+def append_path_entry(path_value: str, directory: Path) -> tuple[str, bool]:
+    entries = path_value.split(os.pathsep) if path_value else []
+    directory_text = str(directory.expanduser().resolve())
+    directory_key = normalized_path_entry(directory_text)
+    if any(
+        entry.strip() and normalized_path_entry(entry) == directory_key
+        for entry in entries
+    ):
+        return path_value, False
+    return os.pathsep.join(entries + [directory_text]), True
+
+
+def add_to_current_path(directory: Path) -> bool:
+    current_path = os.environ.get("PATH", "")
+    updated_path, changed = append_path_entry(current_path, directory)
+    if changed:
+        os.environ["PATH"] = updated_path
+    return changed
+
+
+def persist_user_path(directory: Path) -> bool | None:
+    """Add a tool directory to the Windows user PATH when possible."""
+
+    if os.name != "nt":
+        return False
+
+    try:
+        import winreg
+
+        with winreg.OpenKey(
+            winreg.HKEY_CURRENT_USER,
+            "Environment",
+            0,
+            winreg.KEY_READ | winreg.KEY_WRITE,
+        ) as key:
+            try:
+                current_value, value_type = winreg.QueryValueEx(key, "Path")
+            except FileNotFoundError:
+                current_value, value_type = "", winreg.REG_EXPAND_SZ
+            updated_value, changed = append_path_entry(str(current_value or ""), directory)
+            if not changed:
+                return False
+            if value_type not in (winreg.REG_SZ, winreg.REG_EXPAND_SZ):
+                value_type = winreg.REG_EXPAND_SZ
+            winreg.SetValueEx(key, "Path", 0, value_type, updated_value)
+            return True
+    except (ImportError, OSError):
+        return None
+
+
+def expose_executable(executable: Path, label: str) -> Path:
+    """Make an executable available to this process and future Windows shells."""
+
+    directory = executable.resolve().parent
+    changed = add_to_current_path(directory)
+    if changed and os.name == "nt":
+        persisted = persist_user_path(directory)
+        if persisted is True:
+            print(f"已将 {label} 安装目录加入 Windows 用户 PATH：{directory}", file=sys.stderr)
+        elif persisted is None:
+            print(
+                f"已将 {label} 目录加入当前进程 PATH，但无法持久化用户 PATH；"
+                "新开的终端可能需要手动配置。",
+                file=sys.stderr,
+            )
+    return executable
+
+
 def ensure_ffmpeg() -> Path:
     existing = configured_executable("NI_VIDEO2MD_FFMPEG", "FFMPEG_PATH", "ffmpeg", "ffmpeg.exe")
     if existing:
-        return existing
+        return expose_executable(existing, "ffmpeg")
 
     if platform.system() != "Windows":
         raise Video2MdError(
@@ -240,7 +313,7 @@ def ensure_ffmpeg() -> Path:
     root = cache_root() / "ffmpeg"
     cached = find_file(root, ("ffmpeg.exe",))
     if cached:
-        return cached
+        return expose_executable(cached, "ffmpeg")
 
     archive = cache_root() / "downloads" / "ffmpeg-release-essentials.zip"
     if not archive.exists():
@@ -253,7 +326,7 @@ def ensure_ffmpeg() -> Path:
     cached = find_file(root, ("ffmpeg.exe",))
     if not cached:
         raise Video2MdError("ffmpeg 下载完成但未找到可执行文件。")
-    return cached
+    return expose_executable(cached, "ffmpeg")
 
 
 def select_whisper_asset(release: dict[str, Any], system: str, machine: str) -> dict[str, str] | None:
@@ -291,12 +364,12 @@ def ensure_whisper_cli() -> Path:
         "whisper-cli.exe",
     )
     if existing:
-        return existing
+        return expose_executable(existing, "whisper-cli")
 
     root = cache_root() / "whisper"
     cached = find_file(root, ("whisper-cli", "whisper-cli.exe"))
     if cached:
-        return cached
+        return expose_executable(cached, "whisper-cli")
 
     if platform.system() != "Windows":
         raise Video2MdError(
@@ -318,7 +391,7 @@ def ensure_whisper_cli() -> Path:
     cached = find_file(root / tag, ("whisper-cli.exe", "whisper-cli"))
     if not cached:
         raise Video2MdError("Whisper.cpp 下载完成但未找到 whisper-cli。")
-    return cached
+    return expose_executable(cached, "whisper-cli")
 
 
 def ensure_model(model_size: str) -> Path:
