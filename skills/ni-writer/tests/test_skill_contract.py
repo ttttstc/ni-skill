@@ -27,22 +27,27 @@ class NiWriterContractTest(unittest.TestCase):
         self.assertIn("产品体验和评价型", self.skill)
 
     def test_scene_rules_make_technical_prose_more_vivid(self):
-        for phrase in (
-            "技术方法论型的场景化生动性",
-            "一条主场景贯穿",
-            "场景卡至少具备三项",
-            "现场和抽象交替",
-            "对话只写决策线",
-            "生动性冷读",
-        ):
-            self.assertIn(phrase, self.skill)
+        # SKILL.md 只做分流:场景规则下沉到 tech_writing_rules.md,主文件保留路由指针
+        self.assertIn("references/tech_writing_rules.md", self.skill)
+        self.assertNotIn("## 子风格分化", self.skill)
 
         for phrase in (
             "可见现场 → 动作或产物 → 阻力或转折 → 机制解释 → 取舍或下一步",
+            "一条主场景贯穿",
             "场景卡五项",
+            "主场景至少写出三项",
+            "对话只写决策线",
             "读者能否在脑中截出一帧画面",
         ):
             self.assertIn(phrase, self.tech_rules)
+
+        # 反 AI 鸡汤与功能列表化终检项同样下沉到两条技术路由的终检清单
+        polemic_rules = (
+            SKILL_DIR / "references" / "tech_polemic_rules.md"
+        ).read_text(encoding="utf-8")
+        for phrase in ("功能列表化", "营销话术"):
+            self.assertIn(phrase, self.tech_rules)
+            self.assertIn(phrase, polemic_rules)
 
     def test_current_anti_ai_rules_and_output_tail_are_explicit(self):
         self.assertIn("human-writing 增量终审", self.skill)
