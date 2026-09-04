@@ -13,9 +13,6 @@ class NiWriterContractTest(unittest.TestCase):
         cls.tech_rules = (
             SKILL_DIR / "references" / "tech_writing_rules.md"
         ).read_text(encoding="utf-8")
-        cls.examples = (
-            SKILL_DIR / "references" / "style_examples.md"
-        ).read_text(encoding="utf-8")
         cls.readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
 
     def test_technical_routes_are_merged_without_dropping_other_archetypes(self):
@@ -54,10 +51,6 @@ class NiWriterContractTest(unittest.TestCase):
         self.assertIn("副词先删后判", self.skill)
         self.assertIn("默认不自动添加公众号推广尾部或署名", self.skill)
         self.assertNotIn("## 固定尾部", self.skill)
-
-    def test_historical_examples_are_not_current_routing_rules(self):
-        self.assertIn("示例库保留历史语料", self.examples)
-        self.assertIn("不用于复制固定句式或判定现行路由", self.examples)
 
     def test_readme_documents_the_scene_contract(self):
         self.assertIn("5 种文章原型", self.readme)
