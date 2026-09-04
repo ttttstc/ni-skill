@@ -125,7 +125,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
 | Domain learning | [`ni-fde-copilot`](./skills/ni-fde-copilot) | Turn expert-oriented source material into a gated learning blueprint and conversation-ready guide |
 | Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
-| Writing | [`ni-writer`](./skills/ni-writer) | Long- and short-form writing across 6 article archetypes, in a hybrid Orwell / Calvino / Borges voice |
+| Writing | [`ni-writer`](./skills/ni-writer) | Five article archetypes; the two technical-methodology routes are merged while technical polemic remains separate |
 | Book writing | [`ni-book-writer`](./skills/ni-book-writer) | Long-form book writing in two styles (technical / trade-press), with structure, outline, and chapter scaffolding |
 | Reporting | [`ni-tech-report`](./skills/ni-tech-report) | Build a clear technical report — narrative arc, evidence layout, and executive-summary synthesis |
 | Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
@@ -197,20 +197,19 @@ Examples:
 /ni-poster a 保留原照片，在下方生成干净象牙色抽象面板
 ```
 
-### The 6 article archetypes in ni-writer
+### The 5 article archetypes in ni-writer
 
-Before writing, classify the piece along three axes — **argument / emotion / source-compression** — then pick the matching archetype:
+Classify by the article's primary value: hands-on experience, source compression, engineering method, technical polemic, or personal reflection. The two technical-methodology routes now share one entry point; the other styles remain available:
 
 | Archetype | Word count | Soul | Fit for |
 |-----------|-----------|------|---------|
 | 1. Hands-on review | ≤ 6,000 | I tried it myself | Field tests, product reviews, process narratives |
 | 2. Discovery brief (speed-read digest) | 500-1,500 | I pre-filtered the source for you | Distilling posts / videos / blogs / papers |
-| 3. Engineering playbook | ≤ 6,000 | Here's my battle-tested framework | Engineering experience + actionable steps |
-| 4. Technical polemic | 5,000-8,500 | Clear stance, zero filler, no fence-sitting | Concept disambiguation, paradigm reframing |
+| 3. Technical methodology (framework + deep-scene merge) | 4,500-7,000 | Explain the facts, then reason through the mechanism | Engineering practice, architecture, process, collaboration, tool retrospectives |
+| 4. Technical polemic | 5,000-8,500 | Think one judgment through to its boundary | Concept disambiguation, mechanism analysis, paradigm reframing |
 | 5. Personal essay | 3,000-5,000 | I've been turning this over | Stream-of-thought, feelings, non-argumentative pieces |
-| 6. Field methodology (deep-water practice) | 4,500-7,000 | I hit a real engineering problem, then abstracted it | Engineering governance, workflows, collaboration, AI-tool reflection |
 
-Full rules: [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) and the sub-style files under `references/`.
+Technical methodology uses [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) and `references/tech_writing_rules.md`; technical polemic keeps its independent `references/tech_polemic_rules.md`. Technical methodology now uses one spine scene to carry the judgment, with visible actions, artifacts, and judgment changes. The anti-AI pass adopts `human-writing` checks for material sufficiency, speaker position, natural progression, revision, removable adverbs, and unsupported degree claims.
 
 ---
 
