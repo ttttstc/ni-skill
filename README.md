@@ -123,7 +123,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
 | 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
 | 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
-| 写作 | [`ni-writer`](./skills/ni-writer) | 6 种文章原型的长/短文写作，融合奥威尔 / 卡尔维诺 / 博尔赫斯文风 |
+| 写作 | [`ni-writer`](./skills/ni-writer) | 5 种文章原型；两类技术方法论合并，技术思辨保留独立路由 |
 | 写书 | [`ni-book-writer`](./skills/ni-book-writer) | 长篇书稿写作（技术书 / 畅销书双风格），含结构、大纲与章节脚手架 |
 | 汇报 | [`ni-tech-report`](./skills/ni-tech-report) | 构建一份清晰的技术汇报——叙事线索、证据布局、执行摘要综合 |
 | 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
@@ -195,20 +195,19 @@ python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o 
 /ni-poster a 保留原照片，在下方生成干净象牙色抽象面板
 ```
 
-### ni-writer 的 6 种文章原型
+### ni-writer 的 5 种文章原型
 
-写作前先按「**论点 / 情绪 / 资料压缩**」三分判型，再选对应原型：
+写作前先判断文章的主要价值来自亲自体验、资料压缩、工程方法、技术思辨还是个人思绪。原有两类技术方法论合并为一个入口，其他风格保留：
 
 | 原型 | 字数 | 灵魂 | 适用题材 |
 |------|------|------|---------|
 | 1. 产品体验和评价型 | ≤ 6000 | 我亲自下场 | 实测、上手评价、过程叙事 |
 | 2. 发现分享型（速读精华式） | 500-1500 | 我替你刷资料压缩精华 | 帖子 / 视频 / 博客 / 论文转译 |
-| 3. 技术方法论型 | ≤ 6000 | 我把框架掏给你 | 工程经验 + 落地清单 |
-| 4. 技术思辨型 | 5000-8500 | 立场鲜明、字字不冗、不左右摇摆 | 概念辨析、范式升维 |
+| 3. 技术方法论型（沉淀 + 深水区合并） | 4500-7000 | 我把事实讲清，再把机制想透 | 工程实践、架构、流程、协作、工具复盘 |
+| 4. 技术思辨型 | 5000-8500 | 我把一个判断想清楚 | 概念辨析、机制推演、范式升维 |
 | 5. 人生哲学随笔型 | 3000-5000 | 我在想这件事 | 思绪流、感受、非论点写作 |
-| 6. 工程现场方法论型（深水区实践） | 4500-7000 | 我遇到一个工程问题，事后整理成方法 | 工程治理、工作流、协作、AI 工具反思 |
 
-详细规则见 [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) 与 `references/` 下的子风格规则文件。
+技术方法论型的专项规则见 [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) 与 `references/tech_writing_rules.md`，技术思辨型保留独立的 `references/tech_polemic_rules.md`。技术方法论要求用一条主场景承载判断，写出可见动作、产物和判断变化。反 AI 终审吸收 `human-writing` 的材料、说话位置、自然推进和改稿规则，并单独检查可删副词与缺少证据的程度副词。
 
 ---
 
