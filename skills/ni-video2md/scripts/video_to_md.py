@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download a public Douyin video and transcribe it to Markdown locally."""
+"""Download a public video and transcribe it to Markdown locally."""
 
 from __future__ import annotations
 
@@ -23,6 +23,10 @@ from typing import Any, Iterable
 
 
 GITHUB_RELEASES_URL = "https://api.github.com/repos/ggml-org/whisper.cpp/releases/latest"
+YTDLP_RELEASE_URLS = {
+    "Windows": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe",
+    "default": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp",
+}
 WHISPER_MODEL_URLS = {
     "tiny": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin",
     "base": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
@@ -33,6 +37,32 @@ DEFAULT_PROMPT = (
     "Skill、SOP、Data Infra、Harness、Evaluation、FDE、ToB、RPA。"
 )
 DEFAULT_USER_AGENT = "ni-video2md/0.1"
+SUPPORTED_PLATFORM_HOSTS = {
+    "x": ("x.com", "twitter.com", "mobile.twitter.com", "t.co"),
+    "youtube": ("youtube.com", "www.youtube.com", "m.youtube.com", "music.youtube.com", "youtu.be"),
+    "bilibili": ("bilibili.com", "www.bilibili.com", "m.bilibili.com", "b23.tv", "bili2233.cn"),
+    "xiaohongshu": ("xiaohongshu.com", "www.xiaohongshu.com", "xhslink.com"),
+}
+PLATFORM_LABELS = {
+    "x": "X",
+    "youtube": "YouTube",
+    "bilibili": "哔哩哔哩",
+    "xiaohongshu": "小红书",
+}
+MEDIA_SUFFIXES = {
+    ".avi",
+    ".flv",
+    ".m4a",
+    ".mkv",
+    ".mov",
+    ".mp3",
+    ".mp4",
+    ".ogg",
+    ".opus",
+    ".ts",
+    ".webm",
+    ".wav",
+}
 UNKNOWN_AUTHOR = "未知作者"
 SUMMARY_MAX_LENGTH = 80
 AUTHOR_MAX_LENGTH = 32
@@ -56,6 +86,31 @@ class CapturedPage:
     user_agent: str
     cookie_header: str
     author: str = UNKNOWN_AUTHOR
+    downloader: str = "browser"
+    platform: str = "douyin"
+
+
+def supported_platform(source_url: str) -> str | None:
+    """Return the yt-dlp-backed platform for a public page URL, if known."""
+
+    hostname = (urllib.parse.urlsplit(source_url).hostname or "").lower().rstrip(".")
+    for platform_name, domains in SUPPORTED_PLATFORM_HOSTS.items():
+        if hostname in domains or any(hostname.endswith(f".{domain}") for domain in domains):
+            return platform_name
+    return None
+
+
+def public_source_url(source_url: str) -> str:
+    """Return a stable source URL without short-lived platform access tokens."""
+
+    if supported_platform(source_url) != "xiaohongshu":
+        return source_url
+    parsed = urllib.parse.urlsplit(source_url)
+    return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path, "", ""))
+
+
+def platform_label(platform_name: str) -> str:
+    return PLATFORM_LABELS.get(platform_name, platform_name)
 
 
 def cache_root() -> Path:
@@ -395,6 +450,104 @@ def expose_executable(executable: Path, label: str) -> Path:
     return executable
 
 
+def ensure_yt_dlp() -> Path:
+    existing = configured_executable(
+        "NI_VIDEO2MD_YTDLP",
+        "YTDLP_PATH",
+        "yt-dlp",
+        "yt-dlp.exe",
+    )
+    if existing:
+        return expose_executable(existing, "yt-dlp")
+
+    system_name = platform.system()
+    executable_name = "yt-dlp.exe" if system_name == "Windows" else "yt-dlp"
+    cached = cache_root() / "yt-dlp" / executable_name
+    if cached.is_file() and cached.stat().st_size:
+        return expose_executable(cached, "yt-dlp")
+
+    print("未找到 yt-dlp，正在下载视频下载器…", file=sys.stderr)
+    download_file(YTDLP_RELEASE_URLS.get(system_name, YTDLP_RELEASE_URLS["default"]), cached)
+    if not cached.is_file() or cached.stat().st_size == 0:
+        raise Video2MdError("yt-dlp 下载完成但文件为空。")
+    if system_name != "Windows":
+        try:
+            cached.chmod(cached.stat().st_mode | 0o111)
+        except OSError as exc:
+            raise Video2MdError("yt-dlp 下载完成但无法设置可执行权限。") from exc
+    return expose_executable(cached, "yt-dlp")
+
+
+def yt_dlp_runtime_args() -> list[str]:
+    configured = os.environ.get("NI_VIDEO2MD_JS_RUNTIME", "").strip()
+    if configured:
+        return ["--no-js-runtimes", "--js-runtimes", configured]
+
+    for runtime in ("deno", "node", "bun", "quickjs"):
+        if shutil.which(runtime):
+            return ["--no-js-runtimes", "--js-runtimes", runtime]
+    return []
+
+
+def yt_dlp_base_command(yt_dlp: Path) -> list[str]:
+    return [
+        str(yt_dlp),
+        "--ignore-config",
+        "--no-playlist",
+        "--no-warnings",
+        *yt_dlp_runtime_args(),
+    ]
+
+
+def yt_dlp_failure_message(platform_name: str, phase: str, details: str) -> str:
+    lowered = details.lower()
+    label = platform_label(platform_name)
+    if any(
+        marker in lowered
+        for marker in (
+            "login",
+            "log in",
+            "sign in",
+            "private video",
+            "members-only",
+            "members only",
+            "captcha",
+            "not a bot",
+            "requires authentication",
+            "验证码",
+            "登录",
+        )
+    ):
+        return f"{label} 视频无法公开访问，可能需要登录、验证码或其他访问权限。"
+    if "unsupported url" in lowered:
+        return f"当前 yt-dlp 不支持该 {label} 视频链接，请更新 yt-dlp 后重试。"
+    if "no video formats" in lowered or "requested format is not available" in lowered:
+        return f"{label} 页面未提供可下载的公开视频格式，可能是页面变化或访问限制。"
+    return f"yt-dlp 无法{phase}{label}视频，请确认链接可公开播放并更新 yt-dlp 后重试。"
+
+
+def run_yt_dlp(command: list[str], platform_name: str, phase: str) -> subprocess.CompletedProcess[str]:
+    try:
+        completed = subprocess.run(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=300,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise Video2MdError(f"yt-dlp {phase}{platform_label(platform_name)}视频超时。") from exc
+    except OSError as exc:
+        raise Video2MdError("无法启动 yt-dlp，请检查安装路径。") from exc
+    if completed.returncode != 0:
+        raise Video2MdError(
+            yt_dlp_failure_message(platform_name, phase, completed.stderr or "")
+        )
+    return completed
+
+
 def ensure_ffmpeg() -> Path:
     existing = configured_executable("NI_VIDEO2MD_FFMPEG", "FFMPEG_PATH", "ffmpeg", "ffmpeg.exe")
     if existing:
@@ -708,6 +861,104 @@ def capture_page(source_url: str) -> CapturedPage:
             browser.close()
 
 
+def parse_yt_dlp_metadata(output: str, platform_name: str) -> dict[str, Any]:
+    candidates = [output.strip()]
+    candidates.extend(line.strip() for line in reversed(output.splitlines()))
+    for candidate in candidates:
+        if not candidate or not candidate.startswith("{"):
+            continue
+        try:
+            payload = json.loads(candidate)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            return payload
+    raise Video2MdError(f"yt-dlp 返回的 {platform_label(platform_name)} 视频信息格式异常。")
+
+
+def metadata_text(info: dict[str, Any], keys: Iterable[str]) -> str:
+    for key in keys:
+        value = info.get(key)
+        if not isinstance(value, str):
+            continue
+        normalized = value.strip()
+        if normalized and normalized.lower() not in {"na", "n/a", "none"}:
+            return normalized
+    return ""
+
+
+def inspect_with_yt_dlp(yt_dlp: Path, source_url: str, platform_name: str) -> CapturedPage:
+    completed = run_yt_dlp(
+        yt_dlp_base_command(yt_dlp)
+        + ["--dump-single-json", "--skip-download", source_url],
+        platform_name,
+        "读取",
+    )
+    info = parse_yt_dlp_metadata(completed.stdout, platform_name)
+    if info.get("_type") == "playlist" or isinstance(info.get("entries"), list):
+        raise Video2MdError(f"暂不支持一次转录 {platform_label(platform_name)} 播放列表。")
+
+    canonical_url = metadata_text(info, ("webpage_url", "original_url")) or source_url
+    if not canonical_url.startswith("http"):
+        canonical_url = source_url
+    title = metadata_text(info, ("title", "fulltitle")) or f"{platform_label(platform_name)}视频文字稿"
+    author = normalize_author(
+        metadata_text(info, ("uploader", "channel", "creator", "artist", "uploader_id"))
+    )
+    return CapturedPage(
+        source_url=source_url,
+        canonical_url=canonical_url,
+        title=title,
+        media_urls=(),
+        user_agent=DEFAULT_USER_AGENT,
+        cookie_header="",
+        author=author,
+        downloader="yt-dlp",
+        platform=platform_name,
+    )
+
+
+def download_with_yt_dlp(
+    yt_dlp: Path,
+    capture: CapturedPage,
+    ffmpeg: Path,
+    target: Path,
+) -> None:
+    target.parent.mkdir(parents=True, exist_ok=True)
+    output_template = str(target.with_suffix("")) + ".%(ext)s"
+    command = yt_dlp_base_command(yt_dlp) + [
+        "--format",
+        "bv*+ba/b",
+        "--merge-output-format",
+        "mp4",
+        "--ffmpeg-location",
+        str(ffmpeg),
+        "--output",
+        output_template,
+        "--no-part",
+        "--no-overwrites",
+        "--quiet",
+        "--no-progress",
+        capture.canonical_url,
+    ]
+    run_yt_dlp(command, capture.platform, "下载")
+
+    if target.is_file() and target.stat().st_size:
+        return
+    candidates = [
+        path
+        for path in target.parent.glob(f"{target.stem}.*")
+        if path.is_file() and path.suffix.lower() in MEDIA_SUFFIXES and path.stat().st_size
+    ]
+    if not candidates:
+        raise Video2MdError(f"yt-dlp 完成后没有找到可处理的 {platform_label(capture.platform)} 媒体文件。")
+    candidate = max(candidates, key=lambda path: path.stat().st_size)
+    try:
+        candidate.replace(target)
+    except OSError as exc:
+        raise Video2MdError("无法整理 yt-dlp 下载的临时媒体文件。") from exc
+
+
 def parse_content_range(value: str) -> tuple[int, int, int | None] | None:
     match = re.match(r"bytes\s+(\d+)-(\d+)/(\d+|\*)", value or "", re.IGNORECASE)
     if not match:
@@ -842,6 +1093,7 @@ def transcribe_with_temporary_files(
     whisper_cli: Path,
     model: Path,
     language: str,
+    yt_dlp: Path | None = None,
 ) -> str:
     """Download and transcribe media inside a directory removed on exit."""
 
@@ -850,7 +1102,12 @@ def transcribe_with_temporary_files(
         media = work_dir / "source.mp4"
         wav = work_dir / "source.wav"
         transcript_base = work_dir / "transcript"
-        download_media(capture, media)
+        if capture.downloader == "yt-dlp":
+            if yt_dlp is None:
+                raise Video2MdError("缺少 yt-dlp，无法下载该平台视频。")
+            download_with_yt_dlp(yt_dlp, capture, ffmpeg, media)
+        else:
+            download_media(capture, media)
         convert_to_wav(ffmpeg, media, wav)
         return transcribe(
             whisper_cli,
@@ -863,7 +1120,7 @@ def transcribe_with_temporary_files(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="将抖音视频 URL 或分享文案通过本地 Whisper 转成 Markdown 文字稿。"
+        description="将公开视频 URL 或分享文案通过本地 Whisper 转成 Markdown 文字稿。"
     )
     parser.add_argument("source", help="视频 URL，或包含 URL 的完整分享文案")
     parser.add_argument(
@@ -883,7 +1140,13 @@ def main(argv: list[str] | None = None) -> int:
         ffmpeg = ensure_ffmpeg()
         whisper_cli = ensure_whisper_cli()
         model = ensure_model(args.model_size)
-        capture = capture_page(source_url)
+        source_platform = supported_platform(source_url)
+        yt_dlp = ensure_yt_dlp() if source_platform else None
+        capture = (
+            inspect_with_yt_dlp(yt_dlp, source_url, source_platform)
+            if source_platform and yt_dlp is not None
+            else capture_page(source_url)
+        )
 
         print("正在下载视频音频并进行本地转录…", file=sys.stderr)
         transcript = transcribe_with_temporary_files(
@@ -892,6 +1155,7 @@ def main(argv: list[str] | None = None) -> int:
             whisper_cli,
             model,
             args.language,
+            yt_dlp,
         )
         author = capture.author if capture.author != UNKNOWN_AUTHOR else extract_author_hint(args.source)
         summary = summarize_transcript(transcript)
@@ -901,7 +1165,7 @@ def main(argv: list[str] | None = None) -> int:
         from datetime import datetime, timezone
 
         markdown = render_markdown(
-            source_url=capture.canonical_url,
+            source_url=public_source_url(capture.canonical_url),
             title=document_title,
             summary=summary,
             author=author,

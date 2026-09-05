@@ -34,6 +34,122 @@ class VideoToMarkdownTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             video_to_md.extract_source_url("没有链接")
 
+    def test_detects_yt_dlp_platforms_and_keeps_douyin_browser_route(self) -> None:
+        cases = {
+            "https://x.com/example/status/123": "x",
+            "https://www.youtube.com/watch?v=abc": "youtube",
+            "https://b23.tv/abc123": "bilibili",
+            "https://www.xiaohongshu.com/explore/abc123": "xiaohongshu",
+            "https://v.douyin.com/abc123/": None,
+        }
+        for source_url, expected in cases.items():
+            with self.subTest(source_url=source_url):
+                self.assertEqual(expected, video_to_md.supported_platform(source_url))
+
+    def test_removes_xiaohongshu_access_token_from_public_source_url(self) -> None:
+        source_url = (
+            "https://www.xiaohongshu.com/explore/674051740000000007027a15"
+            "?xsec_token=temporary-secret&xsec_source=pc_feed"
+        )
+        self.assertEqual(
+            "https://www.xiaohongshu.com/explore/674051740000000007027a15",
+            video_to_md.public_source_url(source_url),
+        )
+        youtube_url = "https://www.youtube.com/watch?v=abc"
+        self.assertEqual(youtube_url, video_to_md.public_source_url(youtube_url))
+
+    def test_inspects_yt_dlp_metadata_without_retaining_media_url(self) -> None:
+        metadata = {
+            "webpage_url": "https://www.youtube.com/watch?v=abc",
+            "title": "公开视频",
+            "uploader": "公开作者",
+            "url": "https://signed.example/media.mp4?token=secret",
+        }
+        completed = video_to_md.subprocess.CompletedProcess(
+            args=["yt-dlp"],
+            returncode=0,
+            stdout=video_to_md.json.dumps(metadata),
+            stderr="",
+        )
+        with patch.object(video_to_md, "run_yt_dlp", return_value=completed) as run:
+            capture = video_to_md.inspect_with_yt_dlp(
+                Path("yt-dlp"),
+                "https://youtu.be/abc",
+                "youtube",
+            )
+
+        self.assertEqual("https://www.youtube.com/watch?v=abc", capture.canonical_url)
+        self.assertEqual("公开作者", capture.author)
+        self.assertEqual((), capture.media_urls)
+        self.assertEqual("yt-dlp", capture.downloader)
+        command = run.call_args.args[0]
+        self.assertIn("--ignore-config", command)
+        self.assertIn("--no-playlist", command)
+        self.assertIn("--dump-single-json", command)
+        self.assertNotIn("--cookies", command)
+
+    def test_downloads_yt_dlp_media_into_requested_target(self) -> None:
+        capture = video_to_md.CapturedPage(
+            source_url="https://b23.tv/test",
+            canonical_url="https://www.bilibili.com/video/BV1test",
+            title="测试视频",
+            media_urls=(),
+            user_agent="test-agent",
+            cookie_header="",
+            author="作者",
+            downloader="yt-dlp",
+            platform="bilibili",
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            target = root / "source.mp4"
+
+            def fake_run(command: list[str], _platform: str, _phase: str) -> None:
+                self.assertIn("--ffmpeg-location", command)
+                (root / "source.webm").write_bytes(b"media")
+
+            with patch.object(video_to_md, "run_yt_dlp", side_effect=fake_run):
+                video_to_md.download_with_yt_dlp(
+                    Path("yt-dlp"),
+                    capture,
+                    Path("ffmpeg"),
+                    target,
+                )
+
+            self.assertEqual(b"media", target.read_bytes())
+            self.assertFalse((root / "source.webm").exists())
+
+    def test_main_uses_yt_dlp_route_for_youtube(self) -> None:
+        capture = video_to_md.CapturedPage(
+            source_url="https://www.youtube.com/watch?v=abc",
+            canonical_url="https://www.youtube.com/watch?v=abc",
+            title="YouTube 视频",
+            media_urls=(),
+            user_agent=video_to_md.DEFAULT_USER_AGENT,
+            cookie_header="",
+            author="作者",
+            downloader="yt-dlp",
+            platform="youtube",
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_dir = Path(temp_dir)
+            with patch.object(video_to_md, "ensure_ffmpeg", return_value=Path("ffmpeg")), \
+                patch.object(video_to_md, "ensure_whisper_cli", return_value=Path("whisper-cli")), \
+                patch.object(video_to_md, "ensure_model", return_value=Path("model.bin")), \
+                patch.object(video_to_md, "ensure_yt_dlp", return_value=Path("yt-dlp")) as ensure, \
+                patch.object(video_to_md, "inspect_with_yt_dlp", return_value=capture) as inspect, \
+                patch.object(video_to_md, "capture_page", side_effect=AssertionError("不应走浏览器")), \
+                patch.object(video_to_md, "transcribe_with_temporary_files", return_value="这是一段转录。") as transcribe:
+                self.assertEqual(
+                    0,
+                    video_to_md.main([capture.source_url, "-o", str(output_dir)]),
+                )
+
+            ensure.assert_called_once_with()
+            inspect.assert_called_once_with(Path("yt-dlp"), capture.source_url, "youtube")
+            self.assertEqual(Path("yt-dlp"), transcribe.call_args.args[-1])
+            self.assertTrue((output_dir / "这是一段转录。-作者.md").is_file())
+
     def test_output_path_is_markdown_only(self) -> None:
         title = video_to_md.build_document_title("一句话概括。", "作者")
         self.assertEqual(

@@ -13,6 +13,7 @@ ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code
 - **Codex** / **Claude Code** / any AI agent runtime that loads skills from a local skills directory
 - **Python 3.10+** — required by `ni-draft` for pushing WeChat drafts and by `ni-video2md` for local transcription
 - **Node.js + Chrome** — required by `ni-url2md` for web scraping
+- **yt-dlp** — used by `ni-video2md` to download public X, YouTube, Bilibili, and Xiaohongshu videos; a portable copy is cached when missing
 - **Chrome/Edge or a downloadable Chromium** — required by `ni-video2md` to capture public Douyin media streams
 - **Image generation + browser control + an available image-to-3D service** — required by `ni-3d-model`; login and free quota depend on the selected provider
 
@@ -121,7 +122,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Stage | Skill | Capability |
 |-------|-------|------------|
 | Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
-| Video | [`ni-video2md`](./skills/ni-video2md) | Transcribe public videos to `full-summary-author.md` with local Whisper; no SRT output |
+| Video | [`ni-video2md`](./skills/ni-video2md) | Transcribe public Douyin, X, YouTube, Bilibili, and Xiaohongshu videos to `full-summary-author.md` with local Whisper; no SRT output |
 | Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
 | Domain learning | [`ni-fde-copilot`](./skills/ni-fde-copilot) | Turn expert-oriented source material into a gated learning blueprint and conversation-ready guide |
 | Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
@@ -152,7 +153,7 @@ It supports text, PDFs, books, reports, slides, charts, video, audio, and transc
 
 ### ni-video2md
 
-`ni-video2md` turns public Douyin video URLs or share text into Markdown transcripts using local Whisper. It prefers local `whisper.cpp`; on first run it downloads and caches missing ffmpeg, Whisper.cpp, the model, or browser dependencies. After finding or installing ffmpeg and Whisper.cpp, it adds their executable directories to the current process PATH and persists them in the Windows user PATH. It does not call a cloud transcription API and does not generate SRT files. The transcript gets a local extractive one-sentence summary based on the full text, and the document title, H1, and filename all use `summary-author`; the Markdown can then be safely copied to a user-selected archive path.
+`ni-video2md` turns public Douyin, X, YouTube, Bilibili, and Xiaohongshu video URLs or share text into Markdown transcripts using local Whisper. It prefers local `whisper.cpp`; X, YouTube, Bilibili, and Xiaohongshu use `yt-dlp` for single-video downloads, while Douyin still uses browser capture. On first run it downloads and caches missing ffmpeg, Whisper.cpp, the model, or `yt-dlp`; browser dependencies are needed only for Douyin. After finding or installing these executables, it adds their directories to the current process PATH and persists them in the Windows user PATH. It does not call a cloud transcription API and does not generate SRT files. The transcript gets a local extractive one-sentence summary based on the full text, and the document title, H1, and filename all use `summary-author`; the Markdown can then be safely copied to a user-selected archive path. Login walls, CAPTCHAs, and site compatibility failures are reported rather than bypassed.
 
 ```bash
 python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o ./transcripts
@@ -162,7 +163,7 @@ Media, WAV, and Whisper intermediate TXT files live only in a one-shot temporary
 
 `-o` selects the output directory (when given an `.md` path, its parent directory is used), while the generated `summary-author.md` name is always enforced. After returning the Markdown, ask whether to archive it; if confirmed, run `skills/ni-video2md/scripts/archive_markdown.py`. Existing archive targets are never overwritten, and the original file is retained.
 
-Automatic dependency downloads currently cover Windows x64. On other platforms, point `NI_VIDEO2MD_FFMPEG`, `NI_VIDEO2MD_WHISPER_CLI`, `NI_VIDEO2MD_MODEL`, and `NI_VIDEO2MD_BROWSER` at existing local tools. Video and public dependency downloads use network bandwidth, but speech recognition runs locally.
+Automatic dependency downloads currently cover Windows x64. On other platforms, point `NI_VIDEO2MD_FFMPEG`, `NI_VIDEO2MD_WHISPER_CLI`, `NI_VIDEO2MD_MODEL`, `NI_VIDEO2MD_YTDLP`, and `NI_VIDEO2MD_BROWSER` at existing local tools. Video and public dependency downloads use network bandwidth, but speech recognition runs locally.
 
 ### ni-readme-guide
 
@@ -321,6 +322,8 @@ Optional environment variables:
 | `NI_VIDEO2MD_FFMPEG` / `FFMPEG_PATH` | Path to the ffmpeg executable |
 | `NI_VIDEO2MD_WHISPER_CLI` / `WHISPER_CLI` | Path to the whisper-cli executable |
 | `NI_VIDEO2MD_MODEL` / `WHISPER_MODEL` | Path to a local Whisper `ggml-*.bin` model |
+| `NI_VIDEO2MD_YTDLP` / `YTDLP_PATH` | Path to the yt-dlp executable |
+| `NI_VIDEO2MD_JS_RUNTIME` | JavaScript runtime for yt-dlp, such as `node` or `deno` |
 | `NI_VIDEO2MD_BROWSER` / `BROWSER_PATH` | Path to Chrome, Edge, or Chromium |
 
 ---
