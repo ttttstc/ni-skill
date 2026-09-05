@@ -16,7 +16,7 @@
       "strict": false,
       "skills": [
         "./skills/ni-writer",
-        "./skills/ni-research",
+        "./skills/ni-radar",
         "./skills/ni-insight",
         "./skills/ni-formatter",
         "./skills/ni-inspect",

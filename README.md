@@ -4,7 +4,7 @@
 
 > 面向内容创作、视频转写、陌生领域学习、产品架构基线、首层软件架构决策与审核制 3D 资产生产的技能矩阵。
 
-ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、视频转写、调研、陌生领域学习、灵魂挖掘、写作、排版、预检、配图、发布、产品架构基线、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用，内容类 skill 可由 `ni-article-workflow` 编排为完整管线。
+ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、视频转写、选题雷达、陌生领域学习、文章策划访谈、写作、排版、预检、配图、发布、产品架构基线、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用；`ni-article-workflow` 负责把内容生产稳定编排到正文初稿。
 
 ---
 
@@ -35,7 +35,7 @@ ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行�
 git clone https://github.com/ttttstc/ni-skill.git
 mkdir -p ~/.codex/skills
 for skill in \
-  ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
+  ni-url2md ni-radar ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
   ni-design-with-docs ni-video2md think-like-architect
@@ -50,7 +50,7 @@ PowerShell：
 git clone https://github.com/ttttstc/ni-skill.git
 New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
-  "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
+  "ni-url2md", "ni-radar", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
   "ni-design-with-docs", "ni-video2md", "think-like-architect"
@@ -121,9 +121,9 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 |------|-------|------|
 | 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
 | 视频 | [`ni-video2md`](./skills/ni-video2md) | 将抖音、X、YouTube、哔哩哔哩和小红书公开视频通过本地 Whisper 转为“全文概括-作者.md”文字稿，不生成 SRT |
-| 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
+| 选题雷达 | [`ni-radar`](./skills/ni-radar) | 搜索最近 14 天的 X 原创内容，结合 21 天本地素材生成 5–8 个候选和本周 1–2 个主推 |
 | 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
-| 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
+| 文章策划 | [`ni-insight`](./skills/ni-insight) | 支持人在场访谈与无人值守自我挖掘，区分用户观点和 Agent 综合判断并交付完整大纲 |
 | 写作 | [`ni-writer`](./skills/ni-writer) | 5 种文章原型；两类技术方法论合并，技术思辨保留独立路由 |
 | 写书 | [`ni-book-writer`](./skills/ni-book-writer) | 长篇书稿写作（技术书 / 畅销书双风格），含结构、大纲与章节脚手架 |
 | 汇报 | [`ni-tech-report`](./skills/ni-tech-report) | 构建一份清晰的技术汇报——叙事线索、证据布局、执行摘要综合 |
@@ -133,13 +133,13 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 海报 | [`ni-poster`](./skills/ni-poster) | 一个公开入口，按参数路由四种 ZINE 风格并生成图像 |
 | 3D 建模 | [`ni-3d-model`](./skills/ni-3d-model) | 先确认需求和多视图，再生成并验收带纹理的 GLB 模型 |
 | 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
-| 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 串联上述 skill 为完整管线，支持断点续跑 |
+| 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 以逐阶段门禁串联选题、来源、大纲、证据和写作，断点续跑到正文初稿后停止 |
 | 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
 | README | [`ni-readme-guide`](./skills/ni-readme-guide) | 创建中文默认、英文配套、可双向跳转并含可验证徽章的 GitHub README |
 | 文档驱动设计 | [`ni-design-with-docs`](./skills/ni-design-with-docs) | 基于资料、访谈和公开证据，将模糊产品或云服务需求生成通过独立评审的研发级产品架构基线 |
 | 架构判断 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
 
-每个 skill 均可独立调用；`ni-article-workflow` 只编排内容生产类 skill。
+每个 skill 均可独立调用；`ni-article-workflow` 只编排选题到正文初稿，后续审稿、配图、排版和发布仍由对应 skill 独立处理。
 
 ### ni-fde-copilot
 
@@ -224,45 +224,43 @@ python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o 
 
 ---
 
-## 创作管线
+## 正文初稿管线
 
 ```
 topic
   ↓
-ni-research           trend analysis, competitor scan, material collection
+ni-radar              14 天 X 搜索、21 天本地素材分析与本周推荐
   ↓
-ni-insight            define the core argument and angle
+selection + source    人工选题或合格主推、原始素材本地归档
   ↓
-ni-writer             develop the long-form article
+ni-insight            协作访谈或自主挖掘，生成通过门禁的完整大纲
   ↓
-ni-formatter          inject layout modules
+ni-radar evidence     深化证据并检查大纲冲突
   ↓
-ni-inspect            pre-publication quality check
+ni-writer             生成 article-draft.md
   ↓
-ni-article-image-gen  generate image prompts (optional)
-  ↓
-ni-draft              push to the WeChat draft inbox
+draft_ready           工作流停止，等待人工审阅
 ```
 
-任一阶段降级或失败时，对应 skill 会明确告知，由你决定后续处理。
+每个阶段都先验收产物再推进；失败时保留证据并停止，不用默认值越过门禁。
 
 ---
 
 ## 使用方式
 
-### 完整管线
+### 正文初稿管线
 
 向 Codex 或 Claude 描述选题，例如：
 
 > 用 ni-skill 写一篇关于「AGENTS.md 实践」的文章
 
-`ni-article-workflow` 会接管流程，逐阶段调用对应 skill。
+`ni-article-workflow` 会接管流程，逐阶段调用对应 skill，并在正文初稿通过门禁后停止。
 
 ### 单个 skill
 
 直接描述需求即可触发对应 skill：
 
-- 挖掘文章角度 → `ni-insight`
+- 与用户讨论或在无人值守模式下自主挖掘文章观点、结构和风格，生成完整大纲 → `ni-insight`
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
 - 将视频 URL 或分享文案转成本地 Markdown 文字稿 → `ni-video2md`
