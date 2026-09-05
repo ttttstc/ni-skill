@@ -13,6 +13,7 @@ ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行�
 - **Codex** / **Claude Code** / 任何能从本地 skills 目录加载 skill 的 AI agent 运行时
 - **Python 3.10+** —— `ni-draft` 推送微信草稿、`ni-video2md` 运行本地转写脚本时需要
 - **Node.js + Chrome** —— `ni-url2md` 抓取网页时需要
+- **yt-dlp** —— `ni-video2md` 下载 X、YouTube、哔哩哔哩和小红书公开视频；缺少时脚本会缓存便携版
 - **Chrome/Edge 或可下载的 Chromium** —— `ni-video2md` 抓取抖音公开媒体流时需要
 - **图像生成、浏览器控制与可用的图生 3D 服务** —— `ni-3d-model` 需要；登录状态与免费额度取决于所选服务
 
@@ -119,7 +120,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 阶段 | Skill | 能力 |
 |------|-------|------|
 | 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
-| 视频 | [`ni-video2md`](./skills/ni-video2md) | 将公开视频通过本地 Whisper 转为“全文概括-作者.md”文字稿，不生成 SRT |
+| 视频 | [`ni-video2md`](./skills/ni-video2md) | 将抖音、X、YouTube、哔哩哔哩和小红书公开视频通过本地 Whisper 转为“全文概括-作者.md”文字稿，不生成 SRT |
 | 调研 | [`ni-research`](./skills/ni-research) | 热点分析、竞品扫描、采集具名素材 |
 | 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
 | 灵魂 | [`ni-insight`](./skills/ni-insight) | 挖掘文章的核心观点与独特角度 |
@@ -150,7 +151,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 
 ### ni-video2md
 
-`ni-video2md` 将抖音等公开视频 URL 或分享文案转成本地 Whisper 生成的 Markdown 文字稿。它优先使用本地 `whisper.cpp`，首次运行如果缺少 ffmpeg、Whisper.cpp、模型或浏览器依赖，会先下载/安装并缓存；安装或发现 ffmpeg、Whisper.cpp 后会自动把可执行文件目录加入当前进程 PATH，并在 Windows 写入当前用户 PATH；不调用云端转录 API，也不生成 SRT。文字稿会基于全文用本地抽取式算法生成一句话概括，标题、一级标题和文件名统一为“概括-作者”；交付后可将 Markdown 安全复制到用户指定的归档路径。
+`ni-video2md` 将抖音、X、YouTube、哔哩哔哩和小红书等公开视频 URL 或分享文案转成本地 Whisper 生成的 Markdown 文字稿。它优先使用本地 `whisper.cpp`；X、YouTube、哔哩哔哩和小红书通过 `yt-dlp` 下载单个公开视频，抖音才需要浏览器抓流。首次运行如果缺少 ffmpeg、Whisper.cpp、模型或 `yt-dlp`，会先下载/安装并缓存；安装或发现这些可执行文件后会自动把目录加入当前进程 PATH，并在 Windows 写入当前用户 PATH；不调用云端转录 API，也不生成 SRT。文字稿会基于全文用本地抽取式算法生成一句话概括，标题、一级标题和文件名统一为“概括-作者”；交付后可将 Markdown 安全复制到用户指定的归档路径。验证码、登录墙和页面兼容性问题不绕过，明确报告失败。
 
 ```bash
 python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o ./transcripts
@@ -160,7 +161,7 @@ python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o 
 
 `-o` 用于指定输出目录（传入 `.md` 路径时取其父目录），最终文件名始终是生成的“概括-作者.md”。返回 Markdown 后，先询问用户是否归档；确认后运行 `skills/ni-video2md/scripts/archive_markdown.py`，目标已存在时不会覆盖，原文件也会保留。
 
-默认支持 Windows x64 的依赖自动下载；其他平台可通过 `NI_VIDEO2MD_FFMPEG`、`NI_VIDEO2MD_WHISPER_CLI`、`NI_VIDEO2MD_MODEL` 和 `NI_VIDEO2MD_BROWSER` 指向已有本地工具。视频和公开依赖下载会消耗网络流量，但语音识别在本机完成。
+默认支持 Windows x64 的依赖自动下载；其他平台可通过 `NI_VIDEO2MD_FFMPEG`、`NI_VIDEO2MD_WHISPER_CLI`、`NI_VIDEO2MD_MODEL`、`NI_VIDEO2MD_YTDLP` 和 `NI_VIDEO2MD_BROWSER` 指向已有本地工具。视频和公开依赖下载会消耗网络流量，但语音识别在本机完成。
 
 ### ni-readme-guide
 
@@ -319,6 +320,8 @@ wechat:
 | `NI_VIDEO2MD_FFMPEG` / `FFMPEG_PATH` | 指定 ffmpeg 可执行文件 |
 | `NI_VIDEO2MD_WHISPER_CLI` / `WHISPER_CLI` | 指定 whisper-cli 可执行文件 |
 | `NI_VIDEO2MD_MODEL` / `WHISPER_MODEL` | 指定本地 Whisper `ggml-*.bin` 模型 |
+| `NI_VIDEO2MD_YTDLP` / `YTDLP_PATH` | 指定 yt-dlp 可执行文件 |
+| `NI_VIDEO2MD_JS_RUNTIME` | 指定 yt-dlp 使用的 JavaScript 运行时 |
 | `NI_VIDEO2MD_BROWSER` / `BROWSER_PATH` | 指定 Chrome、Edge 或 Chromium 可执行文件 |
 
 ---

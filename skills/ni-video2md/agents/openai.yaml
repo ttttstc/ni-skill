@@ -1,4 +1,4 @@
 interface:
   display_name: "ni-video2md"
-  short_description: "本地转录并按全文概括-作者生成 Markdown，交付后可归档"
+  short_description: "支持抖音、X、YouTube、哔哩哔哩和小红书的本地视频转录"
   default_prompt: "使用 $ni-video2md 把这个视频转成本地 Markdown 文字稿，按全文概括-作者命名并在交付后询问是否归档。"
