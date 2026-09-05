@@ -26,10 +26,11 @@ interface Args {
   output?: string;
   wait: boolean;
   timeout: number;
+  overwrite: boolean;
 }
 
 function parseArgs(argv: string[]): Args {
-  const args: Args = { url: "", wait: false, timeout: DEFAULT_TIMEOUT_MS };
+  const args: Args = { url: "", wait: false, timeout: DEFAULT_TIMEOUT_MS, overwrite: false };
   for (let i = 2; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--wait" || arg === "-w") {
@@ -38,6 +39,8 @@ function parseArgs(argv: string[]): Args {
       args.output = argv[++i];
     } else if (arg === "--timeout" || arg === "-t") {
       args.timeout = parseInt(argv[++i], 10) || DEFAULT_TIMEOUT_MS;
+    } else if (arg === "--overwrite" || arg === "--force") {
+      args.overwrite = true;
     } else if (!arg.startsWith("-") && !args.url) {
       args.url = arg;
     }
@@ -144,7 +147,7 @@ async function captureUrl(args: Args): Promise<ConversionResult> {
 async function main(): Promise<void> {
   const args = parseArgs(process.argv);
   if (!args.url) {
-    console.error("Usage: bun main.ts <url> [-o output.md] [--wait] [--timeout ms]");
+    console.error("Usage: bun main.ts <url> [-o output.md] [--wait] [--timeout ms] [--overwrite]");
     process.exit(1);
   }
 
@@ -162,6 +165,12 @@ async function main(): Promise<void> {
   const outputPath = args.output || await generateOutputPath(args.url, result.metadata.title);
   const outputDir = path.dirname(outputPath);
   await mkdir(outputDir, { recursive: true });
+
+  if (!args.overwrite && await fileExists(outputPath)) {
+    console.error(`Refusing to overwrite existing file: ${outputPath}`);
+    console.error("Choose a new archive path or pass --overwrite only when replacement is intentional.");
+    process.exit(2);
+  }
 
   const document = createMarkdownDocument(result);
   await writeFile(outputPath, document, "utf-8");

@@ -4,7 +4,7 @@
 
 > A skill suite for content creation, local video transcription, conversation-ready domain learning, product architecture baselines, first-cut software architecture, and review-gated 3D asset production.
 
-ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code, and similar runtimes), spanning source capture, local video transcription, research, domain learning, insight, writing, layout, preflight, imagery, publishing, product architecture baselines, first-principles architecture decisions, and review-gated multiview-to-GLB production. Each skill works standalone, and `ni-article-workflow` orchestrates the content skills into a complete pipeline.
+ni-skill is a set of cooperating skills for AI coding agents (Codex, Claude Code, and similar runtimes), spanning source capture, local video transcription, topic radar, domain learning, article planning, writing, layout, preflight, imagery, publishing, product architecture baselines, first-principles architecture decisions, and review-gated multiview-to-GLB production. Each skill works standalone; `ni-article-workflow` provides a gated path through the initial article draft.
 
 ---
 
@@ -35,7 +35,7 @@ If you only need the skills, copy them into `~/.codex/skills/`. This snippet ins
 git clone https://github.com/ttttstc/ni-skill.git
 mkdir -p ~/.codex/skills
 for skill in \
-  ni-url2md ni-research ni-insight ni-writer ni-formatter ni-inspect \
+  ni-url2md ni-radar ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
   ni-design-with-docs ni-video2md think-like-architect
@@ -50,7 +50,7 @@ PowerShell:
 git clone https://github.com/ttttstc/ni-skill.git
 New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
-  "ni-url2md", "ni-research", "ni-insight", "ni-writer", "ni-formatter",
+  "ni-url2md", "ni-radar", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
   "ni-design-with-docs", "ni-video2md", "think-like-architect"
@@ -123,9 +123,9 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 |-------|-------|------------|
 | Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
 | Video | [`ni-video2md`](./skills/ni-video2md) | Transcribe public Douyin, X, YouTube, Bilibili, and Xiaohongshu videos to `full-summary-author.md` with local Whisper; no SRT output |
-| Research | [`ni-research`](./skills/ni-research) | Trend analysis, competitor scanning, sourced material collection |
+| Topic radar | [`ni-radar`](./skills/ni-radar) | Search 14 days of original X content, combine it with 21 days of local sources, and recommend 1–2 of 5–8 topics |
 | Domain learning | [`ni-fde-copilot`](./skills/ni-fde-copilot) | Turn expert-oriented source material into a gated learning blueprint and conversation-ready guide |
-| Insight | [`ni-insight`](./skills/ni-insight) | Identify the core argument and a distinctive angle |
+| Article planning | [`ni-insight`](./skills/ni-insight) | Interview the user or autonomously synthesize candidate theses, preserve authorship boundaries, and produce a complete outline |
 | Writing | [`ni-writer`](./skills/ni-writer) | Five article archetypes; the two technical-methodology routes are merged while technical polemic remains separate |
 | Book writing | [`ni-book-writer`](./skills/ni-book-writer) | Long-form book writing in two styles (technical / trade-press), with structure, outline, and chapter scaffolding |
 | Reporting | [`ni-tech-report`](./skills/ni-tech-report) | Build a clear technical report — narrative arc, evidence layout, and executive-summary synthesis |
@@ -135,13 +135,13 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Poster | [`ni-poster`](./skills/ni-poster) | One public poster skill with four routed ZINE styles and image generation |
 | 3D modeling | [`ni-3d-model`](./skills/ni-3d-model) | Confirm requirements, review consistent multiview images, then generate and validate a textured GLB |
 | Publish | [`ni-draft`](./skills/ni-draft) | Push the article to the WeChat draft inbox |
-| Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Thread the skills into a complete pipeline with resume support |
+| Orchestration | [`ni-article-workflow`](./skills/ni-article-workflow) | Gate topic selection, sources, outline, evidence, and writing; resume safely and stop at the initial draft |
 | Diagnosis | [`ni-unknown-first`](./skills/ni-unknown-first) | Diagnose which kind of "unknown" you are facing and emit a Chinese next-step prompt |
 | README | [`ni-readme-guide`](./skills/ni-readme-guide) | Create synchronized Chinese-default and English GitHub READMEs with reciprocal links and verified badges |
 | Docs-driven design | [`ni-design-with-docs`](./skills/ni-design-with-docs) | Use source documents, interviews, and public evidence to turn an ambiguous product or cloud-service requirement into a review-gated architecture baseline |
 | Architecture | [`think-like-architect`](./skills/think-like-architect) | Turn a PRD or project context into a first-principles Architecture First Cut |
 
-Each skill can be used standalone. `ni-article-workflow` orchestrates the content-production skills.
+Each skill can be used standalone. `ni-article-workflow` orchestrates topic discovery through the initial draft; review, imagery, layout, and publishing remain standalone steps.
 
 ### ni-fde-copilot
 
@@ -226,45 +226,43 @@ Each skill also has its own domain guidelines; see the corresponding `SKILL.md`.
 
 ---
 
-## Pipeline
+## Initial-draft pipeline
 
 ```
 topic
   ↓
-ni-research           trend analysis, competitor scan, material collection
+ni-radar              14-day X search, 21-day local analysis, weekly recommendations
   ↓
-ni-insight            define the core argument and angle
+selection + source    user selection or qualified top pick, locally archived sources
   ↓
-ni-writer             develop the long-form article
+ni-insight            collaborative interview or autonomous thesis synthesis
   ↓
-ni-formatter          inject layout modules
+ni-radar evidence     deepen evidence and detect outline conflicts
   ↓
-ni-inspect            pre-publication quality check
+ni-writer             produce article-draft.md
   ↓
-ni-article-image-gen  generate image prompts (optional)
-  ↓
-ni-draft              push to the WeChat draft inbox
+draft_ready           workflow stops for human review
 ```
 
-If any stage degrades or fails, the skill reports it clearly and leaves the next step to you.
+Each stage validates its artifact before advancing. Failures retain evidence and stop instead of bypassing a gate with defaults.
 
 ---
 
 ## Usage
 
-### Full pipeline
+### Initial-draft pipeline
 
 Describe a topic to Codex or Claude, for example:
 
 > Use ni-skill to write an article on "AGENTS.md in practice"
 
-`ni-article-workflow` takes over and runs each stage in turn.
+`ni-article-workflow` takes over, runs each gated stage, and stops after the initial draft passes validation.
 
 ### Individual skills
 
 Describe what you need to trigger the matching skill:
 
-- Find an article angle → `ni-insight`
+- Discuss the topic with the user or autonomously synthesize its thesis, structure, and style into a complete outline → `ni-insight`
 - Lay out an article → `ni-formatter`
 - Scrape a URL into Markdown → `ni-url2md`
 - Turn a video URL or share text into a local Markdown transcript → `ni-video2md`
