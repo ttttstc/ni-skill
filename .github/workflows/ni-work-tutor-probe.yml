@@ -1,9 +1,6 @@
 name: ni-work-tutor-probe
 
 on:
-  push:
-    branches:
-      - work/ni-work-tutor-build-20260922
   workflow_dispatch:
 
 permissions:
@@ -26,32 +23,21 @@ jobs:
       - name: Probe Douyin real media
         run: |
           python - <<'PY'
-          import hashlib, json, re, sys, time
+          import hashlib, json, sys
           from pathlib import Path
           import requests
           from playwright.sync_api import sync_playwright
 
           source = "https://v.douyin.com/YkkwCC0b_3Y/"
           expected_author_id = "MS4wLjABAAAAuf_LJbB5-Ax1mK7A-haX99dBuPsiU5KvqVG183M-xEZjesCpObHPdYe6pdC_XyoG"
-          out = {
-              "source": source,
-              "final_url": None,
-              "title": None,
-              "expected_author_id_seen": False,
-              "media_count": 0,
-              "media_probe_ok": False,
-              "media_content_type": None,
-              "media_bytes": 0,
-              "media_sha256_prefix": None,
-              "errors": [],
-          }
-
+          out = {"source": source, "final_url": None, "title": None, "expected_author_id_seen": False,
+                 "media_count": 0, "media_probe_ok": False, "media_content_type": None,
+                 "media_bytes": 0, "media_sha256_prefix": None, "errors": []}
           with sync_playwright() as p:
               browser = p.chromium.launch(headless=True)
               context = browser.new_context(locale="zh-CN")
               page = context.new_page()
               media = []
-
               def on_response(resp):
                   try:
                       ctype = (resp.headers.get("content-type") or "").lower()
@@ -59,12 +45,10 @@ jobs:
                       if resp.status in (200, 206) and (
                           ctype.startswith("video/") or ctype.startswith("audio/") or
                           "media-audio" in u.lower() or "/play/" in u.lower()
-                      ):
-                          if u not in media:
-                              media.append(u)
+                      ) and u not in media:
+                          media.append(u)
                   except Exception:
                       pass
-
               page.on("response", on_response)
               try:
                   page.goto(source, wait_until="domcontentloaded", timeout=90000)
@@ -72,70 +56,48 @@ jobs:
                   try:
                       page.evaluate("""() => {
                         for (const e of document.querySelectorAll('video,audio')) {
-                          e.muted = true;
-                          const p = e.play();
-                          if (p) p.catch(() => {});
+                          e.muted = true; const p = e.play(); if (p) p.catch(() => {});
                         }
                       }""")
                       page.wait_for_timeout(5000)
                   except Exception as exc:
                       out["errors"].append("play:" + str(exc)[:200])
-
                   out["final_url"] = page.url
                   out["title"] = page.title()
                   html = page.content()
                   out["expected_author_id_seen"] = expected_author_id in html or expected_author_id in page.url
                   try:
-                      dom = page.eval_on_selector_all(
-                          "video,audio",
-                          "els => els.map(e => e.currentSrc || e.src).filter(Boolean)"
-                      )
+                      dom = page.eval_on_selector_all("video,audio",
+                          "els => els.map(e => e.currentSrc || e.src).filter(Boolean)")
                       for u in dom:
                           if isinstance(u, str) and u.startswith("http") and u not in media:
                               media.append(u)
                   except Exception as exc:
                       out["errors"].append("dom:" + str(exc)[:200])
-
                   out["media_count"] = len(media)
-
                   if media:
                       cookies = context.cookies()
-                      cookie_header = "; ".join(
-                          f"{c['name']}={c['value']}" for c in cookies if c.get("name")
-                      )
+                      cookie_header = "; ".join(f"{c['name']}={c['value']}" for c in cookies if c.get("name"))
                       ua = page.evaluate("navigator.userAgent")
-                      headers = {
-                          "User-Agent": ua,
-                          "Referer": page.url,
-                          "Range": "bytes=0-2097151",
-                      }
-                      if cookie_header:
-                          headers["Cookie"] = cookie_header
-                      try:
-                          r = requests.get(media[0], headers=headers, timeout=60, stream=True)
-                          out["media_content_type"] = r.headers.get("content-type")
-                          data = b""
-                          for chunk in r.iter_content(65536):
-                              if not chunk:
-                                  continue
+                      headers = {"User-Agent": ua, "Referer": page.url, "Range": "bytes=0-2097151"}
+                      if cookie_header: headers["Cookie"] = cookie_header
+                      r = requests.get(media[0], headers=headers, timeout=60, stream=True)
+                      out["media_content_type"] = r.headers.get("content-type")
+                      data = b""
+                      for chunk in r.iter_content(65536):
+                          if chunk:
                               data += chunk
-                              if len(data) >= 1048576:
-                                  break
-                          out["media_bytes"] = len(data)
-                          if data:
-                              out["media_sha256_prefix"] = hashlib.sha256(data).hexdigest()[:16]
-                          out["media_probe_ok"] = r.status_code in (200,206) and len(data) > 65536
-                      except Exception as exc:
-                          out["errors"].append("download:" + str(exc)[:300])
+                              if len(data) >= 1048576: break
+                      out["media_bytes"] = len(data)
+                      if data: out["media_sha256_prefix"] = hashlib.sha256(data).hexdigest()[:16]
+                      out["media_probe_ok"] = r.status_code in (200,206) and len(data) > 65536
               except Exception as exc:
                   out["errors"].append("page:" + str(exc)[:400])
               finally:
                   browser.close()
-
           Path("probe.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
           print(json.dumps(out, ensure_ascii=False, indent=2))
-          if not out["media_probe_ok"]:
-              sys.exit(2)
+          if not out["media_probe_ok"]: sys.exit(2)
           PY
       - uses: actions/upload-artifact@v4
         if: always()
