@@ -95,13 +95,42 @@ def main() -> int:
                     "max_cursor": payload.get("max_cursor"),
                 }, ensure_ascii=False), flush=True)
             except Exception as exc:
-                errors.append("response:" + str(exc)[:300])
+                try:
+                    body = resp.body()
+                    diag = {
+                        "status": resp.status,
+                        "content_type": resp.headers.get("content-type"),
+                        "content_length": resp.headers.get("content-length"),
+                        "body_len": len(body or b""),
+                        "resource_type": resp.request.resource_type,
+                        "error": str(exc)[:200],
+                    }
+                    print(json.dumps({"event": "api_parse_failure", **diag}, ensure_ascii=False), flush=True)
+                    errors.append("response:" + json.dumps(diag, ensure_ascii=False))
+                except Exception as diag_exc:
+                    errors.append("response:" + str(exc)[:200] + "|diag:" + str(diag_exc)[:100])
 
         page.on("response", on_response)
+        def on_request_failed(req: Any) -> None:
+            if "/aweme/v1/web/aweme/post/" in req.url:
+                print(json.dumps({
+                    "event": "api_request_failed",
+                    "resource_type": req.resource_type,
+                    "failure": req.failure,
+                }, ensure_ascii=False), flush=True)
+        page.on("requestfailed", on_request_failed)
         try:
             page.goto(PROFILE_URL, wait_until="domcontentloaded", timeout=90000)
             page.wait_for_timeout(10000)
             html = page.content()
+            try:
+                body_text = page.locator("body").inner_text(timeout=5000)
+                for line in body_text.splitlines():
+                    if "作品" in line or "粉丝" in line or "获赞" in line:
+                        if len(line) < 120:
+                            print(json.dumps({"event": "profile_text", "text": line}, ensure_ascii=False), flush=True)
+            except Exception:
+                pass
             if AUTHOR_ID in page.url or AUTHOR_ID in html:
                 author_verified = True
 
