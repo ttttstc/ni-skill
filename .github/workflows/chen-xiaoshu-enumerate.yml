@@ -1,0 +1,35 @@
+name: chen-xiaoshu-enumerate
+
+on:
+  push:
+    branches:
+      - work/chen-xiaoshu-full-wiki
+    paths:
+      - .github/workflows/chen-xiaoshu-enumerate.yml
+      - tools/chen_xiaoshu_enumerate.py
+  workflow_dispatch:
+
+jobs:
+  enumerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install browser
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Enumerate current public posts
+        run: python tools/chen_xiaoshu_enumerate.py
+      - name: Upload evidence manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chen-xiaoshu-enumeration
+          path: artifacts/chen-xiaoshu
+          if-no-files-found: warn
+          retention-days: 7
