@@ -1,0 +1,55 @@
+name: ni-work-tutor-transcribe
+
+on:
+  push:
+    branches:
+      - work/ni-work-tutor-build-20260922
+    paths:
+      - 'skills/ni-work-tutor/evidence/posts.jsonl'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  transcribe:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install ASR and browser dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --upgrade pip
+          pip install faster-whisper playwright requests
+          if ! command -v google-chrome >/dev/null 2>&1; then
+            python -m playwright install --with-deps chromium
+          fi
+
+      - name: Transcribe shard
+        env:
+          HF_HOME: ${{ runner.temp }}/hf
+        run: |
+          mkdir -p build/ni-work-tutor/transcripts
+          python skills/ni-work-tutor/scripts/transcribe_shard.py \
+            --posts skills/ni-work-tutor/evidence/posts.jsonl \
+            --output build/ni-work-tutor/transcripts \
+            --shard ${{ matrix.shard }} \
+            --shards 8 \
+            --model small
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ni-work-tutor-transcripts-${{ matrix.shard }}
+          path: build/ni-work-tutor/
+          if-no-files-found: warn
