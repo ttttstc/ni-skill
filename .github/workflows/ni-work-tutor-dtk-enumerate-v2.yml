@@ -1,0 +1,69 @@
+name: ni-work-tutor-dtk-enumerate-v2
+
+on:
+  push:
+    branches:
+      - work/ni-work-tutor-build-20260922
+    paths:
+      - '.github/workflows/ni-work-tutor-dtk-enumerate-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  enumerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free disk
+        run: |
+          sudo rm -rf /usr/local/lib/android /opt/ghc /usr/share/dotnet || true
+          docker system prune -af || true
+      - name: Start DTK
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/Evil0ctal/Douyin_TikTok_Download_API.git /tmp/dtk
+          cd /tmp/dtk
+          PG="$(openssl rand -hex 24)"
+          RD="$(openssl rand -hex 24)"
+          SK="$(openssl rand -base64 48 | tr -d '\n')"
+          cat > .env <<EOF
+          DTK_SECRET_KEY=${SK}
+          POSTGRES_PASSWORD=${PG}
+          REDIS_PASSWORD=${RD}
+          DTK_DATABASE_URL=postgresql+asyncpg://dtk:${PG}@postgres:5432/dtk
+          DTK_REDIS_URL=redis://:${RD}@redis:6379/0
+          DTK_BROWSER_RPC_URL=http://browser-rpc:9000
+          EOF
+          CLOAKBROWSER_COMMIT=f04c23da285b3b3d3cf10c8f9d282e7adc1d52ce \
+            docker compose -p dtk -f docker/compose.yml --profile browser up -d --build --wait --wait-timeout 300
+      - name: Full author enumeration
+        run: |
+          set -euo pipefail
+          cd /tmp/dtk
+          TOKEN=""
+          for i in $(seq 1 30); do
+            TOKEN="$(docker compose -p dtk -f docker/compose.yml logs api 2>/dev/null \
+              | grep -oE 'setup\?token=[A-Za-z0-9_-]+' \
+              | tail -1 | cut -d= -f2 || true)"
+            [ -n "$TOKEN" ] && break
+            sleep 2
+          done
+          [ -n "$TOKEN" ] || exit 2
+          export DTK_SETUP_TOKEN="$TOKEN"
+          python -m pip install -q requests
+          python "$GITHUB_WORKSPACE/skills/ni-work-tutor/scripts/dtk_enumerate_ci.py" \
+            --output-dir "$GITHUB_WORKSPACE/build/ni-work-tutor"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ni-work-tutor-dtk-enumeration-v2
+          path: build/ni-work-tutor/
+          if-no-files-found: warn
+      - name: Stop DTK
+        if: always()
+        run: |
+          cd /tmp/dtk 2>/dev/null || exit 0
+          docker compose -p dtk -f docker/compose.yml --profile browser down -v || true
