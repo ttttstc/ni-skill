@@ -1,0 +1,44 @@
+name: ni-work-tutor-asr-quality-probe
+
+on:
+  push:
+    branches:
+      - work/ni-work-tutor-build-20260922
+    paths:
+      - '.github/workflows/ni-work-tutor-asr-quality-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --upgrade pip
+          pip install faster-whisper playwright requests
+      - name: Transcribe with large-v3-turbo
+        run: |
+          mkdir -p build/probe build/out
+          cat > build/probe/posts.jsonl <<'EOF'
+          {"content_id":"7670944415926459578","kind":"video","web_url":"https://www.douyin.com/video/7670944415926459578","title":"工作一直担惊受怕的解法","description":"工作一直担惊受怕的解法","created_at":null}
+          EOF
+          python skills/ni-work-tutor/scripts/transcribe_shard.py \
+            --posts build/probe/posts.jsonl \
+            --output build/out/transcripts \
+            --shard 0 --shards 1 --model large-v3-turbo
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ni-work-tutor-asr-quality-probe
+          path: build/out/
+          if-no-files-found: error
