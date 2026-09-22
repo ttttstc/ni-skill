@@ -1,0 +1,219 @@
+name: ni-work-tutor-dtk-enumerate
+
+on:
+  push:
+    branches:
+      - work/ni-work-tutor-build-20260922
+    paths:
+      - '.github/workflows/ni-work-tutor-dtk-enumerate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  enumerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /opt/ghc /usr/share/dotnet || true
+          docker system prune -af || true
+
+      - name: Start DTK with guest identity browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/Evil0ctal/Douyin_TikTok_Download_API.git /tmp/dtk
+          cd /tmp/dtk
+          POSTGRES_PASSWORD="$(openssl rand -hex 24)"
+          REDIS_PASSWORD="$(openssl rand -hex 24)"
+          SECRET="$(openssl rand -base64 48 | tr -d '\n')"
+          cat > .env <<EOF
+          DTK_SECRET_KEY=${SECRET}
+          POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+          REDIS_PASSWORD=${REDIS_PASSWORD}
+          DTK_DATABASE_URL=postgresql+asyncpg://dtk:${POSTGRES_PASSWORD}@postgres:5432/dtk
+          DTK_REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+          DTK_BROWSER_RPC_URL=http://browser-rpc:9000
+          EOF
+          CLOAKBROWSER_COMMIT=f04c23da285b3b3d3cf10c8f9d282e7adc1d52ce \
+            docker compose -p dtk -f docker/compose.yml --profile browser up -d --build --wait --wait-timeout 300
+
+      - name: Initialize DTK and enumerate all posts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/dtk
+          python -m pip install -q requests
+
+          TOKEN=""
+          for i in $(seq 1 30); do
+            TOKEN="$(docker compose -p dtk -f docker/compose.yml logs api 2>/dev/null \
+              | grep -oE 'setup\?token=[A-Za-z0-9_-]+' \
+              | tail -1 | cut -d= -f2 || true)"
+            [ -n "$TOKEN" ] && break
+            sleep 2
+          done
+          if [ -z "$TOKEN" ]; then
+            echo "DTK setup token was not emitted" >&2
+            exit 2
+          fi
+
+          export DTK_SETUP_TOKEN="$TOKEN"
+          mkdir -p "$GITHUB_WORKSPACE/build/ni-work-tutor"
+
+          python - <<'PY'
+          from __future__ import annotations
+          import json, os, sys, time
+          from pathlib import Path
+          import requests
+
+          BASE = "http://127.0.0.1:8000"
+          AUTHOR_ID = "MS4wLjABAAAAuf_LJbB5-Ax1mK7A-haX99dBuPsiU5KvqVG183M-xEZjesCpObHPdYe6pdC_XyoG"
+          OUT = Path(os.environ["GITHUB_WORKSPACE"]) / "build/ni-work-tutor"
+          OUT.mkdir(parents=True, exist_ok=True)
+          report = {"stage": "init", "mint": None, "pages": [], "errors": []}
+
+          def envelope(resp):
+              body = resp.json()
+              if not body.get("success"):
+                  raise RuntimeError(f"{body.get('error',{}).get('code')}: {body.get('error',{}).get('message')}")
+              return body["data"]
+
+          s = requests.Session()
+          token = os.environ["DTK_SETUP_TOKEN"]
+          username = "ni_work_tutor"
+          password = "Tmp-" + os.urandom(18).hex()
+
+          r = s.post(BASE + "/api/setup/init", json={"token": token, "username": username, "password": password}, timeout=30)
+          r.raise_for_status()
+          envelope(r)
+          report["stage"] = "setup"
+
+          r = s.post(BASE + "/api/v1/auth/login", json={"username": username, "password": password}, timeout=30)
+          r.raise_for_status()
+          envelope(r)
+          report["stage"] = "login"
+
+          # Explicitly mint one anonymous Douyin identity.
+          r = s.post(BASE + "/api/v1/admin/identities/mint", json={"platform": "douyin", "count": 1}, timeout=30)
+          r.raise_for_status()
+          minted = envelope(r)
+          task_id = minted["task_ids"][0]
+          report["mint"] = {"task_id": task_id, "state": "queued"}
+
+          deadline = time.time() + 240
+          while time.time() < deadline:
+              t = envelope(s.get(BASE + f"/api/v1/tasks/{task_id}", timeout=30))
+              report["mint"]["state"] = t["state"]
+              if t["state"] == "done":
+                  report["mint"]["data"] = t.get("data")
+                  break
+              if t["state"] == "failed":
+                  report["mint"]["error"] = t.get("error")
+                  raise RuntimeError("identity mint failed: " + json.dumps(t.get("error"), ensure_ascii=False))
+              time.sleep(3)
+          else:
+              raise TimeoutError("identity mint did not finish")
+
+          def submit_page(cursor):
+              params = {
+                  "sec_user_id": AUTHOR_ID,
+                  "count": 50,
+                  "wait": 30,
+                  "include_raw": "false",
+              }
+              if cursor:
+                  params["cursor"] = cursor
+              resp = s.get(BASE + "/api/v1/douyin/user/posts", params=params, timeout=45)
+              data = envelope(resp)
+              if resp.status_code == 200:
+                  return data
+              task = data
+              tid = task["task_id"]
+              end = time.time() + 120
+              while time.time() < end:
+                  row = envelope(s.get(BASE + f"/api/v1/tasks/{tid}", timeout=30))
+                  if row["state"] == "done":
+                      return row["data"]
+                  if row["state"] == "failed":
+                      raise RuntimeError("author_posts failed: " + json.dumps(row.get("error"), ensure_ascii=False))
+                  time.sleep(2)
+              raise TimeoutError(f"author_posts task {tid} timed out")
+
+          all_items = {}
+          cursor = None
+          seen_cursors = set()
+          terminal = False
+          for page_no in range(1, 101):
+              page = submit_page(cursor)
+              items = page.get("items") or []
+              for item in items:
+                  cid = str(item.get("content_id") or "")
+                  if cid:
+                      all_items[cid] = item
+              next_cursor = page.get("cursor")
+              has_more = bool(page.get("has_more"))
+              report["pages"].append({
+                  "page": page_no,
+                  "items": len(items),
+                  "total_unique": len(all_items),
+                  "has_more": has_more,
+                  "has_cursor": bool(next_cursor),
+              })
+              print(json.dumps(report["pages"][-1], ensure_ascii=False), flush=True)
+              if not has_more:
+                  terminal = True
+                  break
+              if not next_cursor or next_cursor in seen_cursors:
+                  raise RuntimeError("pagination cursor stopped before terminal page")
+              seen_cursors.add(next_cursor)
+              cursor = next_cursor
+              # DTK's per-identity author_posts bucket refills ~one request per 8s.
+              time.sleep(9)
+
+          ordered = sorted(
+              all_items.values(),
+              key=lambda x: (x.get("created_at") or "", str(x.get("content_id") or "")),
+              reverse=True,
+          )
+          with (OUT / "posts.jsonl").open("w", encoding="utf-8") as f:
+              for item in ordered:
+                  f.write(json.dumps(item, ensure_ascii=False) + "\n")
+          summary = {
+              "author_id": AUTHOR_ID,
+              "terminal_page_seen": terminal,
+              "page_count": len(report["pages"]),
+              "total_posts": len(ordered),
+              "video_posts": sum(1 for x in ordered if x.get("kind") == "video"),
+              "image_posts": sum(1 for x in ordered if x.get("kind") == "image_album"),
+              "pages": report["pages"],
+              "mint_state": report["mint"]["state"],
+          }
+          (OUT / "enumeration-summary.json").write_text(
+              json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
+          )
+          (OUT / "dtk-report.json").write_text(
+              json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
+          )
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          if not terminal or not ordered:
+              raise SystemExit(3)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ni-work-tutor-dtk-enumeration
+          path: build/ni-work-tutor/
+          if-no-files-found: warn
+
+      - name: Stop DTK
+        if: always()
+        run: |
+          cd /tmp/dtk 2>/dev/null || exit 0
+          docker compose -p dtk -f docker/compose.yml --profile browser down -v || true
