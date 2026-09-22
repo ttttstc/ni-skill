@@ -53,7 +53,9 @@ def main() -> int:
     api_author_mismatch = 0
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        import os
+        headful = os.environ.get("NI_DOUYIN_HEADFUL") == "1"
+        browser = p.chromium.launch(headless=not headful, channel="chrome" if headful else None)
         context = browser.new_context(locale="zh-CN", viewport={"width": 1440, "height": 1200})
         page = context.new_page()
 
@@ -120,6 +122,9 @@ def main() -> int:
                 }, ensure_ascii=False), flush=True)
         page.on("requestfailed", on_request_failed)
         try:
+            # Establish a normal anonymous browsing session from a known public video first.
+            page.goto("https://v.douyin.com/YkkwCC0b_3Y/", wait_until="domcontentloaded", timeout=90000)
+            page.wait_for_timeout(8000)
             page.goto(PROFILE_URL, wait_until="domcontentloaded", timeout=90000)
             page.wait_for_timeout(10000)
             html = page.content()
