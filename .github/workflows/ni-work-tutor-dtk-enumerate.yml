@@ -100,7 +100,7 @@ jobs:
           report["stage"] = "login"
 
           # Explicitly mint one anonymous Douyin identity.
-          r = s.post(BASE + "/api/v1/admin/identities/mint", json={"platform": "douyin", "count": 1}, timeout=30)
+          r = s.post(BASE + "/api/v1/admin/identities/mint", json={"platform": "douyin", "count": 3}, timeout=30)
           r.raise_for_status()
           minted = envelope(r)
           task_id = minted["task_ids"][0]
@@ -174,7 +174,7 @@ jobs:
               seen_cursors.add(next_cursor)
               cursor = next_cursor
               # DTK's per-identity author_posts bucket refills ~one request per 8s.
-              time.sleep(9)
+              time.sleep(18)
 
           ordered = sorted(
               all_items.values(),
