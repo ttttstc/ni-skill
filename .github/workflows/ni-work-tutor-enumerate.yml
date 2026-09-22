@@ -1,0 +1,38 @@
+name: ni-work-tutor-enumerate
+
+on:
+  push:
+    branches:
+      - work/ni-work-tutor-build-20260922
+    paths:
+      - '.github/workflows/ni-work-tutor-enumerate.yml'
+      - 'skills/ni-work-tutor/scripts/enumerate_posts.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  enumerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Enumerate all public posts
+        run: |
+          mkdir -p build/ni-work-tutor
+          python skills/ni-work-tutor/scripts/enumerate_posts.py             --output build/ni-work-tutor/posts.jsonl             --summary build/ni-work-tutor/enumeration-summary.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ni-work-tutor-enumeration
+          path: build/ni-work-tutor/
+          if-no-files-found: error
