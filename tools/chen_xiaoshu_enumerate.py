@@ -3,7 +3,7 @@ import json, time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-SEED = "https://www.douyin.com/video/7670944415926459578"
+SEED = "https://v.douyin.com/YkkwCC0b_3Y/"
 OUT = Path("artifacts/chen-xiaoshu")
 OUT.mkdir(parents=True, exist_ok=True)
 raw_dir = OUT / "raw"
