@@ -53,3 +53,64 @@ jobs:
           name: ni-work-tutor-transcripts-${{ matrix.shard }}
           path: build/ni-work-tutor/
           if-no-files-found: warn
+
+  aggregate:
+    needs: transcribe
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ni-work-tutor-transcripts-*
+          path: build/all
+          merge-multiple: true
+
+      - name: Verify transcript coverage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          posts = [
+              json.loads(x) for x in
+              Path("skills/ni-work-tutor/evidence/posts.jsonl").read_text(encoding="utf-8").splitlines()
+              if x.strip()
+          ]
+          statuses = []
+          for p in sorted(Path("build/all").glob("status-*.jsonl")):
+              statuses += [json.loads(x) for x in p.read_text(encoding="utf-8").splitlines() if x.strip()]
+
+          status_by_id = {str(x["content_id"]): x for x in statuses}
+          video_ids = {str(x["content_id"]) for x in posts if x.get("kind") == "video"}
+          ok_ids = {cid for cid, x in status_by_id.items() if x.get("status") == "ok"}
+          failed_ids = {cid for cid, x in status_by_id.items() if x.get("status") == "failed"}
+          missing_ids = sorted(video_ids - set(status_by_id))
+          transcript_ids = {p.stem for p in Path("build/all/transcripts").glob("*.json")} if Path("build/all/transcripts").exists() else set()
+          ok_without_file = sorted(ok_ids - transcript_ids)
+
+          coverage = {
+              "total_posts": len(posts),
+              "video_posts": len(video_ids),
+              "ok": len(ok_ids),
+              "failed": len(failed_ids),
+              "missing_status": len(missing_ids),
+              "ok_without_transcript_file": len(ok_without_file),
+              "failed_ids": sorted(failed_ids),
+              "missing_ids": missing_ids,
+              "ok_without_file_ids": ok_without_file,
+          }
+          Path("build/all/coverage.json").write_text(
+              json.dumps(coverage, ensure_ascii=False, indent=2), encoding="utf-8"
+          )
+          print(json.dumps(coverage, ensure_ascii=False, indent=2))
+          if missing_ids or ok_without_file:
+              raise SystemExit(2)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ni-work-tutor-transcripts-all
+          path: build/all/
+          if-no-files-found: error
