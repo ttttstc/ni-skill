@@ -1,0 +1,44 @@
+name: ni-work-tutor-asr-probe
+
+on:
+  push:
+    branches:
+      - work/ni-work-tutor-build-20260922
+    paths:
+      - '.github/workflows/ni-work-tutor-asr-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  transcribe-sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install local ASR dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --upgrade pip
+          pip install faster-whisper playwright requests
+      - name: Transcribe real sample media
+        run: |
+          mkdir -p build/probe build/out
+          cat > build/probe/posts.jsonl <<'EOF'
+          {"content_id":"7670944415926459578","kind":"video","web_url":"https://www.douyin.com/video/7670944415926459578","title":"工作一直担惊受怕的解法","description":"工作一直担惊受怕的解法","created_at":null}
+          EOF
+          python skills/ni-work-tutor/scripts/transcribe_shard.py \
+            --posts build/probe/posts.jsonl \
+            --output build/out/transcripts \
+            --shard 0 --shards 1 --model small
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ni-work-tutor-asr-probe
+          path: build/out/
+          if-no-files-found: error
