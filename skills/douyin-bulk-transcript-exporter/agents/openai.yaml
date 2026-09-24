@@ -1,0 +1,4 @@
+interface:
+  display_name: "抖音博主全量逐字稿导出"
+  short_description: "批量导出抖音博主全部或最新 N 条视频的完整逐字稿"
+  default_prompt: "使用 $douyin-bulk-transcript-exporter 导出这个抖音博主主页的全部（或最新 N 条）视频逐字稿，校订同音错字后按“视频标题-博主名.md”归档到本地目录。"
