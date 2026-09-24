@@ -38,7 +38,7 @@ for skill in \
   ni-url2md ni-radar ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
-  ni-design-with-docs ni-video2md think-like-architect
+  ni-design-with-docs ni-video2md douyin-bulk-transcript-exporter think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -53,7 +53,7 @@ $skills = @(
   "ni-url2md", "ni-radar", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
-  "ni-design-with-docs", "ni-video2md", "think-like-architect"
+  "ni-design-with-docs", "ni-video2md", "douyin-bulk-transcript-exporter", "think-like-architect"
 )
 foreach ($skill in $skills) {
   Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
@@ -123,6 +123,7 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 |-------|-------|------------|
 | Source | [`ni-url2md`](./skills/ni-url2md) | Scrape any URL into Markdown, with JS rendering and logged-in page support |
 | Video | [`ni-video2md`](./skills/ni-video2md) | Transcribe public Douyin, X, YouTube, Bilibili, and Xiaohongshu videos to `full-summary-author.md` with local Whisper; no SRT output |
+| Video | [`douyin-bulk-transcript-exporter`](./skills/douyin-bulk-transcript-exporter) | Given a Douyin creator homepage, scroll-load and batch-export complete transcripts for all (or the latest N) videos, correct homophone typos, and archive as `title-author.md` |
 | Topic radar | [`ni-radar`](./skills/ni-radar) | Search 14 days of original X content, combine it with 21 days of local sources, and recommend 1–2 of 5–8 topics |
 | Domain learning | [`ni-fde-copilot`](./skills/ni-fde-copilot) | Turn expert-oriented source material into a gated learning blueprint and conversation-ready guide |
 | Article planning | [`ni-insight`](./skills/ni-insight) | Interview the user or autonomously synthesize candidate theses, preserve authorship boundaries, and produce a complete outline |
@@ -164,6 +165,12 @@ Media, WAV, and Whisper intermediate TXT files live only in a one-shot temporary
 `-o` selects the output directory (when given an `.md` path, its parent directory is used), while the generated `summary-author.md` name is always enforced. After returning the Markdown, ask whether to archive it; if confirmed, run `skills/ni-video2md/scripts/archive_markdown.py`. Existing archive targets are never overwritten, and the original file is retained.
 
 Automatic dependency downloads currently cover Windows x64. On other platforms, point `NI_VIDEO2MD_FFMPEG`, `NI_VIDEO2MD_WHISPER_CLI`, `NI_VIDEO2MD_MODEL`, `NI_VIDEO2MD_YTDLP`, and `NI_VIDEO2MD_BROWSER` at existing local tools. Video and public dependency downloads use network bandwidth, but speech recognition runs locally.
+
+### douyin-bulk-transcript-exporter
+
+`douyin-bulk-transcript-exporter` targets whole-creator batch transcription: given a Douyin creator homepage URL, it scroll-loads the page in an embedded browser, extracts all video links from the DOM with deduplication, then exports each video's complete transcript via paginated `web.fetch` calls, corrects homophone typos, and archives the results locally as `title-author.md`. It only archives local Markdown files — it does not write to Feishu sheets — and also accepts a batch of individual video URLs directly.
+
+When `web.fetch` returns only the title for long videos (5–7 minute talking-head content), it automatically falls back to local whisper.cpp (reusing `ni-video2md`) to recover the full transcript; short snippet cards (~20 s or less, no speech) are judged as "no transcript" instead of being force-transcribed. Failures are recorded in `_failed.json` — no placeholders, no fabricated transcripts. For bulk jobs it pairs with `ni-video2md`: the exporter owns the homepage inventory and body text, while `ni-video2md` serves as the long-video fallback engine.
 
 ### ni-readme-guide
 
@@ -266,6 +273,7 @@ Describe what you need to trigger the matching skill:
 - Lay out an article → `ni-formatter`
 - Scrape a URL into Markdown → `ni-url2md`
 - Turn a video URL or share text into a local Markdown transcript → `ni-video2md`
+- Batch-export complete transcripts for all (or the latest N) videos of a Douyin creator → `douyin-bulk-transcript-exporter`
 - Turn professional sources into a conversation-ready learning guide → `ni-fde-copilot`
 - Make a minimal ZINE-style poster → `ni-poster`
 - Turn a theme into reviewed multiview images and a validated GLB → `ni-3d-model`

@@ -38,7 +38,7 @@ for skill in \
   ni-url2md ni-radar ni-insight ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
-  ni-design-with-docs ni-video2md think-like-architect
+  ni-design-with-docs ni-video2md douyin-bulk-transcript-exporter think-like-architect
 do
   cp -R "ni-skill/skills/$skill" ~/.codex/skills/
 done
@@ -53,7 +53,7 @@ $skills = @(
   "ni-url2md", "ni-radar", "ni-insight", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
-  "ni-design-with-docs", "ni-video2md", "think-like-architect"
+  "ni-design-with-docs", "ni-video2md", "douyin-bulk-transcript-exporter", "think-like-architect"
 )
 foreach ($skill in $skills) {
   Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
@@ -121,6 +121,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 |------|-------|------|
 | 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
 | 视频 | [`ni-video2md`](./skills/ni-video2md) | 将抖音、X、YouTube、哔哩哔哩和小红书公开视频通过本地 Whisper 转为“全文概括-作者.md”文字稿，不生成 SRT |
+| 视频 | [`douyin-bulk-transcript-exporter`](./skills/douyin-bulk-transcript-exporter) | 给定抖音博主主页，滚动加载并批量导出全部（或最新 N 条）视频的完整逐字稿，校订同音错字后按“视频标题-博主名.md”归档 |
 | 选题雷达 | [`ni-radar`](./skills/ni-radar) | 搜索最近 14 天的 X 原创内容，结合 21 天本地素材生成 5–8 个候选和本周 1–2 个主推 |
 | 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
 | 文章策划 | [`ni-insight`](./skills/ni-insight) | 支持人在场访谈与无人值守自我挖掘，区分用户观点和 Agent 综合判断并交付完整大纲 |
@@ -162,6 +163,12 @@ python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o 
 `-o` 用于指定输出目录（传入 `.md` 路径时取其父目录），最终文件名始终是生成的“概括-作者.md”。返回 Markdown 后，先询问用户是否归档；确认后运行 `skills/ni-video2md/scripts/archive_markdown.py`，目标已存在时不会覆盖，原文件也会保留。
 
 默认支持 Windows x64 的依赖自动下载；其他平台可通过 `NI_VIDEO2MD_FFMPEG`、`NI_VIDEO2MD_WHISPER_CLI`、`NI_VIDEO2MD_MODEL`、`NI_VIDEO2MD_YTDLP` 和 `NI_VIDEO2MD_BROWSER` 指向已有本地工具。视频和公开依赖下载会消耗网络流量，但语音识别在本机完成。
+
+### douyin-bulk-transcript-exporter
+
+`douyin-bulk-transcript-exporter` 面向“整博主”批量转写场景：给定抖音博主主页链接，用内置浏览器滚动懒加载到底，从 DOM 去重提取全部视频链接，再逐条 `web.fetch` 分页导出完整逐字稿并校订同音错字，最终按“视频标题-博主名.md”归档到本地目录。它只做本地 Markdown 归档，不写飞书表格；也支持直接给一批单条视频 URL。
+
+长视频（5~7 分钟口播）`web.fetch` 只回标题时，会自动回退到本地 whisper.cpp（复用 `ni-video2md`）转写补全；短视频金句卡（约 20 秒以下、无口播）直接判“无逐字稿”不硬转。失败条记入 `_failed.json`，不写占位符、不伪造逐字稿。批量场景可与 `ni-video2md` 配合：前者负责整主页清单与正文，后者作为长视频回退引擎。
 
 ### ni-readme-guide
 
@@ -264,6 +271,7 @@ draft_ready           工作流停止，等待人工审阅
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
 - 将视频 URL 或分享文案转成本地 Markdown 文字稿 → `ni-video2md`
+- 批量导出抖音某博主全部（或最新 N 条）视频的完整逐字稿 → `douyin-bulk-transcript-exporter`
 - 把专业资料转化为可对话级学习指南 → `ni-fde-copilot`
 - 做一张 ZINE 风格极简海报 → `ni-poster`
 - 按主题先审多视图、再生成并验收 GLB → `ni-3d-model`
