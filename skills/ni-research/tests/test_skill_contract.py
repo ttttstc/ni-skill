@@ -5,7 +5,7 @@ import unittest
 SKILL_DIR = Path(__file__).resolve().parents[1]
 
 
-class InsightContractTest(unittest.TestCase):
+class ResearchPlanningContractTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
@@ -19,13 +19,13 @@ class InsightContractTest(unittest.TestCase):
             encoding="utf-8"
         )
 
-    def test_insight_uses_report_selected_topic_and_local_sources(self):
+    def test_research_uses_report_selected_topic_and_local_sources(self):
         for phrase in ("本周选题报告", "选定的主题", "source-manifest.md", "本地原始素材"):
-            self.assertIn(phrase, self.skill)
+            self.assertIn(phrase, self.skill + self.questions)
 
     def test_collaborative_mode_interviews_and_waits(self):
         for phrase in (
-            "`collaborative`",
+            "`mode: collaborative`",
             "不替用户决定本周写哪一篇",
             "有依赖关系的决定",
             "最多三个问题",
@@ -33,12 +33,12 @@ class InsightContractTest(unittest.TestCase):
             "等待用户回答",
             "outline_status: user_confirmed",
         ):
-            self.assertIn(phrase, self.skill)
+            self.assertIn(phrase, self.skill + self.questions)
         self.assertIn("Agent 自己读取文件和核对事实", self.questions)
 
     def test_autonomous_mode_generates_and_scores_multiple_theses(self):
         for phrase in (
-            "`autonomous`",
+            "`mode: autonomous`",
             "2–4 个观点候选",
             "证据强度",
             "方法密度",
@@ -78,7 +78,7 @@ class InsightContractTest(unittest.TestCase):
         ):
             self.assertIn(phrase, self.outline)
 
-    def test_insight_does_not_write_article_body(self):
+    def test_research_does_not_write_article_body(self):
         self.assertIn("不写正文段落", self.skill)
         self.assertIn("不为了展示风格提前生成开头和结尾成稿", self.skill)
 

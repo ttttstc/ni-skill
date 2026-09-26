@@ -35,7 +35,7 @@ ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行�
 git clone https://github.com/ttttstc/ni-skill.git
 mkdir -p ~/.codex/skills
 for skill in \
-  ni-url2md ni-radar ni-insight ni-writer ni-formatter ni-inspect \
+  ni-url2md ni-radar ni-research ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
   ni-design-with-docs ni-video2md douyin-bulk-transcript-exporter think-like-architect
@@ -50,7 +50,7 @@ PowerShell：
 git clone https://github.com/ttttstc/ni-skill.git
 New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
-  "ni-url2md", "ni-radar", "ni-insight", "ni-writer", "ni-formatter",
+  "ni-url2md", "ni-radar", "ni-research", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
   "ni-design-with-docs", "ni-video2md", "douyin-bulk-transcript-exporter", "think-like-architect"
@@ -124,7 +124,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 视频 | [`douyin-bulk-transcript-exporter`](./skills/douyin-bulk-transcript-exporter) | 给定抖音博主主页，滚动加载并批量导出全部（或最新 N 条）视频的完整逐字稿，校订同音错字后按“视频标题-博主名.md”归档 |
 | 选题雷达 | [`ni-radar`](./skills/ni-radar) | 搜索最近 14 天的 X 原创内容，结合 21 天本地素材生成 5–8 个候选和本周 1–2 个主推 |
 | 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
-| 文章策划 | [`ni-insight`](./skills/ni-insight) | 支持人在场访谈与无人值守自我挖掘，区分用户观点和 Agent 综合判断并交付完整大纲 |
+| 深度研究与策划 | [`ni-research`](./skills/ni-research) | 研究机制、理论、竞争解释与反证，先讨论研究结论，再把观点和大纲聊透；不写正文 |
 | 写作 | [`ni-writer`](./skills/ni-writer) | 6 种文章原型；支持部门能力上新与技术架构解析 |
 | 写书 | [`ni-book-writer`](./skills/ni-book-writer) | 长篇书稿写作（技术书 / 畅销书双风格），含结构、大纲与章节脚手架 |
 | 汇报 | [`ni-tech-report`](./skills/ni-tech-report) | 构建一份清晰的技术汇报——叙事线索、证据布局、执行摘要综合 |
@@ -240,20 +240,20 @@ python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o 
 
 ## 正文初稿管线
 
-```
-topic
+```text
+ni-radar
   ↓
-ni-radar              14 天 X 搜索、21 天本地素材分析与本周推荐
+selection + source
   ↓
-selection + source    人工选题或合格主推、原始素材本地归档
+ni-research (research + discussion)
   ↓
-ni-insight            协作访谈或自主挖掘，生成通过门禁的完整大纲
+ni-research (outline)
   ↓
-ni-radar evidence     深化证据并检查大纲冲突
+practice + authorization
   ↓
-ni-writer             生成 article-draft.md
+ni-writer
   ↓
-draft_ready           工作流停止，等待人工审阅
+draft_ready
 ```
 
 每个阶段都先验收产物再推进；失败时保留证据并停止，不用默认值越过门禁。
@@ -274,7 +274,7 @@ draft_ready           工作流停止，等待人工审阅
 
 直接描述需求即可触发对应 skill：
 
-- 与用户讨论或在无人值守模式下自主挖掘文章观点、结构和风格，生成完整大纲 → `ni-insight`
+- 深度研究已选问题，先讨论结论，再聊透文章观点、结构和风格，生成完整大纲 → `ni-research`
 - 排版文章 → `ni-formatter`
 - 抓取网页为 Markdown → `ni-url2md`
 - 将视频 URL 或分享文案转成本地 Markdown 文字稿 → `ni-video2md`
@@ -342,3 +342,5 @@ wechat:
 ## License
 
 MIT
+
+`ni-insight` 的策划能力已合并进 `ni-research`，`ni-radar evidence` 也由研究阶段接替。radar 吸收 last30days 的多源发现方法，研究重点吸收 DBS 的命题审查、机制、理论与历史比较；两者均不要求安装被借鉴的技能。已有全局安装不会随仓库更新自动移除旧入口。

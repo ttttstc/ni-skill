@@ -1,7 +1,7 @@
 ---
 name: ni-article-workflow
 description: |
-  编排公众号 AI 技术文章从选题雷达、选题、来源归档、观点与大纲、实践边界、证据深化到正文初稿的完整生产链路。支持用户在场的 collaborative 模式和无人值守的 autonomous 模式；逐阶段验收产物并记录门禁，只在条件满足时调用 ni-writer 生成 article-draft.md，随后停止。
+  编排公众号 AI 技术文章从选题雷达、选题、来源归档、深度研究、研究讨论、观点与大纲、实践边界到正文初稿的完整生产链路。支持用户在场的 collaborative 模式和无人值守的 autonomous 模式；逐阶段验收产物并记录门禁，只在条件满足时调用 ni-writer 生成 article-draft.md，随后停止。
 ---
 
 # ni-article-workflow — 公众号文章初稿生产编排
@@ -15,9 +15,9 @@ description: |
 1. `ni-radar weekly` 生成本周选题报告；
 2. 用户选择或工作流按规则选择一个主题；
 3. 确保关键来源已归档为本地可读 Markdown；
-4. `ni-insight` 生成已确认或自主就绪的 `article-outline.md`；
-5. 明确实践边界；
-6. `ni-radar evidence` 生成 `research.md`；
+4. `ni-research stage: research` 生成 `research.md`，协作模式先讨论并确认研究结论；
+5. `ni-research stage: outline` 把观点与大纲聊透，生成 `article-outline.md`；
+6. 明确实践边界并检查研究、大纲与实践的一致性；
 7. `ni-writer` 生成 `article-draft.md`；
 8. 验收初稿并停止在 `draft_ready`。
 
@@ -40,7 +40,7 @@ description: |
 交互调用的默认模式：
 
 - 用户从本周报告中明确选择主题；
-- `ni-insight` 与用户分轮讨论，并得到 `outline_status: user_confirmed`；
+- `ni-research` 先交付研究，取得当前版本的 `research_status: user_confirmed`，再与用户分轮讨论大纲，并得到 `outline_status: user_confirmed`；
 - 用户明确表示“可以写正文”“开始成稿”或等价授权后，才允许写初稿。
 
 需要用户决定时进入 `pending_user`。不得因等待超时自行切换到自主模式。
@@ -55,7 +55,7 @@ run_to_draft: true
 ```
 
 - 工作流只能选择 `ni-radar` 明确标记为主推且通过雷达门禁的最高优先级主题；
-- `ni-insight` 自行生成并筛选观点，产出 `outline_status: autonomous_ready`；
+- `ni-research` 自行生成并筛选观点，产出 `outline_status: autonomous_ready`；
 - `run_to_draft: true` 只授权生成本地初稿，不代表用户确认观点、定稿或发布；
 - 没有精确归档目录、合格主推主题或可追溯证据时停止为 `blocked`，不能为了无人值守而降低标准。
 
@@ -96,41 +96,39 @@ Agent 推荐不等于用户在协作模式下已经选择。
 
 自主模式缺少 `source_archive.path` 时，不自行猜测 `/素材收集库/{第几周}/`，直接阻断。已有本地归档满足门禁时不重复抓取。
 
-### 4. `insight`
+### 4. `research`
 
-调用 `ni-insight`，生成 `article-outline.md`。门禁：
+调用 `ni-research stage: research`，生成 `research.md`。门禁：
 
-- 协作模式状态必须为 `user_confirmed`；
-- 自主模式状态必须为 `autonomous_ready`，且 `opinion_origin: agent_synthesis`；
-- 大纲包含唯一核心任务、目标读者、观点与来源边界、完整结构、风格、预计篇幅和章节证据；
-- 没有未核实中心事实、虚构用户立场或伪造第一人称实践；
-- 核心论点未与近期文章重复。
+- 问题、定义、机制、竞争解释、反证、适用边界与未知项清楚；
+- 中心事实能追溯到已读的 A-official 或 B-original 原始来源；理论与历史材料按主张适配来源，不受 radar 近期窗口限制；
+- 主张与证据账本包含来源、时间或版本、原文位置、支持力度和同源关系；
+- 未核实内容不会影响正文结论；关键缺口仍在时为 blocked，不策划大纲。
 
-大纲为 `draft` 或 `blocked` 时不得继续。
+协作模式先以 `ready_for_discussion` 交付并进入 `pending_user`。调用 `ni-research stage: discussion` 讨论后，只有明确确认当前研究版本，才接受 `research_status: user_confirmed`。用户修改中心判断时定向补查并重新确认。自主模式通过同样证据门禁后使用 `research_status: autonomous_ready`，不得冒充用户确认。研究不支持成文时正常交付研究并停止，不硬凑大纲。
 
-### 5. `practice`
+### 5. `outline`
 
-生成 `practice-record.md`。门禁：
+调用 `ni-research stage: outline`，生成 `article-outline.md`。门禁：
+
+- 协作模式研究已确认，且大纲必须为 `user_confirmed`；
+- 自主模式研究和大纲均为 `autonomous_ready`，且 `opinion_origin: agent_synthesis`；
+- 大纲指向当前研究版本，包含唯一核心任务、读者、观点与来源边界、完整结构、风格、预计篇幅和章节证据；
+- 没有未核实中心事实、虚构用户立场或伪造第一人称实践；核心论点未与近期文章重复。
+
+大纲为 draft 或 blocked 时不得继续。出现改变中心判断的新主张时退回 research；旧研究确认和大纲确认失效。表达调整不要求重复整轮研究。
+
+### 6. `practice`
+
+生成 `practice-record.md` 并检查与研究、大纲的一致性。门禁：
 
 - 状态只能是 `verified`、`not_required`、`source_only` 或 `blocked`；
 - `verified` 必须记录实践来源、时间、输入、动作、结果和可复查证据；
 - 自主模式只有在调用前已存在可复查的用户实践记录时才能使用 `verified`；
 - `source_only` 不得把外部案例写成用户亲历；
-- 主题依赖尚未完成的用户实测时，改选不依赖实测的观点，或阻断。
+- 研究、大纲与实践不存在未解决冲突；主题依赖未完成实测时阻断，或退回 research / outline 收窄判断并重新确认。
 
-`blocked` 禁止进入证据深化和写作。
-
-### 6. `evidence`
-
-调用 `ni-radar evidence`，生成 `research.md`。门禁：
-
-- 所有影响中心结论的事实都有 A-official 或 B-original 来源；
-- 数字、版本、价格、机制和引用均能追溯到原始来源；
-- 反例、代价、适用边界和未知项已经记录；
-- `research.md` 与 `article-outline.md`、`practice-record.md` 不存在未解决冲突；
-- 未核实内容不会影响正文结论。
-
-证据推翻大纲时，协作模式退回 `insight` 等待用户重审；自主模式重新生成观点候选。不得带着冲突进入写作。
+`blocked` 禁止进入写作。实践核验发现中心结论变化时，不能只改实践记录而沿用已确认的大纲。
 
 ### 7. `draft`
 
@@ -161,11 +159,11 @@ selection ---- pending_user / blocked
   |
 source ------- blocked
   |
-insight ------ pending_user / blocked
+research ----- pending_user / blocked
   |
-practice ----- pending_user / blocked
+outline ------ research / pending_user / blocked
   |
-evidence ----- insight / blocked
+practice ----- research / outline / blocked
   |
 draft -------- pending_user / blocked
   |
@@ -183,9 +181,9 @@ draft_ready
 | `radar` | `ni-radar weekly` | 素材库、关注范围、发布日志 | 本周选题报告 |
 | `selection` | 用户决定或自主选择规则 | 本周报告 | `topic-selection.md` |
 | `source` | `ni-radar archive` 等来源提取能力 | 已选主题、精确归档目录 | 原始 Markdown、`source-manifest.md` |
-| `insight` | `ni-insight` | 报告、选题、归档素材、模式 | `article-outline.md` |
+| `research` | `ni-research stage: research / discussion` | 已选问题、来源、模式 | `research.md` 与研究确认 |
+| `outline` | `ni-research stage: outline` | 当前研究、用户讨论、实践边界 | `article-outline.md` |
 | `practice` | 用户记录或既有实践资料 | 大纲中的实践依赖 | `practice-record.md` |
-| `evidence` | `ni-radar evidence` | 大纲、来源、实践记录 | `research.md` |
 | `draft` | `ni-writer` | 大纲、研究、实践记录 | `article-draft.md` |
 
 每个阶段还要更新 `gate-report.md` 和 `state.yaml`。完整来源保留在研究文件，正文只保留影响结论的关键链接。
@@ -205,7 +203,7 @@ draft_ready
 
 - 选题来源失效或日期不成立：退回 `radar` 或 `selection`。
 - 归档素材与报告摘要不一致：退回 `source`，重新核对原文。
-- 证据推翻中心观点：退回 `insight`；协作模式等待用户，自主模式重新比较观点。
+- 证据推翻中心观点：退回 `research`，更新结论后再走 `outline`；协作模式重新确认，自主模式重新比较观点。
 - 上游文件发生变化：下游全部标记 `stale`，从最早受影响阶段重跑。
 - 初稿门禁失败：按失败项定向修复一次；仍失败则阻断。
 
@@ -217,7 +215,7 @@ draft_ready
 - `source-manifest.md` 通过来源门禁；
 - `article-outline.md` 为 `user_confirmed` 或 `autonomous_ready`；
 - `practice-record.md` 的状态允许写作；
-- `research.md` 通过证据门禁；
+- `research.md` 通过研究门禁，且确认对应当前版本；
 - `article-draft.md` 通过初稿门禁；
 - `gate-report.md` 中所有必要阶段均为 PASS；
 - `state.yaml` 的路径、状态和哈希与实际产物一致。
