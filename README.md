@@ -2,343 +2,54 @@
 
 中文 | [English](./README.en.md)
 
-> 面向内容创作、视频转写、陌生领域学习、产品架构基线、首层软件架构决策与审核制 3D 资产生产的技能矩阵。
+**个人技能工具箱，让 AI Agent 帮你处理日常工作与创作。**
 
-ni-skill 是一组面向 AI 编程 agent（Codex、Claude Code 及类似运行时）的协同 skill，覆盖素材抓取、视频转写、选题雷达、陌生领域学习、文章策划访谈、写作、排版、预检、配图、发布、产品架构基线、第一性原则架构决策，以及带人工审核门禁的多视图到 GLB 生产。每个 skill 均可独立使用；`ni-article-workflow` 负责把内容生产稳定编排到正文初稿。
+用于 Codex、Claude Code 等 AI Agent，收集我在资料整理、学习研究、写作、产品架构和视觉创作中使用的技能。按任务取用，每个技能都能独立调用。
 
----
+## 先用起来
 
-## 环境要求
+安装后，在对话中指定技能、目标和材料：
 
-- **Codex** / **Claude Code** / 任何能从本地 skills 目录加载 skill 的 AI agent 运行时
-- **Python 3.10+** —— `ni-draft` 推送微信草稿、`ni-video2md` 运行本地转写脚本时需要
-- **Node.js + Chrome** —— `ni-url2md` 抓取网页时需要
-- **yt-dlp** —— `ni-video2md` 下载 X、YouTube、哔哩哔哩和小红书公开视频；缺少时脚本会缓存便携版
-- **Chrome/Edge 或可下载的 Chromium** —— `ni-video2md` 抓取抖音公开媒体流时需要
-- **图像生成、浏览器控制与可用的图生 3D 服务** —— `ni-3d-model` 需要；登录状态与免费额度取决于所选服务
-
-各 skill 的具体依赖见对应的 `SKILL.md`。
-
----
+| 想做什么 | 可以这样说 |
+|---|---|
+| 整理资料 | 用 ni-video2md 把这个公开视频转成 Markdown：〈链接〉 |
+| 学习陌生领域 | 用 ni-fde-copilot 读这些资料，先出学习蓝图，确认后再写指南 |
+| 设计产品架构 | 用 ni-design-with-docs，基于这些需求和资料形成可评审的架构基线 |
+| 写一篇文章 | 用 ni-article-workflow 写一篇 Agent 工程实践文章，先确认研究结论与大纲 |
+| 做一张海报 | 用 ni-poster，把这句话做成极简纸刊风格海报：〈文案〉 |
 
 ## 安装
 
-按你的运行时挑一条。
+**Codex：**把下面这句话交给 Agent：
 
-### Codex — 本地插件
+> 帮我从 https://github.com/ttttstc/ni-skill 安装 skills 到 ~/.codex/skills/；已有同名技能先检查，不直接覆盖。安装后告诉我哪些技能需要额外依赖。
 
-仓库已包含 Codex 插件清单 `.codex-plugin/plugin.json`。本地开发时，clone 后按你的 Codex 插件工作流安装或软链这个仓库。
+只需要一个技能时，加上“只安装 ni-video2md”。安装后开启新会话。
 
-如果只需要使用 skills，也可以把 `skills/` 下的子目录复制到 `~/.codex/skills/`。下面这段适合直接交给 AI Agent 执行，会安装当前发布的 ni-skill 集合：
+**Claude Code：**
 
-```bash
-git clone https://github.com/ttttstc/ni-skill.git
-mkdir -p ~/.codex/skills
-for skill in \
-  ni-url2md ni-radar ni-research ni-writer ni-formatter ni-inspect \
-  ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
-  ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
-  ni-design-with-docs ni-video2md douyin-bulk-transcript-exporter think-like-architect
-do
-  cp -R "ni-skill/skills/$skill" ~/.codex/skills/
-done
-```
-
-PowerShell：
-
-```powershell
-git clone https://github.com/ttttstc/ni-skill.git
-New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
-$skills = @(
-  "ni-url2md", "ni-radar", "ni-research", "ni-writer", "ni-formatter",
-  "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
-  "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
-  "ni-design-with-docs", "ni-video2md", "douyin-bulk-transcript-exporter", "think-like-architect"
-)
-foreach ($skill in $skills) {
-  Copy-Item "ni-skill\skills\$skill" "$HOME\.codex\skills\$skill" -Recurse -Force
-}
-```
-
-只安装 `ni-unknown-first`：
-
-```bash
-git clone https://github.com/ttttstc/ni-skill.git
-mkdir -p ~/.codex/skills
-cp -R ni-skill/skills/ni-unknown-first ~/.codex/skills/
-```
-
-PowerShell：
-
-```powershell
-git clone https://github.com/ttttstc/ni-skill.git
-New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
-Copy-Item ni-skill\skills\ni-unknown-first $HOME\.codex\skills\ni-unknown-first -Recurse -Force
-```
-
-安装后开启新的 Codex 会话，让 skill 列表重新加载。
-
-### Claude Code — Plugin Marketplace
-
-```
+```text
 /plugin marketplace add ttttstc/ni-skill
 /plugin install ni-skill@ni-skill
 ```
 
-### 任意运行时 — 让 Agent 代装
+也可手动将本仓库 `skills/` 下所需子目录复制到运行时的 skills 目录。
 
-向 Codex 或 Claude 说明：
+依赖按需配置：网页抓取需要 Node.js 与浏览器；本地视频转写需要 Python 和 Whisper 等工具；微信草稿推送需要公众号凭证；3D 建模需要图像生成与图生 3D 服务。具体配置见各技能文档。
 
-> 帮我安装 github.com/ttttstc/ni-skill 的 skill
+## 按场景选工具
 
-只装单个 skill 到 Codex 时可以说：
+| 场景 | 技能与用途 |
+|---|---|
+| 资料整理 | [ni-url2md](./skills/ni-url2md/SKILL.md)：网页转 Markdown；[ni-video2md](./skills/ni-video2md/SKILL.md)：公开视频本地转写；[douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md)：抖音博主逐字稿批量归档 |
+| 学习与研究 | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md)：专业资料学习蓝图与指南；[ni-unknown-first](./skills/ni-unknown-first/SKILL.md)：识别未知与下一步；[ni-research](./skills/ni-research/SKILL.md)：深度研究、讨论结论与文章大纲 |
+| 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |
+| 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README |
+| 文章处理 | [ni-inspect](./skills/ni-inspect/SKILL.md)：发布前检查；[ni-formatter](./skills/ni-formatter/SKILL.md)：排版；[ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md)：配图提示词；[ni-draft](./skills/ni-draft/SKILL.md)：推送微信草稿箱 |
+| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收 |
 
-> 只把 github.com/ttttstc/ni-skill 里的 ni-unknown-first 安装到 ~/.codex/skills
-
-### 手动安装 — 复制到对应 skills 目录
-
-大多数 AI agent 运行时都从 `~/.{agent}/skills/` 加载 skill（如 `~/.codex/skills/`、`~/.claude/skills/`）。clone 仓库后，把 `skills/` 下的子目录复制到你运行时的 skills 目录：
-
-```bash
-git clone https://github.com/ttttstc/ni-skill.git
-cp -R ni-skill/skills/* ~/.claude/skills/
-```
-
-PowerShell：
-
-```powershell
-git clone https://github.com/ttttstc/ni-skill.git
-Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
-```
-
-手动安装不支持自动更新：能走运行时专属路径就优先走那条。
-
----
-
-## Skills
-
-| 阶段 | Skill | 能力 |
-|------|-------|------|
-| 素材 | [`ni-url2md`](./skills/ni-url2md) | 将任意 URL 抓取为 Markdown，支持 JS 渲染与登录态页面 |
-| 视频 | [`ni-video2md`](./skills/ni-video2md) | 将抖音、X、YouTube、哔哩哔哩和小红书公开视频通过本地 Whisper 转为“全文概括-作者.md”文字稿，不生成 SRT |
-| 视频 | [`douyin-bulk-transcript-exporter`](./skills/douyin-bulk-transcript-exporter) | 给定抖音博主主页，滚动加载并批量导出全部（或最新 N 条）视频的完整逐字稿，校订同音错字后按“视频标题-博主名.md”归档 |
-| 选题雷达 | [`ni-radar`](./skills/ni-radar) | 搜索最近 14 天的 X 原创内容，结合 21 天本地素材生成 5–8 个候选和本周 1–2 个主推 |
-| 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
-| 深度研究与策划 | [`ni-research`](./skills/ni-research) | 研究机制、理论、竞争解释与反证，先讨论研究结论，再把观点和大纲聊透；不写正文 |
-| 写作 | [`ni-writer`](./skills/ni-writer) | 6 种文章原型；支持部门能力上新与技术架构解析 |
-| 写书 | [`ni-book-writer`](./skills/ni-book-writer) | 长篇书稿写作（技术书 / 畅销书双风格），含结构、大纲与章节脚手架 |
-| 汇报 | [`ni-tech-report`](./skills/ni-tech-report) | 构建一份清晰的技术汇报——叙事线索、证据布局、执行摘要综合 |
-| 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
-| 预检 | [`ni-inspect`](./skills/ni-inspect) | 发布前检查元数据、内容质量与结构 |
-| 配图 | [`ni-article-image-gen`](./skills/ni-article-image-gen) | 生成封面与内文配图提示词 |
-| 海报 | [`ni-poster`](./skills/ni-poster) | 一个公开入口，按参数路由四种 ZINE 风格并生成图像 |
-| 3D 建模 | [`ni-3d-model`](./skills/ni-3d-model) | 先确认需求和多视图，再生成并验收带纹理的 GLB 模型 |
-| 发布 | [`ni-draft`](./skills/ni-draft) | 将文章推送至微信公众号草稿箱 |
-| 编排 | [`ni-article-workflow`](./skills/ni-article-workflow) | 以逐阶段门禁串联选题、来源、大纲、证据和写作，断点续跑到正文初稿后停止 |
-| 诊断 | [`ni-unknown-first`](./skills/ni-unknown-first) | 判断你正面临哪一类 unknown，并给出可复制的下一阶段中文提示词 |
-| README | [`ni-readme-guide`](./skills/ni-readme-guide) | 创建中文默认、英文配套、可双向跳转并含可验证徽章的 GitHub README |
-| 文档驱动设计 | [`ni-design-with-docs`](./skills/ni-design-with-docs) | 基于资料、访谈和公开证据，将模糊产品或云服务需求生成通过独立评审的研发级产品架构基线 |
-| 架构判断 | [`think-like-architect`](./skills/think-like-architect) | 将 PRD 或现有项目上下文转化为第一性原则的首层架构方案 |
-
-每个 skill 均可独立调用；`ni-article-workflow` 只编排选题到正文初稿，后续审稿、配图、排版和发布仍由对应 skill 独立处理。
-
-### ni-fde-copilot
-
-`ni-fde-copilot` 面向 FDE 客户会前补课和陌生专业领域学习。它先完整清点资料，建立领域模型、认知缺口与学习主线，再输出五部分学习蓝图等待确认；确认后才生成引导式学习指南、迁移挑战和对话准备度。
-
-调用方式：在新的代理会话中输入 `$ni-fde-copilot`，附上专业资料，说明会议或学习目标，并要求先输出学习蓝图，确认后再写完整指南。
-
-它支持文本、PDF、书籍、报告、PPT、图表、视频、音频和转录，但实际读取能力取决于当前代理环境。无法读取的范围会被明确阻断，不会假装已经处理。完整使用方式、证据边界与验证说明见[中文说明](./skills/ni-fde-copilot/README.md)和[英文说明](./skills/ni-fde-copilot/README.en.md)。
-
-### ni-video2md
-
-`ni-video2md` 将抖音、X、YouTube、哔哩哔哩和小红书等公开视频 URL 或分享文案转成本地 Whisper 生成的 Markdown 文字稿。它优先使用本地 `whisper.cpp`；X、YouTube、哔哩哔哩和小红书通过 `yt-dlp` 下载单个公开视频，抖音才需要浏览器抓流。首次运行如果缺少 ffmpeg、Whisper.cpp、模型或 `yt-dlp`，会先下载/安装并缓存；安装或发现这些可执行文件后会自动把目录加入当前进程 PATH，并在 Windows 写入当前用户 PATH；不调用云端转录 API，也不生成 SRT。文字稿会基于全文用本地抽取式算法生成一句话概括，标题、一级标题和文件名统一为“概括-作者”；交付后可将 Markdown 安全复制到用户指定的归档路径。验证码、登录墙和页面兼容性问题不绕过，明确报告失败。
-
-```bash
-python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o ./transcripts
-```
-
-转换期间的媒体、WAV 和 Whisper 中间 TXT 只写入一次性临时目录，成功或失败后自动删除；仅保留 Markdown 输出和依赖缓存。
-
-`-o` 用于指定输出目录（传入 `.md` 路径时取其父目录），最终文件名始终是生成的“概括-作者.md”。返回 Markdown 后，先询问用户是否归档；确认后运行 `skills/ni-video2md/scripts/archive_markdown.py`，目标已存在时不会覆盖，原文件也会保留。
-
-默认支持 Windows x64 的依赖自动下载；其他平台可通过 `NI_VIDEO2MD_FFMPEG`、`NI_VIDEO2MD_WHISPER_CLI`、`NI_VIDEO2MD_MODEL`、`NI_VIDEO2MD_YTDLP` 和 `NI_VIDEO2MD_BROWSER` 指向已有本地工具。视频和公开依赖下载会消耗网络流量，但语音识别在本机完成。
-
-### douyin-bulk-transcript-exporter
-
-`douyin-bulk-transcript-exporter` 面向“整博主”批量转写场景：给定抖音博主主页链接，用内置浏览器滚动懒加载到底，从 DOM 去重提取全部视频链接，再逐条 `web.fetch` 分页导出完整逐字稿并校订同音错字，最终按“视频标题-博主名.md”归档到本地目录。它只做本地 Markdown 归档，不写飞书表格；也支持直接给一批单条视频 URL。
-
-长视频（5~7 分钟口播）`web.fetch` 只回标题时，会自动回退到本地 whisper.cpp（复用 `ni-video2md`）转写补全；短视频金句卡（约 20 秒以下、无口播）直接判“无逐字稿”不硬转。失败条记入 `_failed.json`，不写占位符、不伪造逐字稿。批量场景可与 `ni-video2md` 配合：前者负责整主页清单与正文，后者作为长视频回退引擎。
-
-### ni-readme-guide
-
-`ni-readme-guide` 创建或审计一组同步的 README：
-
-- `README.md` —— 简体中文，默认入口
-- `README.en.md` —— 英文配套，并反向链接中文版本
-
-它从仓库证据提炼项目故事，把最短可成功路径前置，保持命令、事实和可验证徽章一致，并校验本地链接、图片、代码块和基础 SVG 安全性。详见 [`skills/ni-readme-guide/README.md`](./skills/ni-readme-guide/README.md)。
-
-### ni-poster 风格参数
-
-`ni-poster` 是海报功能唯一对外暴露的 skill。需要显式控制风格时，在 `/ni-poster` 后使用短参数：
-
-| 命令 | 内部风格 | 适用场景 |
-|------|----------|----------|
-| `/ni-poster s ...` | Standard | 极简纸刊：3:5 竖版、70–90% 留白、小主体、旧纸扫描质感、稀疏文字、单个克制色彩锚点 |
-| `/ni-poster g ...` | Gathered Scenes | 保留用户照片真实内容，再接入来源简化插画场和可见手撕纤维边 |
-| `/ni-poster d ...` | Scene Distillation | 照片只作语义参考，最终不保留照片像素，进行作者化抽象重构 |
-| `/ni-poster a ...` | Photo Abstract Editorial | 保留原照片，在下方增加由照片空间与色彩关系推导的干净象牙色抽象记忆面板 |
-
-不写 `s`、`g`、`d`、`a` 时，足够明确的风格描述仍可直接判型；如果需求仍然模糊，`ni-poster` 会每次询问一个关键问题，直到风格确认，不再静默默认 Standard。完整参数名 `standard`、`gathered`、`distillation`、`photo-abstract-editorial` 仍兼容。`g` 和 `a` 需要参考照片；`d` 还支持精确触发词 `单色块模式`。
-
-最直白的区别：极简纸刊选 `s`；照片与撕纸插画融合选 `g`；最终不保留照片选 `d`；原照片加下方干净抽象面板选 `a`。只有“照片、抽象、纸感、ZINE”等泛词时会进入访谈。
-
-示例：
-
-```text
-/ni-poster s 把这句话做成极简纸刊：夏天结束得很轻
-/ni-poster g 保留这张照片的真实场景，加入手撕纤维边
-/ni-poster d 用这张照片做视觉隐喻，不保留照片像素
-/ni-poster a 保留原照片，在下方生成干净象牙色抽象面板
-```
-
-### ni-writer 的 6 种文章原型
-
-写作前先区分部门对外介绍能力与个人写作。部门能力上新和架构解析走运营技术文章型；其他文章按亲自体验、资料压缩、工程方法、技术思辨或个人思绪选择。原有两类技术方法论合并为一个入口，其他风格保留：
-
-六种文风共用[写前访谈](./skills/ni-writer/references/writing_interview.md)。优先复用 ni-research 或前期讨论已确认的大纲、主线和材料，只从正文可写性出发补问待确认项。没有已定方案时再分轮厘清目标、身份、主线和证据；每轮少量问题，信息充分直接写。用户要求立即写时按已有材料推进，不补造经历、立场或内部设计。访谈记录不进入 Skill 仓库。
-
-| 原型 | 字数 | 灵魂 | 适用题材 |
-|------|------|------|---------|
-| 1. 产品体验和评价型 | ≤ 6000 | 我亲自下场 | 实测、上手评价、过程叙事 |
-| 2. 发现分享型（速读精华式） | 500-1500 | 我替你刷资料压缩精华 | 帖子 / 视频 / 博客 / 论文转译 |
-| 3. 技术方法论型（沉淀 + 深水区合并） | 4500-7000 | 我把事实讲清，再把机制想透 | 工程实践、架构、流程、协作、工具复盘 |
-| 4. 技术思辨型 | 5000-8500 | 我把一个判断想清楚 | 概念辨析、机制推演、范式升维 |
-| 5. 人生哲学随笔型 | 3000-5000 | 我在想这件事 | 思绪流、感受、非论点写作 |
-| 6. 运营技术文章型 | 上新通常 1000-2200，架构通常 2500-4500 | 用问题、过程和机制讲清能力 | 面向外部工程师与技术负责人的部门能力发布、技术架构解析 |
-
-技术方法论型的专项规则见 [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) 与 `references/tech_writing_rules.md`，技术思辨型保留独立的 `references/tech_polemic_rules.md`。技术方法论要求用一条主场景承载判断，写出可见动作、产物和判断变化。反 AI 终审吸收 `human-writing` 的材料、说话位置、自然推进和改稿规则，并单独检查可删副词与缺少证据的程度副词。
-
-运营技术文章型面向部门外的工程师和技术负责人，采用自然书面语，用工作过程、机制解释和设计取舍讲清能力。少用副词，保留技术限定；不要求个人履历、名言、反直觉角度或固定句长。身份、结构、图文分工与自检约定见[专项规则](./skills/ni-writer/references/tech_operations_rules.md)。
-
-用法示例：`用 ni-writer 的运营技术文章风格，把这份发布材料写成能力上新稿，面向部门外的工程师和技术负责人。` 架构稿把「能力上新稿」换成「技术架构解析」，并提供设计、取舍和证据材料。
-
----
-
-## 设计准则
-
-所有 skill 遵循三条共同准则：
-
-- **诚实输出**：不编造、不夸大，失败如实反馈。
-- **输出前自检**：交付前按各自的检查清单核对。
-- **显式降级**：外部依赖不可用时提供降级路径，并明确标注。
-
-每个 skill 另有各自的领域准则，详见对应的 `SKILL.md`。
-
----
-
-## 正文初稿管线
-
-```text
-ni-radar
-  ↓
-selection + source
-  ↓
-ni-research (research + discussion)
-  ↓
-ni-research (outline)
-  ↓
-practice + authorization
-  ↓
-ni-writer
-  ↓
-draft_ready
-```
-
-每个阶段都先验收产物再推进；失败时保留证据并停止，不用默认值越过门禁。
-
----
-
-## 使用方式
-
-### 正文初稿管线
-
-向 Codex 或 Claude 描述选题，例如：
-
-> 用 ni-skill 写一篇关于「AGENTS.md 实践」的文章
-
-`ni-article-workflow` 会接管流程，逐阶段调用对应 skill，并在正文初稿通过门禁后停止。
-
-### 单个 skill
-
-直接描述需求即可触发对应 skill：
-
-- 深度研究已选问题，先讨论结论，再聊透文章观点、结构和风格，生成完整大纲 → `ni-research`
-- 排版文章 → `ni-formatter`
-- 抓取网页为 Markdown → `ni-url2md`
-- 将视频 URL 或分享文案转成本地 Markdown 文字稿 → `ni-video2md`
-- 批量导出抖音某博主全部（或最新 N 条）视频的完整逐字稿 → `douyin-bulk-transcript-exporter`
-- 把专业资料转化为可对话级学习指南 → `ni-fde-copilot`
-- 做一张 ZINE 风格极简海报 → `ni-poster`
-- 按主题先审多视图、再生成并验收 GLB → `ni-3d-model`
-- 判断自己处于哪一类 unknown 并获取下一阶段提示词 → `ni-unknown-first`
-- 创建中文默认、英文配套且可双向跳转的 GitHub README → `ni-readme-guide`
-- 基于现有资料将模糊产品或云服务需求生成可研发评审的产品架构基线 → `ni-design-with-docs`
-- 将 PRD 或现有项目转成首层架构决策 → `think-like-architect`
-- 推送草稿 → `ni-draft`
-
-各 skill 的完整触发词见对应的 `SKILL.md`。
-
----
-
-## 配置
-
-### 微信草稿推送（ni-draft）
-
-通过环境变量配置：
-
-```bash
-WECHAT_APPID=wx_xxxxxxxx
-WECHAT_SECRET=xxxxxxxxxxxxxxxx
-```
-
-或写入 `~/.config/ni-skill/config.yaml`：
-
-```yaml
-wechat:
-  appid: wx_xxxxxxxx
-  secret: xxxxxxxxxxxxxxxx
-```
-
-凭证可在微信公众号后台「设置与开发 → 基本配置」获取，并需将调用方 IP 加入白名单。
-
-### 网页抓取（ni-url2md）
-
-可选环境变量：
-
-| 变量 | 用途 |
-|------|------|
-| `URL_CHROME_PATH` | 指定 Chrome 可执行文件路径 |
-| `URL_DATA_DIR` | 指定默认输出目录 |
-| `URL_CHROME_PROFILE_DIR` | 指定 Chrome 配置目录以保留登录态 |
-
-### 视频转 Markdown（ni-video2md）
-
-可选环境变量：
-
-| 变量 | 用途 |
-|------|------|
-| `NI_VIDEO2MD_HOME` | 工具、模型和下载缓存目录 |
-| `NI_VIDEO2MD_FFMPEG` / `FFMPEG_PATH` | 指定 ffmpeg 可执行文件 |
-| `NI_VIDEO2MD_WHISPER_CLI` / `WHISPER_CLI` | 指定 whisper-cli 可执行文件 |
-| `NI_VIDEO2MD_MODEL` / `WHISPER_MODEL` | 指定本地 Whisper `ggml-*.bin` 模型 |
-| `NI_VIDEO2MD_YTDLP` / `YTDLP_PATH` | 指定 yt-dlp 可执行文件 |
-| `NI_VIDEO2MD_JS_RUNTIME` | 指定 yt-dlp 使用的 JavaScript 运行时 |
-| `NI_VIDEO2MD_BROWSER` / `BROWSER_PATH` | 指定 Chrome、Edge 或 Chromium 可执行文件 |
-
----
+需要串联文章生产时，用 [ni-article-workflow](./skills/ni-article-workflow/SKILL.md) 从选题、研究和大纲推进到初稿，支持断点续跑。默认先确认研究结论、大纲和写作授权；审稿、配图、排版与推送草稿箱另行调用。
 
 ## License
 
-MIT
+[MIT](./LICENSE)
