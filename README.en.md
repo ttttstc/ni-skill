@@ -35,7 +35,7 @@ If you only need the skills, copy them into `~/.codex/skills/`. This snippet ins
 git clone https://github.com/ttttstc/ni-skill.git
 mkdir -p ~/.codex/skills
 for skill in \
-  ni-url2md ni-radar ni-insight ni-writer ni-formatter ni-inspect \
+  ni-url2md ni-radar ni-research ni-writer ni-formatter ni-inspect \
   ni-article-image-gen ni-poster ni-draft ni-article-workflow ni-unknown-first \
   ni-tech-report ni-book-writer ni-3d-model ni-fde-copilot ni-readme-guide \
   ni-design-with-docs ni-video2md douyin-bulk-transcript-exporter think-like-architect
@@ -50,7 +50,7 @@ PowerShell:
 git clone https://github.com/ttttstc/ni-skill.git
 New-Item -ItemType Directory -Force $HOME\.codex\skills | Out-Null
 $skills = @(
-  "ni-url2md", "ni-radar", "ni-insight", "ni-writer", "ni-formatter",
+  "ni-url2md", "ni-radar", "ni-research", "ni-writer", "ni-formatter",
   "ni-inspect", "ni-article-image-gen", "ni-poster", "ni-draft", "ni-article-workflow",
   "ni-unknown-first", "ni-tech-report", "ni-book-writer", "ni-3d-model", "ni-fde-copilot", "ni-readme-guide",
   "ni-design-with-docs", "ni-video2md", "douyin-bulk-transcript-exporter", "think-like-architect"
@@ -126,8 +126,8 @@ Manual install doesn't support auto-updates; prefer the per-runtime path above w
 | Video | [`douyin-bulk-transcript-exporter`](./skills/douyin-bulk-transcript-exporter) | Given a Douyin creator homepage, scroll-load and batch-export complete transcripts for all (or the latest N) videos, correct homophone typos, and archive as `title-author.md` |
 | Topic radar | [`ni-radar`](./skills/ni-radar) | Search 14 days of original X content, combine it with 21 days of local sources, and recommend 1–2 of 5–8 topics |
 | Domain learning | [`ni-fde-copilot`](./skills/ni-fde-copilot) | Turn expert-oriented source material into a gated learning blueprint and conversation-ready guide |
-| Article planning | [`ni-insight`](./skills/ni-insight) | Interview the user or autonomously synthesize candidate theses, preserve authorship boundaries, and produce a complete outline |
-| Writing | [`ni-writer`](./skills/ni-writer) | Five article archetypes; the two technical-methodology routes are merged while technical polemic remains separate |
+| Deep research and planning | [`ni-research`](./skills/ni-research) | Investigate mechanisms, theories, competing explanations, and counterevidence; discuss findings before planning and confirming the outline; never write the body |
+| Writing | [`ni-writer`](./skills/ni-writer) | Six article archetypes, including capability announcements and technical architecture explanations |
 | Book writing | [`ni-book-writer`](./skills/ni-book-writer) | Long-form book writing in two styles (technical / trade-press), with structure, outline, and chapter scaffolding |
 | Reporting | [`ni-tech-report`](./skills/ni-tech-report) | Build a clear technical report — narrative arc, evidence layout, and executive-summary synthesis |
 | Layout | [`ni-formatter`](./skills/ni-formatter) | Inject layout modules (part / callout / quote / steps / verdict) |
@@ -205,7 +205,7 @@ Examples:
 /ni-poster a 保留原照片，在下方生成干净象牙色抽象面板
 ```
 
-### The 5 article archetypes in ni-writer
+### The 6 article archetypes in ni-writer
 
 Classify by the article's primary value: hands-on experience, source compression, engineering method, technical polemic, or personal reflection. The two technical-methodology routes now share one entry point; the other styles remain available:
 
@@ -216,6 +216,9 @@ Classify by the article's primary value: hands-on experience, source compression
 | 3. Technical methodology (framework + deep-scene merge) | 4,500-7,000 | Explain the facts, then reason through the mechanism | Engineering practice, architecture, process, collaboration, tool retrospectives |
 | 4. Technical polemic | 5,000-8,500 | Think one judgment through to its boundary | Concept disambiguation, mechanism analysis, paradigm reframing |
 | 5. Personal essay | 3,000-5,000 | I've been turning this over | Stream-of-thought, feelings, non-argumentative pieces |
+| 6. Technical product writing | Typically 1,000-2,200 for announcements; 2,500-4,500 for architecture | Explain capabilities through workflows, mechanisms, and tradeoffs | External engineers and technical leads |
+
+All six styles share the [writing interview](./skills/ni-writer/references/writing_interview.md). Reuse an approved research outline and ask only about gaps needed to write the body. When no outline exists, clarify the purpose, viewpoint, and evidence in small rounds. Research handoff requirements still apply; interview records stay outside the Skill repository.
 
 Technical methodology uses [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) and `references/tech_writing_rules.md`; technical polemic keeps its independent `references/tech_polemic_rules.md`. Technical methodology now uses one spine scene to carry the judgment, with visible actions, artifacts, and judgment changes. The anti-AI pass adopts `human-writing` checks for material sufficiency, speaker position, natural progression, revision, removable adverbs, and unsupported degree claims.
 
@@ -235,20 +238,20 @@ Each skill also has its own domain guidelines; see the corresponding `SKILL.md`.
 
 ## Initial-draft pipeline
 
-```
-topic
+```text
+ni-radar
   ↓
-ni-radar              14-day X search, 21-day local analysis, weekly recommendations
+selection + source
   ↓
-selection + source    user selection or qualified top pick, locally archived sources
+ni-research (research + discussion)
   ↓
-ni-insight            collaborative interview or autonomous thesis synthesis
+ni-research (outline)
   ↓
-ni-radar evidence     deepen evidence and detect outline conflicts
+practice + authorization
   ↓
-ni-writer             produce article-draft.md
+ni-writer
   ↓
-draft_ready           workflow stops for human review
+draft_ready
 ```
 
 Each stage validates its artifact before advancing. Failures retain evidence and stop instead of bypassing a gate with defaults.
@@ -269,7 +272,7 @@ Describe a topic to Codex or Claude, for example:
 
 Describe what you need to trigger the matching skill:
 
-- Discuss the topic with the user or autonomously synthesize its thesis, structure, and style into a complete outline → `ni-insight`
+- Research the selected question, discuss findings, then develop its thesis, structure, and style into a confirmed outline → `ni-research`
 - Lay out an article → `ni-formatter`
 - Scrape a URL into Markdown → `ni-url2md`
 - Turn a video URL or share text into a local Markdown transcript → `ni-video2md`

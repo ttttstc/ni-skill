@@ -47,7 +47,7 @@ class ArticleWorkflowContractTest(unittest.TestCase):
             self.assertIn(phrase, self.skill)
 
     def test_every_stage_has_an_acceptance_gate(self):
-        for stage in ("radar", "selection", "source", "insight", "practice", "evidence", "draft"):
+        for stage in ("radar", "selection", "source", "research", "outline", "practice", "draft"):
             self.assertIn(f"### `{stage}`", self.schema)
         for phrase in ("gate-report.md", "PASS | FAIL | WAITING | DEGRADED", "门禁未通过时不得进入下一阶段"):
             self.assertIn(phrase, self.combined)

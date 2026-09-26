@@ -1,11 +1,11 @@
-# ni-insight — `article-outline.md` 契约
+# ni-research — `article-outline.md` 契约
 
 `collaborative` 与 `autonomous` 必须输出同一种大纲。下游只根据状态和字段判断是否可写，不根据自然语言猜测。
 
 ## 顶部状态
 
 ```yaml
-schema_version: 2
+schema_version: 3
 authorship_mode: collaborative        # collaborative|autonomous
 opinion_origin: user                  # user|mixed|agent_synthesis
 outline_status: draft                 # draft|user_confirmed|autonomous_ready|blocked
@@ -13,6 +13,8 @@ topic_id: null
 topic_title: ""
 radar_report: ""
 source_manifest: ""
+research_path: research.md
+research_revision: null
 practice_status: pending              # pending|verified|not_required|source_only|blocked
 created_at: ""
 updated_at: ""
@@ -118,3 +120,7 @@ blocking_issues: []
 - 每一节必须写出来源或观点归属。只写章节标题不算完整结构。
 - 会改变中心结论的证据或实践缺口必须进入 `blocking_issues`。
 - 大纲不是正文写作授权；授权由 `ni-article-workflow` 单独记录。
+
+## 研究前置门禁
+
+策划前必须读取 research.md。协作模式要求 research_status: user_confirmed 且 confirmed_revision 等于当前 research_revision；自主模式要求 research_status: autonomous_ready。大纲记录 research_revision，证据账本仍以研究文件为真源，各节引用主张 ID。研究中心结论或版本变化时，旧大纲状态退回 draft，重新确认，不得复用 user_confirmed。

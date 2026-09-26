@@ -63,10 +63,13 @@ class RadarContractTest(unittest.TestCase):
         for excluded in ("工具清单", "产品推荐", "促销", "广告", "软文", "纯新闻搬运"):
             self.assertIn(excluded, self.skill)
 
-    def test_evidence_mode_accepts_both_outline_modes(self):
-        self.assertIn("user_confirmed", self.skill)
-        self.assertIn("autonomous_ready", self.skill)
-        self.assertIn("自主模式重新生成并筛选观点候选", self.skill)
+    def test_discovery_can_precede_anchor_and_hands_off_depth(self):
+        self.assertIn("发现阶段不要求先有参考文章", self.skill)
+        self.assertIn("同源转载", self.skill)
+        self.assertIn("低热度但有可靠新实践", self.skill)
+        self.assertIn("ni-research", self.skill)
+        self.assertNotIn("## `evidence`：", self.skill)
+        self.assertIn("研究交接", self.weekly)
 
     def test_last30days_is_optional_and_uses_agent_mode(self):
         for phrase in (

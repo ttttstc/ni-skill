@@ -9,6 +9,9 @@ on:
       - "skills/ni-readme-guide/**"
       - "skills/ni-video2md/**"
       - "skills/ni-writer/**"
+      - "skills/ni-radar/**"
+      - "skills/ni-research/**"
+      - "skills/ni-article-workflow/**"
       - ".codex-plugin/plugin.json"
       - ".claude-plugin/marketplace.json"
       - "README.md"
@@ -24,6 +27,9 @@ on:
       - "skills/ni-readme-guide/**"
       - "skills/ni-video2md/**"
       - "skills/ni-writer/**"
+      - "skills/ni-radar/**"
+      - "skills/ni-research/**"
+      - "skills/ni-article-workflow/**"
       - ".codex-plugin/plugin.json"
       - ".claude-plugin/marketplace.json"
       - "README.md"
@@ -50,6 +56,9 @@ jobs:
           python -m unittest discover -s skills/ni-readme-guide/tests -v
           python -m unittest discover -s skills/ni-video2md/tests -v
           python -m unittest discover -s skills/ni-writer/tests -v
+          python -m unittest discover -s skills/ni-radar/tests -v
+          python -m unittest discover -s skills/ni-research/tests -v
+          python -m unittest discover -s skills/ni-article-workflow/tests -v
       - name: Audit bilingual READMEs
         run: |
           python skills/ni-readme-guide/scripts/audit_readme.py .

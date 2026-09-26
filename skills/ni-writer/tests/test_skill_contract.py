@@ -16,7 +16,7 @@ class NiWriterContractTest(unittest.TestCase):
         cls.readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
 
     def test_technical_routes_are_merged_without_dropping_other_archetypes(self):
-        self.assertIn("## 文章原型(5 种)", self.skill)
+        self.assertIn("## 文章原型(6 种)", self.skill)
         self.assertIn("技术方法论型(沉淀 + 深水区合并)", self.skill)
         self.assertIn("技术思辨型", self.skill)
         self.assertIn("人生哲学随笔型", self.skill)
@@ -53,7 +53,7 @@ class NiWriterContractTest(unittest.TestCase):
         self.assertNotIn("## 固定尾部", self.skill)
 
     def test_readme_documents_the_scene_contract(self):
-        self.assertIn("5 种文章原型", self.readme)
+        self.assertIn("6 种文章原型", self.readme)
         self.assertIn("一条主场景承载判断", self.readme)
 
 

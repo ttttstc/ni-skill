@@ -24,7 +24,7 @@ drafts/
 ## `state.yaml`
 
 ```yaml
-schema_version: 4
+schema_version: 5
 article_name: example-article
 created_at: 2026-09-05T10:00:00+08:00
 updated_at: 2026-09-05T10:00:00+08:00
@@ -32,7 +32,7 @@ updated_at: 2026-09-05T10:00:00+08:00
 mode: collaborative               # collaborative|autonomous
 run_to_draft: false               # autonomous 进入 draft 的显式授权
 
-# intake|radar|selection|source|insight|practice|evidence|draft|draft_ready|blocked|pending_user
+# intake|radar|selection|source|research|outline|practice|draft|draft_ready|blocked|pending_user
 phase: intake
 
 radar_report:
@@ -67,14 +67,18 @@ outline:
   status: draft                   # draft|user_confirmed|autonomous_ready|blocked
   authorship_mode: null           # collaborative|autonomous
   opinion_origin: null            # user|mixed|agent_synthesis
+  research_revision: null
 
 practice:
   status: pending                 # pending|verified|not_required|source_only|blocked
   artifact: practice-record.md
 
-evidence:
-  status: pending                 # pending|ready|conflict|blocked
+research:
+  status: draft                   # draft|ready_for_discussion|user_confirmed|autonomous_ready|blocked
   artifact: research.md
+  revision: 1
+  confirmed_revision: null
+  confirmation_record: null
 
 draft:
   authorized: false
@@ -102,7 +106,13 @@ stages:
     input_fingerprint: null
     output_sha256: null
     validated_at: null
-  insight:
+  research:
+    status: pending
+    artifact: research.md
+    input_fingerprint: null
+    output_sha256: null
+    validated_at: null
+  outline:
     status: pending
     artifact: article-outline.md
     input_fingerprint: null
@@ -111,12 +121,6 @@ stages:
   practice:
     status: pending
     artifact: practice-record.md
-    input_fingerprint: null
-    output_sha256: null
-    validated_at: null
-  evidence:
-    status: pending
-    artifact: research.md
     input_fingerprint: null
     output_sha256: null
     validated_at: null
@@ -184,11 +188,18 @@ blockers: []
 - 本地文件真实存在且可读；
 - 新归档目录来自显式配置。
 
-### `insight`
+### `research`
+
+- research.md 通过研究契约的证据门禁，核心问题、机制、竞争解释、反证和边界明确；
+- 协作模式先交付 ready_for_discussion 并等待；只有明确确认当前版本才写 user_confirmed，confirmed_revision 必须等于 revision；
+- 自主模式为 autonomous_ready，不能代写用户确认；
+- 缺口阻断成文时停止，不生成大纲。
+
+### `outline`
 
 - 协作模式：`outline.status: user_confirmed`；
 - 自主模式：`outline.status: autonomous_ready`、`opinion_origin: agent_synthesis`；
-- 完整大纲中不存在阻断项或虚构用户实践。
+- 完整大纲中不存在阻断项或虚构用户实践；outline.research_revision 与 research.revision 一致。
 
 ### `practice`
 
@@ -198,14 +209,7 @@ blockers: []
 | `not_required` | 是 | 文章不依赖用户亲自实践 |
 | `source_only` | 是 | 外部案例必须明确归因，不写成用户亲历 |
 | `pending` | 否 | 协作模式等待用户；自主模式改选或阻断 |
-| `blocked` | 否 | 禁止进入证据与初稿阶段 |
-
-### `evidence`
-
-- `research.md` 存在并覆盖全部中心主张；
-- 来源等级为 A-official 或 B-original；
-- 与大纲、实践记录没有未解决冲突；
-- 未核实项不影响文章结论。
+| `blocked` | 否 | 禁止进入初稿阶段 |
 
 ### `draft`
 
@@ -223,15 +227,18 @@ blockers: []
 | radar | 素材库、用户范围、关注博主、发布日志 | 本周选题报告 | `radar_report.*`、radar gate |
 | selection | 本周报告、用户决定或自主规则 | `topic-selection.md` | `selection.*`、selection gate |
 | source | 已选主题、直接来源、精确归档目录 | 原始文件、`source-manifest.md` | `source_archive.*`、source gate |
-| insight | 报告、选题、归档素材、运行模式 | `article-outline.md` | `outline.*`、insight gate |
+| research | 已选问题、归档素材、运行模式 | `research.md` 与确认 | `research.*`、research gate |
+| outline | 当前研究、讨论、实践边界 | `article-outline.md` | `outline.*`、outline gate |
 | practice | 大纲、用户实践或既有记录 | `practice-record.md` | `practice.*`、practice gate |
-| evidence | 大纲、归档素材、实践记录 | `research.md` | `evidence.*`、evidence gate |
 | draft | 已授权的大纲、研究、实践记录 | `article-draft.md` | `draft.*`、draft gate |
 
 原子 Skill 只负责生成自己的产物。编排器验收后才能把对应阶段改为 `passed`。
 
 ## 一致性与失效
 
+- 依赖顺序为 radar、selection、source、research、outline、practice、draft。研究新发现来源先更新 source-manifest，再计算研究输入指纹；保留新旧来源版本。
+- 研究中心结论或关键证据变化时，递增 research.revision，清空 confirmed_revision 与 confirmation_record；大纲退回 draft，下游全部 stale。
+- 实践核验若改变研究或大纲，返回相应阶段，不能沿用旧确认。
 - `input_fingerprint` 是按固定顺序拼接上游文件 SHA-256 后得到的 SHA-256；模式和关键配置也要纳入。
 - 当前输入指纹与上次不一致时，本阶段及下游阶段全部标记 `stale`。
 - 文件哈希与 `output_sha256` 不一致时，不接受已有 PASS，重新验收。
@@ -247,3 +254,7 @@ blockers: []
 - 证明关键数字或事实的来源。
 
 其余链接留在研究文件，不复制进正文。
+
+## 旧状态迁移
+
+读取 schema_version: 4 时先保留原文件，生成版本化的 v5 状态。旧 insight / evidence 阶段的 PASS 不能直接换名沿用：旧流程先定大纲后补证据，缺少研究讨论门禁。旧 research.md 与 article-outline.md 可作输入，重新验收 research，协作模式确认当前研究后再重审 outline；practice / draft 标为 stale。已有原始用户授权记录保留，但必须满足新的研究、大纲与实践门禁才能续写。不得凭旧 outline.user_confirmed 推断研究已确认。版本未知时停止并报告，不猜测迁移。
