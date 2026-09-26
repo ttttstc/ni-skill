@@ -342,5 +342,3 @@ wechat:
 ## License
 
 MIT
-
-`ni-insight` 的策划能力已合并进 `ni-research`，`ni-radar evidence` 也由研究阶段接替。radar 吸收 last30days 的多源发现方法，研究重点吸收 DBS 的命题审查、机制、理论与历史比较；两者均不要求安装被借鉴的技能。已有全局安装不会随仓库更新自动移除旧入口。

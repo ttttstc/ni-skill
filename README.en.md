@@ -340,5 +340,3 @@ Optional environment variables:
 ## License
 
 MIT
-
-The planning responsibilities of `ni-insight` and the former `ni-radar evidence` mode now belong to `ni-research`. Radar adopts multi-source discovery methods from last30days; research adopts proposition review, mechanism analysis, theory grounding, and historical comparison from DBS. Neither borrowed method requires those skills to be installed. Updating the repository does not remove old globally installed entrypoints.

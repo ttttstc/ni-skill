@@ -1,7 +1,7 @@
 ---
 name: ni-research
 description: |
-  围绕 ni-radar 已选主题做深度研究，追查机制、理论、历史案例、竞争解释、反证与适用边界；先交付 research.md 并与用户讨论研究结论，再把观点、作者位置、结构和风格聊透，生成 article-outline.md。合并原 ni-insight 的策划职责。支持显式自主模式；不发现新选题、不写正文，确认后的大纲交给 ni-writer。
+  围绕 ni-radar 已选主题做深度研究，追查机制、理论、历史案例、竞争解释、反证与适用边界；先交付 research.md 并与用户讨论研究结论，再把观点、作者位置、结构和风格聊透，生成 article-outline.md。支持显式自主模式；不发现新选题、不写正文，确认后的大纲交给 ni-writer。
 ---
 
 # ni-research — 深度研究与文章策划
