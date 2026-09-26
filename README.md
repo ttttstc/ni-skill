@@ -125,7 +125,7 @@ Copy-Item ni-skill\skills\* $HOME\.claude\skills\ -Recurse -Force
 | 选题雷达 | [`ni-radar`](./skills/ni-radar) | 搜索最近 14 天的 X 原创内容，结合 21 天本地素材生成 5–8 个候选和本周 1–2 个主推 |
 | 领域学习 | [`ni-fde-copilot`](./skills/ni-fde-copilot) | 将面向内行的专业资料转化为经过确认门禁的学习蓝图和可对话级指南 |
 | 文章策划 | [`ni-insight`](./skills/ni-insight) | 支持人在场访谈与无人值守自我挖掘，区分用户观点和 Agent 综合判断并交付完整大纲 |
-| 写作 | [`ni-writer`](./skills/ni-writer) | 5 种文章原型；两类技术方法论合并，技术思辨保留独立路由 |
+| 写作 | [`ni-writer`](./skills/ni-writer) | 6 种文章原型；支持部门能力上新与技术架构解析 |
 | 写书 | [`ni-book-writer`](./skills/ni-book-writer) | 长篇书稿写作（技术书 / 畅销书双风格），含结构、大纲与章节脚手架 |
 | 汇报 | [`ni-tech-report`](./skills/ni-tech-report) | 构建一份清晰的技术汇报——叙事线索、证据布局、执行摘要综合 |
 | 排版 | [`ni-formatter`](./skills/ni-formatter) | 注入排版模块（part / callout / quote / steps / verdict） |
@@ -203,9 +203,11 @@ python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o 
 /ni-poster a 保留原照片，在下方生成干净象牙色抽象面板
 ```
 
-### ni-writer 的 5 种文章原型
+### ni-writer 的 6 种文章原型
 
-写作前先判断文章的主要价值来自亲自体验、资料压缩、工程方法、技术思辨还是个人思绪。原有两类技术方法论合并为一个入口，其他风格保留：
+写作前先区分部门对外介绍能力与个人写作。部门能力上新和架构解析走运营技术文章型；其他文章按亲自体验、资料压缩、工程方法、技术思辨或个人思绪选择。原有两类技术方法论合并为一个入口，其他风格保留：
+
+六种文风共用[写前访谈](./skills/ni-writer/references/writing_interview.md)。优先复用 ni-research 或前期讨论已确认的大纲、主线和材料，只从正文可写性出发补问待确认项。没有已定方案时再分轮厘清目标、身份、主线和证据；每轮少量问题，信息充分直接写。用户要求立即写时按已有材料推进，不补造经历、立场或内部设计。访谈记录不进入 Skill 仓库。
 
 | 原型 | 字数 | 灵魂 | 适用题材 |
 |------|------|------|---------|
@@ -214,8 +216,13 @@ python skills/ni-video2md/scripts/video_to_md.py "<video-url-or-share-text>" -o 
 | 3. 技术方法论型（沉淀 + 深水区合并） | 4500-7000 | 我把事实讲清，再把机制想透 | 工程实践、架构、流程、协作、工具复盘 |
 | 4. 技术思辨型 | 5000-8500 | 我把一个判断想清楚 | 概念辨析、机制推演、范式升维 |
 | 5. 人生哲学随笔型 | 3000-5000 | 我在想这件事 | 思绪流、感受、非论点写作 |
+| 6. 运营技术文章型 | 上新通常 1000-2200，架构通常 2500-4500 | 用问题、过程和机制讲清能力 | 面向外部工程师与技术负责人的部门能力发布、技术架构解析 |
 
 技术方法论型的专项规则见 [`skills/ni-writer/SKILL.md`](./skills/ni-writer/SKILL.md) 与 `references/tech_writing_rules.md`，技术思辨型保留独立的 `references/tech_polemic_rules.md`。技术方法论要求用一条主场景承载判断，写出可见动作、产物和判断变化。反 AI 终审吸收 `human-writing` 的材料、说话位置、自然推进和改稿规则，并单独检查可删副词与缺少证据的程度副词。
+
+运营技术文章型面向部门外的工程师和技术负责人，采用自然书面语，用工作过程、机制解释和设计取舍讲清能力。少用副词，保留技术限定；不要求个人履历、名言、反直觉角度或固定句长。身份、结构、图文分工与自检约定见[专项规则](./skills/ni-writer/references/tech_operations_rules.md)。
+
+用法示例：`用 ni-writer 的运营技术文章风格，把这份发布材料写成能力上新稿，面向部门外的工程师和技术负责人。` 架构稿把「能力上新稿」换成「技术架构解析」，并提供设计、取舍和证据材料。
 
 ---
 
