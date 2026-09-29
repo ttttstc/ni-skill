@@ -1,10 +1,10 @@
 ---
 name: ni-poster
 description: |
-  Generate ZINE-style paper-poster prompts and raster images through one public skill with four internal modes: Standard, Gathered Scenes, Scene Distillation, and Photo Abstract Editorial. Use for themes, sentences, objects, moods, photos, or content briefs that need a tactile editorial poster. Triggers include 「做一张海报」「ZINE 风格」「极简海报」「纸感海报」「拾景纸刊」「保留照片」「撕纸边」「场景提炼」「不保留照片」「视觉隐喻」「单色块模式」「照片抽象编辑」「抽象记忆面板」「poster」「zine poster」「photo abstract editorial」. Style controls are `/ni-poster s`, `/ni-poster g`, `/ni-poster d`, and `/ni-poster a`; full names remain aliases. If no selector, explicit mode, or decisive treatment is given, interview one question at a time until one mode is confirmed before generating. Not for commercial ads, product KV, UI mockups, or article inline illustrations (use ni-article-image-gen).
+  Generate poster and photo-restaging prompts and raster images through one public skill with five internal modes: Standard, Gathered Scenes, Scene Distillation, Photo Abstract Editorial, and Reality Restaged. Use for themes, sentences, objects, moods, photos, or content briefs that need a tactile editorial poster, and for documentary, travel, street, cultural, or human-centered photographs that need rebuilding as restrained surreal cinematic tableaux. Triggers include 「做一张海报」「ZINE 风格」「极简海报」「纸感海报」「拾景纸刊」「保留照片」「撕纸边」「场景提炼」「不保留照片」「视觉隐喻」「单色块模式」「照片抽象编辑」「抽象记忆面板」「超现实电影画面」「纪实重构」「重构这张照片」「不可能世界」「克制的超现实」「poster」「zine poster」「photo abstract editorial」「reality restaged」「restage this photo」. Style controls are `/ni-poster s`, `/ni-poster g`, `/ni-poster d`, `/ni-poster a`, and `/ni-poster r`; full names remain aliases. If no selector, explicit mode, or decisive treatment is given, interview one question at a time until one mode is confirmed before generating. Not for commercial ads, product KV, UI mockups, or article inline illustrations (use ni-article-image-gen).
 ---
 
-# ni-poster — Minimal Zine Poster
+# ni-poster — Minimal Zine Poster & Reality Restaging
 
 Turn the user's content into both:
 
@@ -21,17 +21,18 @@ Select exactly one mode before compiling a prompt. Read the matching reference o
 | **Gathered Scenes** | User wants the supplied scene kept truthful, photo as anchor, photo-to-illustration continuity, visible torn-paper seam, or source-derived collage | Preserve a recognizable photographic section | Photo anchor plus expansive simplified illustration field; one source-derived structural hue |
 | **Scene Distillation** | User wants the photo used only as semantic reference, an authored abstract rewrite, visual metaphor, free typography, or exact `单色块模式` | Do not retain photographic pixels or photorealistic regions | Independent illustration, emotional proposition, adaptive edge, authorial text/color |
 | **Photo Abstract Editorial** | User wants the original photo kept intact and paired with a clean, source-derived abstract memory panel | Preserve the original photograph as the upper/principal section | Adaptive photo/panel diptych, flat ivory panel, muted source palette, one restrained English title |
+| **Reality Restaged** | User wants the documentary photo itself rebuilt as a restrained surreal cinematic tableau — impossible world, monumental color fields, cinematic restaging — or names `reality-restaged` | Do not retain the original pixels; real people, gestures, and cultural details survive photographically believable | Cinematic tableau: radically simplified stage, large saturated color fields, strong negative space, one impossible relationship, analog film realism |
 
 **Standard** is the original `ni-poster` base style: a quiet vertical 3:5 paper poster with 70–90% negative space, one small image cluster, aged scanned-paper texture, sparse short typography, and one clear but restrained high-chroma anchor. It does not require a source photo.
 
 Use this priority order:
 
-1. A valid slash selector is authoritative: `/ni-poster s`, `/ni-poster g`, `/ni-poster d`, or `/ni-poster a`. Strip the command and selector before parsing the poster content.
-2. An explicit style name wins when no slash selector is present: `Standard`, `Gathered Scenes`/`拾景纸刊`, `Scene Distillation`/`场景提炼`, or `Photo Abstract Editorial`/`照片抽象编辑`.
-3. A decisive visual treatment may resolve the mode without an interview: “极简纸刊/大留白小主体” selects **Standard**; “保留照片＋撕纸插画融合” selects **Gathered Scenes**; “不保留照片/场景提炼” or exact `单色块模式` selects **Scene Distillation**; “保留原片＋下方抽象面板” selects **Photo Abstract Editorial**.
-4. Partial or generic cues do not resolve the mode. `保留照片` alone leaves Gathered Scenes versus Photo Abstract Editorial unresolved. `照片`, `抽象`, `纸感`, `ZINE`, or `杂志风` alone also remain unresolved.
+1. A valid slash selector is authoritative: `/ni-poster s`, `/ni-poster g`, `/ni-poster d`, `/ni-poster a`, or `/ni-poster r`. Strip the command and selector before parsing the poster content.
+2. An explicit style name wins when no slash selector is present: `Standard`, `Gathered Scenes`/`拾景纸刊`, `Scene Distillation`/`场景提炼`, `Photo Abstract Editorial`/`照片抽象编辑`, or `Reality Restaged`/`纪实重构`.
+3. A decisive visual treatment may resolve the mode without an interview: “极简纸刊/大留白小主体” selects **Standard**; “保留照片＋撕纸插画融合” selects **Gathered Scenes**; “不保留照片/场景提炼” or exact `单色块模式` selects **Scene Distillation**; “保留原片＋下方抽象面板” selects **Photo Abstract Editorial**; “超现实电影画面/纪实重构/把照片重建成不可能世界” or `reality-restaged` selects **Reality Restaged**.
+4. Partial or generic cues do not resolve the mode. `保留照片` alone leaves Gathered Scenes versus Photo Abstract Editorial unresolved. `照片`, `抽象`, `纸感`, `ZINE`, `杂志风`, or bare `超现实`/`电影感` alone also remain unresolved.
 5. If the mode remains unresolved, run the Guided Style Interview. Do not silently default to Standard and do not generate before the user confirms a mode.
-6. Do not mix the core photo rules of Gathered Scenes, Scene Distillation, and Photo Abstract Editorial.
+6. Do not mix the core photo rules of Gathered Scenes, Scene Distillation, Photo Abstract Editorial, and Reality Restaged.
 
 ### Explicit slash selectors
 
@@ -43,6 +44,7 @@ Treat the first token after `/ni-poster` as a case-insensitive style selector. P
 | `g` (`gathered`) | Gathered Scenes | `references/gathered-scenes-zine.md` |
 | `d` (`distillation`) | Scene Distillation | `references/scene-distillation-zine.md` |
 | `a` (`abstract`, `photo-abstract-editorial`) | Photo Abstract Editorial | `references/photo-abstract-editorial.md` |
+| `r` (`reality-restaged`, `restage`) | Reality Restaged | `references/reality-restaged.md` |
 
 Supported forms:
 
@@ -51,13 +53,14 @@ Supported forms:
 /ni-poster g <photo + source-faithful collage request>
 /ni-poster d <photo/theme + abstract reinterpretation request>
 /ni-poster a <photo + clean abstract editorial panel request>
+/ni-poster r <photo + restrained surreal cinematic restaging request>
 ```
 
-If `/ni-poster` has no selector, use an explicit mode name or decisive visual treatment when present; otherwise run the Guided Style Interview. If the selector is unknown, state the valid short values (`s`, `g`, `d`, `a`) and interview the user unless the remaining request already identifies one mode decisively.
+If `/ni-poster` has no selector, use an explicit mode name or decisive visual treatment when present; otherwise run the Guided Style Interview. If the selector is unknown, state the valid short values (`s`, `g`, `d`, `a`, `r`) and interview the user unless the remaining request already identifies one mode decisively.
 
-Keyword categories and examples are maintained in [references/style-routing.md](references/style-routing.md). For **Gathered Scenes**, read [references/gathered-scenes-zine.md](references/gathered-scenes-zine.md). For **Scene Distillation**, read [references/scene-distillation-zine.md](references/scene-distillation-zine.md). For **Photo Abstract Editorial**, read [references/photo-abstract-editorial.md](references/photo-abstract-editorial.md).
+Keyword categories and examples are maintained in [references/style-routing.md](references/style-routing.md). For **Gathered Scenes**, read [references/gathered-scenes-zine.md](references/gathered-scenes-zine.md). For **Scene Distillation**, read [references/scene-distillation-zine.md](references/scene-distillation-zine.md). For **Photo Abstract Editorial**, read [references/photo-abstract-editorial.md](references/photo-abstract-editorial.md). For **Reality Restaged**, read [references/reality-restaged.md](references/reality-restaged.md).
 
-Photo input rule: Gathered Scenes and Photo Abstract Editorial need a supplied photo. Scene Distillation can use a supplied photo or, when explicitly requested without one, treat the user's theme/text as the semantic source. When Gathered Scenes or Photo Abstract Editorial is selected without a photo, keep the selected mode, ask the user to upload a reference photo, and wait. Never fall back to Standard merely because the photo is missing.
+Photo input rule: Gathered Scenes, Photo Abstract Editorial, and Reality Restaged need a supplied photo; Reality Restaged specifically needs a documentary, travel, street, cultural, or human-centered photograph. Scene Distillation can use a supplied photo or, when explicitly requested without one, treat the user's theme/text as the semantic source. When Gathered Scenes, Photo Abstract Editorial, or Reality Restaged is selected without a photo, keep the selected mode, ask the user to upload a reference photo, and wait. Never fall back to Standard merely because the photo is missing.
 
 ## Guided Style Interview
 
@@ -67,7 +70,7 @@ The interview selects a mode only. Never use it to rewrite, merge, weaken, or ex
 
 1. Establish whether a photo exists or will be supplied and whether it should remain visible in the final artwork.
    - If a photo is supplied but its role is unclear, ask: `成品里需要保留原照片吗？`
-   - If the answer is no, select **Scene Distillation**.
+   - If the answer is no, ask: `重建成摄影可信的超现实电影画面（真实人物与文化细节），还是独立抽象插画？` Photographic surreal cinematic restaging selects **Reality Restaged**; independent abstract illustration selects **Scene Distillation**.
 2. If the photo should remain visible, distinguish the two preservation modes.
    - Ask: `你想让照片与撕纸插画融合，还是保留原片并在下方接干净抽象面板？`
    - Torn-paper photo/illustration fusion selects **Gathered Scenes**.
@@ -76,8 +79,8 @@ The interview selects a mode only. Never use it to rewrite, merge, weaken, or ex
    - Ask: `你更想要极简大留白纸刊，还是把主题提炼成独立抽象插画？`
    - Minimal paper zine selects **Standard**.
    - Independent abstract reinterpretation selects **Scene Distillation**.
-4. If an answer remains ambiguous, reflect the inferred preference in one sentence and ask one narrower confirmation. Do not repeat the full four-style menu.
-5. After selection, state one concise confirmation: `将使用 [Mode]：[direct defining trait].` Then continue the normal workflow. If the chosen mode is Gathered Scenes or Photo Abstract Editorial and no photo is available, request the photo and wait.
+4. If an answer remains ambiguous, reflect the inferred preference in one sentence and ask one narrower confirmation. Do not repeat the full five-style menu.
+5. After selection, state one concise confirmation: `将使用 [Mode]：[direct defining trait].` Then continue the normal workflow. If the chosen mode is Gathered Scenes, Photo Abstract Editorial, or Reality Restaged and no photo is available, request the photo and wait.
 
 Do not ask about color, typography, or decorative details before mode selection unless the answer is necessary to separate two remaining modes.
 
@@ -226,10 +229,10 @@ Before writing the prompt, choose one option from each axis. Randomness must cha
 ## Workflow
 
 1. Determine mode.
-   - Parse `/ni-poster <selector>` first. If present and valid (`s`, `g`, `d`, `a`, or a full-name alias), use that selector as the resolved mode even when content keywords point elsewhere. Record both the selector and resolved mode in the final response.
+   - Parse `/ni-poster <selector>` first. If present and valid (`s`, `g`, `d`, `a`, `r`, or a full-name alias), use that selector as the resolved mode even when content keywords point elsewhere. Record both the selector and resolved mode in the final response.
    - If no selector is present, use an explicit mode name or decisive treatment when available. Otherwise run the Guided Style Interview, stop the current generation workflow, and wait for the user's answer. Resume only after one mode is confirmed.
    - Record the selection method as `selector`, `explicit request`, or `interview`.
-   - If the selected mode is Gathered Scenes, Scene Distillation, or Photo Abstract Editorial, read its reference file before analyzing the source image.
+   - If the selected mode is Gathered Scenes, Scene Distillation, Photo Abstract Editorial, or Reality Restaged, read its reference file before analyzing the source image.
 
 2. Parse the user's content.
    - Identify the core subject, mood, exact text if supplied, possible visual metaphor, and any reference image role.
@@ -238,7 +241,7 @@ Before writing the prompt, choose one option from each axis. Randomness must cha
 
 3. Select a variation recipe.
    - In Standard Mode, pick layout, image anchor, typography, texture, and mood from the Variation Engine, then choose color through the Standard Color Engine. Do not select `near-monochrome` unless the user explicitly asks for it.
-   - In Gathered Scenes, Scene Distillation, or Photo Abstract Editorial, follow the selected reference's source analysis, composition, edge, color, typography, and correction rules instead of this Variation Engine.
+   - In Gathered Scenes, Scene Distillation, Photo Abstract Editorial, or Reality Restaged, follow the selected reference's rules instead of this Variation Engine.
    - Do not default to "tiny photo + blue dots + microtext" unless it truly fits.
    - If the recipe becomes too dense, simplify typography or color treatment first.
 
@@ -253,16 +256,17 @@ Before writing the prompt, choose one option from each axis. Randomness must cha
      2. an installed image-generation skill or tool in this environment (e.g. `chatgpt-imagegen`, an MCP image tool, or any project-local generation CLI);
      3. an image-generation command the user has already told you to use in this session.
    - Do not hardcode a single vendor. Do not ask the user which tool to use if one of the above is already available — just use it and name the tool in the output.
-   - Do not stop after prompt-only unless the user explicitly asks for prompt-only, **or** no generation capability is available at all. In the no-capability case, state plainly that no image was generated and why, and name the concrete missing capability. Return the final prompt automatically only in Standard Mode; for Gathered Scenes, Scene Distillation, or Photo Abstract Editorial, return it only if the user asked for it.
+   - Do not stop after prompt-only unless the user explicitly asks for prompt-only, **or** no generation capability is available at all. In the no-capability case, state plainly that no image was generated and why, and name the concrete missing capability. Return the final prompt automatically only in Standard Mode; for Gathered Scenes, Scene Distillation, Photo Abstract Editorial, or Reality Restaged, return it only if the user asked for it.
    - If Standard, Gathered Scenes, or Photo Abstract Editorial visibly violates the selected mode or recipe, tighten only the failed constraint and regenerate once. In Gathered Scenes, preserve the truthful photo and torn handoff; in Photo Abstract Editorial, preserve the faithful photo and clean ivory join during this correction.
    - In Scene Distillation, follow its reference: do not perform an automatic visual-inspection review or regeneration after a successful generation unless the user asks for a check/revision. Retry only a concrete runtime generation failure.
+   - In Reality Restaged, inspect the result against its Final Quality Gate; if a critical category fails (recomposition, relationship, color, photographic realism), tighten only the failed constraint and regenerate once. For a local edit of an approved image, Master Lock Mode governs: modify only what the user requested.
    - In Standard Mode, inspect the result at thumbnail scale. If the high-chroma anchor is absent, washed out, or reduced to an imperceptible mark, regenerate once with stronger color wording and a larger colored area.
 
-6. Return the mode-specific output contract. State the selected mode; Standard includes the final prompt by default, while the three routed reference modes return their rationale/notes and reveal the prompt only when requested.
+6. Return the mode-specific output contract. State the selected mode; Standard includes the final prompt by default, while the four routed reference modes return their rationale/notes and reveal the prompt only when requested.
 
 ## Negative Constraints
 
-Always avoid:
+Always avoid in the four zine modes (Reality Restaged follows the hard avoids in its own reference — generic AI look, plastic skin, duplicated faces, surreal clutter, typography by default — while photographic realism and cinematic staging are its core):
 
 - full-bleed subject or scene
 - commercial poster headline hierarchy
@@ -277,7 +281,7 @@ Always avoid:
 
 ## Output Format
 
-Use this output format for **Standard Mode**. Gathered Scenes, Scene Distillation, and Photo Abstract Editorial have their own output contracts in their reference files: each returns the generated image and concise rationale/notes by default, and reveals the final prompt only when the user asks for it.
+Use this output format for **Standard Mode**. Gathered Scenes, Scene Distillation, Photo Abstract Editorial, and Reality Restaged have their own output contracts in their reference files: each returns the generated image and concise rationale/notes by default, and reveals the final prompt only when the user asks for it.
 
 ````markdown
 **生成图**
@@ -292,7 +296,7 @@ Use this output format for **Standard Mode**. Gathered Scenes, Scene Distillatio
 
 **说明**
 
-- Selector: [s / g / d / a / none]
+- Selector: [s / g / d / a / r / none]
 - Selection: [selector / explicit request / interview]
 - Mode: Standard
 - Tool: [the image-generation capability actually used]
@@ -306,7 +310,7 @@ If no generation capability was available, replace the **生成图** block with 
 
 ## Quality Gate
 
-Before finalizing, check:
+Before finalizing, check (the paper-poster checks below apply to the four zine modes; Reality Restaged is judged against the Final Quality Gate in its own reference):
 
 - Was exactly one mode confirmed before prompt compilation or image generation?
 - If the request did not specify a mode decisively, did the run interview the user instead of silently defaulting?
@@ -325,6 +329,7 @@ Before finalizing, check:
 - In Standard Mode, did the prompt avoid weakening the color anchor with `pale`, `muted`, `faded`, `pastel`, `low saturation`, or `near-monochrome` wording?
 - In Photo Abstract Editorial, is the uploaded photo faithful, is the lower panel flat neutral ivory, are all motif marks source-derived, and is there no torn edge, texture, shadow, or invented color?
 - In Photo Abstract Editorial, is there only one restrained English title on the abstract panel and no extra labels, dates, logos, or watermarks?
+- In Reality Restaged, does the result read as a newly constructed cinematic world — real people and cultural details preserved, one impossible relationship, large color fields — rather than the original photo with a replaced background?
 - Did the prompt avoid full-bleed, commercial, 3D, neon, cinematic, cartoon, cute, brand, and generic template aesthetics?
 - Did you actually generate the image, or explicitly report that no generation capability was available?
 
@@ -338,15 +343,21 @@ Before finalizing, check:
 - "用这张照片做场景提炼，不要保留照片像素，要有视觉隐喻"
 - "用 ni-poster 的单色块模式处理这张图"
 - "用 photo abstract editorial 把这张照片和抽象记忆面板做成干净的编辑双联作品"
+- "用 reality-restaged 把这张旅行照重构成不可能世界"
 - "/ni-poster s 把这句话做成极简纸刊：夏天结束得很轻"
 - "/ni-poster g 保留这张照片的真实场景，加入手撕纤维边"
 - "/ni-poster d 用这张照片做视觉隐喻，不保留照片像素"
 - "/ni-poster a 保留原照片，在下方生成来源于照片关系的象牙色抽象面板"
+- "/ni-poster r 保留人物和文化细节，把这张街拍重构成克制的超现实电影画面"
 
 ## Reference Examples
 
 See `examples/` for six generated posters in this style: `night-door`, `yellow-step`, `shore-pause`, `pause-map`, `typhoon-memory`, `moon-tide`. Use them to calibrate negative-space ratio, cluster size, and accent share — not to copy their objects, dates, or captions.
 
+For **Reality Restaged**, `examples/reality-restaged/` holds seven upstream selected works; calibrate cinematic grammar — negative-space ratio, color-field scale, staging, film texture — never their scenes, subjects, or palettes.
+
 ## Attribution
 
 Ported from [gc-minimal-zine-poster](https://github.com/LiamGvchi/gc-minimal-zine-poster) (Minimal Zine Poster v0.1) by LiamGvchi, MIT License. Visual rules and prompt compiler preserved verbatim; the generation step was made runtime-agnostic for the ni-skill suite.
+
+Reality Restaged mode is a complete fork of [reality-restaged](https://github.com/traveler0621/reality-restaged) by traveler0621 (commit `9a5533c`, 2026-08-12; upstream declares no LICENSE). All thirty upstream sections are preserved verbatim in [references/reality-restaged.md](references/reality-restaged.md); the seven example images remain the upstream author's work.

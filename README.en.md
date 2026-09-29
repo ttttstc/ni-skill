@@ -17,6 +17,7 @@ After installation, name the skill, your goal, and your sources in a conversatio
 | Design product architecture | Use ni-design-with-docs to build a reviewable architecture baseline from these requirements and sources |
 | Write an article | Use ni-article-workflow for an article about Agent engineering. Confirm the research findings and outline first |
 | Create a poster | Use ni-poster to turn this text into a minimal paper-zine poster: 〈text〉 |
+| Restage a photo | Use ni-poster r to rebuild this travel photo into a restrained surreal cinematic tableau: 〈photo〉 |
 
 ## Install
 
@@ -46,7 +47,7 @@ Configure dependencies as needed: web capture uses Node.js and a browser; local 
 | Product and architecture | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md): product architecture baselines; [think-like-architect](./skills/think-like-architect/SKILL.md): first-cut architecture decisions |
 | Writing and communication | [ni-radar](./skills/ni-radar/SKILL.md): topic recommendations; [ni-writer](./skills/ni-writer/SKILL.md): articles; [ni-book-writer](./skills/ni-book-writer/SKILL.md): books and chapters; [ni-tech-report](./skills/ni-tech-report/SKILL.md): technical reports; [ni-readme-guide](./skills/ni-readme-guide/SKILL.md): Chinese and English READMEs |
 | Article preparation | [ni-inspect](./skills/ni-inspect/SKILL.md): prepublication checks; [ni-formatter](./skills/ni-formatter/SKILL.md): layout; [ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md): image prompts; [ni-draft](./skills/ni-draft/SKILL.md): WeChat draft delivery |
-| Visual creation | [ni-poster](./skills/ni-poster/SKILL.md): ZINE-style posters; [ni-3d-model](./skills/ni-3d-model/SKILL.md): multiview review and textured GLB generation and validation |
+| Visual creation | [ni-poster](./skills/ni-poster/SKILL.md): ZINE-style posters and documentary-photo surreal restaging (five modes); [ni-3d-model](./skills/ni-3d-model/SKILL.md): multiview review and textured GLB generation and validation |
 
 To connect the article stages, use [ni-article-workflow](./skills/ni-article-workflow/SKILL.md) for topics, research, outlines, and an initial draft, with support for resuming interrupted work. By default, it requires confirmation of findings, the outline, and permission to write. Review, imagery, formatting, and draft delivery are separate calls.
 
