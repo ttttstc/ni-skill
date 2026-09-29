@@ -395,7 +395,7 @@ class SkillContractTests(unittest.TestCase):
         style = read_text(SKILL_ROOT / "references" / "07-writing-style.md")
         gates = read_text(SKILL_ROOT / "eval" / "gates.md")
 
-        self.assertIn("不要把“帮助研发、统一认知、建设能力", template)
+        self.assertIn("不要写访谈状态、作者推理、被否决方案、报告策略或“帮助研发、统一认知、建设能力、便于后续开发”等文档用途", template)
         self.assertIn("不把写文档、帮助研发、统一认知或建设能力当目标", architecture)
         self.assertIn("这些是文档用途，不是产品目标", style)
         self.assertIn("没有把文档用途或研发过程当成产品目标", gates)
@@ -431,8 +431,8 @@ class SkillContractTests(unittest.TestCase):
                 [skill, interview, architecture, views, template, gates, security]
             )
             self.assertIn(phrase, combined)
-        self.assertIn("不适用", interview)
-        self.assertIn("未知项回到 P1/P2", interview)
+        self.assertIn("该清单按适用性裁剪", interview)
+        self.assertIn("回到 P1/P2", interview)
         self.assertIn("Secret", security)
 
     def test_formal_report_has_content_firewall(self) -> None:
@@ -448,7 +448,7 @@ class SkillContractTests(unittest.TestCase):
             "面向读者",
             "背景可以保留",
             "当前事实、直接影响和本次变化",
-            "正式报告只呈现方案事实和客观设计结论",
+            "正式报告只呈现方案事实、客观设计结论和可观察结果",
             "一个句子只表达一个主要判断",
         ]:
             self.assertIn(phrase, combined)
