@@ -17,6 +17,7 @@
 | 设计产品架构 | 用 ni-design-with-docs，基于这些需求和资料形成可评审的架构基线 |
 | 写一篇文章 | 用 ni-article-workflow 写一篇 Agent 工程实践文章，先确认研究结论与大纲 |
 | 做一张海报 | 用 ni-poster，把这句话做成极简纸刊风格海报：〈文案〉 |
+| 重构一张照片 | 用 ni-poster r，把这张旅行照重构成克制的超现实电影画面：〈照片〉 |
 
 ## 安装
 
@@ -46,7 +47,7 @@
 | 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |
 | 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README |
 | 文章处理 | [ni-inspect](./skills/ni-inspect/SKILL.md)：发布前检查；[ni-formatter](./skills/ni-formatter/SKILL.md)：排版；[ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md)：配图提示词；[ni-draft](./skills/ni-draft/SKILL.md)：推送微信草稿箱 |
-| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收 |
+| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报与纪实照片超现实重构（五种模式）；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收 |
 
 需要串联文章生产时，用 [ni-article-workflow](./skills/ni-article-workflow/SKILL.md) 从选题、研究和大纲推进到初稿，支持断点续跑。默认先确认研究结论、大纲和写作授权；审稿、配图、排版与推送草稿箱另行调用。
 

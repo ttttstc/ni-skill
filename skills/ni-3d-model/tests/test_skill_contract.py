@@ -64,8 +64,8 @@ class SkillContractTests(unittest.TestCase):
         claude = json.loads(
             (REPO_DIR / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8")
         )
-        self.assertEqual("1.3.0", codex["version"])
-        self.assertEqual("1.3.0", claude["metadata"]["version"])
+        self.assertRegex(codex["version"], r"^\d+\.\d+\.\d+$")
+        self.assertEqual(codex["version"], claude["metadata"]["version"])
         self.assertIn("./skills/ni-3d-model", claude["plugins"][0]["skills"])
 
 

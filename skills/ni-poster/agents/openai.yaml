@@ -1,4 +1,4 @@
 interface:
-  display_name: "ni-poster · Routed Zine Posters"
-  short_description: "四种纸刊海报风格，未指定时先访谈确认风格再生成图片"
-  default_prompt: "Use $ni-poster to make a tactile paper zine poster; if I did not specify a style, interview me until one mode is confirmed before generating."
+  display_name: "ni-poster · Routed Posters & Restaging"
+  short_description: "五种风格：四种纸刊海报＋纪实照片超现实重构，未指定时先访谈确认再生成"
+  default_prompt: "Use $ni-poster to make a tactile paper zine poster or restage a documentary photo as a restrained surreal cinematic tableau; if I did not specify a style, interview me until one mode is confirmed before generating."

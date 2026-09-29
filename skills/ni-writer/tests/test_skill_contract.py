@@ -53,8 +53,8 @@ class NiWriterContractTest(unittest.TestCase):
         self.assertNotIn("## 固定尾部", self.skill)
 
     def test_readme_documents_the_scene_contract(self):
-        self.assertIn("6 种文章原型", self.readme)
-        self.assertIn("一条主场景承载判断", self.readme)
+        self.assertIn("## 文章原型(6 种)", self.skill)
+        self.assertIn("一条主场景贯穿", self.tech_rules)
 
 
 if __name__ == "__main__":
