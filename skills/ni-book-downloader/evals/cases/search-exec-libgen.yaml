@@ -1,0 +1,28 @@
+id: search-exec-libgen
+title: 真实执行——只用 LibGen 渠道列出文字版候选
+description: |
+  端到端冒烟：让 Agent 调用 book.py search，仅用 libgen 渠道检索
+  《The Montessori Baby》的文字版候选（不下载），验证脚本链路可用。
+
+input:
+  prompt: |
+    用这个技能搜索《The Montessori Baby》的文字版候选，只用 libgen 渠道，
+    列出候选即可，不要下载。
+
+constraints:
+  timeout_seconds: 420
+  max_turns: 12
+
+expect:
+  must_contain: ["epub"]
+  exit_code: 0
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["Montessori"]
+    - output_contains:
+        any: ["epub", "mobi"]
+    - output_contains:
+        any: ["libgen", "score", "source", "候选"]

@@ -1,0 +1,32 @@
+schema_version: v1alpha1
+
+environment:
+  type: none
+
+skills:
+  - source: local_path
+    path: .
+    exclude:
+      - "evals/**"
+      - "tests/__pycache__/**"
+      - "scripts/__pycache__/**"
+
+engine:
+  name: claude_code
+
+cases:
+  files:
+    - evals/cases/format-confirm-first.yaml
+    - evals/cases/format-any-proceeds.yaml
+    - evals/cases/sources-and-priority.yaml
+    - evals/cases/zlib-quota-strategy.yaml
+    - evals/cases/netdisk-coverage.yaml
+    - evals/cases/setup-login-guidance.yaml
+    - evals/cases/scanned-pdf-fallback.yaml
+    - evals/cases/search-exec-libgen.yaml
+  defaults:
+    timeout_seconds: 360
+    max_turns: 8
+
+report:
+  formats: [json, html]

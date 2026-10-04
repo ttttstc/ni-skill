@@ -1,0 +1,24 @@
+id: zlib-quota-strategy
+title: 说明 Z-Library 每日配额与配额耗尽后的应对
+description: |
+  回答应给出免费账号每日约 10 本的配额上限，并说明配额用尽后的正确动作：
+  使用免配额渠道（网盘 / LibGen 等）或次日重试，而不是反复重试刷量。
+
+input:
+  prompt: |
+    我用这个技能下书的时候，Z-Library 免费账号每天能下几本？
+    如果配额用完了，这个技能会怎么办？
+
+constraints:
+  timeout_seconds: 480
+
+expect:
+  must_contain: ["10"]
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["次日", "第二天", "明天", "重置", "恢复"]
+    - output_contains:
+        any: ["网盘", "LibGen", "免配额", "其他来源", "换渠道", "降级"]

@@ -1,0 +1,20 @@
+id: scanned-pdf-fallback
+title: 扫描版 PDF 出文字版的兜底方案说明
+description: |
+  用户只有扫描版 PDF。回答应说明：数字原生 PDF 可直接提取文字层
+  （extract-pdf），纯扫描件需要 OCR 或换文字版来源，不得用乱码文本冒充。
+
+input:
+  prompt: |
+    我有这本书，但只有扫描版 PDF，PDF 蒸馏不太方便。用这个技能能拿到文字版吗？
+
+expect:
+  must_contain: ["PDF"]
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["OCR"]
+    - output_contains:
+        any: ["文字层", "extract-pdf", "换源", "epub", "mobi", "文字版下载"]

@@ -1,0 +1,22 @@
+id: netdisk-coverage
+title: 全网搜索兜底覆盖多类型网盘，不限于个别平台
+description: |
+  知识类用例：回答应体现网盘识别"不限制类型"——除夸克/百度等主流平台外，
+  还覆盖迅雷/阿里/123/蓝奏/微云等国内网盘与 Google Drive/Mega 等国际网盘。
+
+input:
+  prompt: |
+    这个技能的全网搜索能识别哪些网盘链接？列一下支持的类型。
+
+expect:
+  must_contain: ["网盘"]
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["夸克", "百度"]
+    - output_contains:
+        any: ["迅雷", "阿里", "123", "蓝奏", "微云", "天翼", "UC", "移动"]
+    - output_contains:
+        any: ["Google Drive", "Mega", "OneDrive", "Dropbox", "TeraBox", "谷歌", "国际"]

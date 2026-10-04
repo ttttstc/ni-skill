@@ -13,6 +13,7 @@
 | 想做什么 | 可以这样说 |
 |---|---|
 | 整理资料 | 用 ni-video2md 把这个公开视频转成 Markdown：〈链接〉 |
+| 找电子书 | 用 ni-book-downloader 按书名下载电子书，先确认要文字版还是 PDF |
 | 学习陌生领域 | 用 ni-fde-copilot 读这些资料，先出学习蓝图，确认后再写指南 |
 | 设计产品架构 | 用 ni-design-with-docs，基于这些需求和资料形成可评审的架构基线 |
 | 写一篇文章 | 用 ni-article-workflow 写一篇 Agent 工程实践文章，先确认研究结论与大纲 |
@@ -42,7 +43,7 @@
 
 | 场景 | 技能与用途 |
 |---|---|
-| 资料整理 | [ni-url2md](./skills/ni-url2md/SKILL.md)：网页转 Markdown；[ni-video2md](./skills/ni-video2md/SKILL.md)：公开视频本地转写；[douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md)：抖音博主逐字稿批量归档 |
+| 资料整理 | [ni-url2md](./skills/ni-url2md/SKILL.md)：网页转 Markdown；[ni-video2md](./skills/ni-video2md/SKILL.md)：公开视频本地转写；[douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md)：抖音博主逐字稿批量归档；[ni-book-downloader](./skills/ni-book-downloader/SKILL.md)：按书名下载电子书，严格区分文字版与 PDF |
 | 学习与研究 | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md)：专业资料学习蓝图与指南；[ni-unknown-first](./skills/ni-unknown-first/SKILL.md)：识别未知与下一步；[ni-research](./skills/ni-research/SKILL.md)：深度研究、讨论结论与文章大纲 |
 | 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |
 | 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README |

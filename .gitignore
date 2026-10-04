@@ -10,3 +10,6 @@ drafts/
 __pycache__/
 *.pyc
 ni-draft/tests/fixtures/local-preview.html
+
+# skill-up 评测工作目录
+*-workspace/
