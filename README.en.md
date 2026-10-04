@@ -13,6 +13,7 @@ After installation, name the skill, your goal, and your sources in a conversatio
 | Goal | Example request |
 |---|---|
 | Organize sources | Use ni-video2md to turn this public video into Markdown: 〈URL〉 |
+| Find ebooks | Use ni-book-downloader to download a book by title. Confirm text or PDF format first |
 | Learn a domain | Use ni-fde-copilot to read these sources. Confirm a learning blueprint before writing the guide |
 | Design product architecture | Use ni-design-with-docs to build a reviewable architecture baseline from these requirements and sources |
 | Write an article | Use ni-article-workflow for an article about Agent engineering. Confirm the research findings and outline first |
@@ -42,7 +43,7 @@ Configure dependencies as needed: web capture uses Node.js and a browser; local 
 
 | Task | Skills and purpose |
 |---|---|
-| Source collection | [ni-url2md](./skills/ni-url2md/SKILL.md): web pages to Markdown; [ni-video2md](./skills/ni-video2md/SKILL.md): local public-video transcription; [douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md): batch transcripts from a Douyin creator |
+| Source collection | [ni-url2md](./skills/ni-url2md/SKILL.md): web pages to Markdown; [ni-video2md](./skills/ni-video2md/SKILL.md): local public-video transcription; [douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md): batch transcripts from a Douyin creator; [ni-book-downloader](./skills/ni-book-downloader/SKILL.md): download ebooks by title, separating text formats from PDF |
 | Learning and research | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md): learning blueprints and guides; [ni-unknown-first](./skills/ni-unknown-first/SKILL.md): identify unknowns and next steps; [ni-research](./skills/ni-research/SKILL.md): deep research, discussion, and article outlines |
 | Product and architecture | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md): product architecture baselines; [think-like-architect](./skills/think-like-architect/SKILL.md): first-cut architecture decisions |
 | Writing and communication | [ni-radar](./skills/ni-radar/SKILL.md): topic recommendations; [ni-writer](./skills/ni-writer/SKILL.md): articles; [ni-book-writer](./skills/ni-book-writer/SKILL.md): books and chapters; [ni-tech-report](./skills/ni-tech-report/SKILL.md): technical reports; [ni-readme-guide](./skills/ni-readme-guide/SKILL.md): Chinese and English READMEs |

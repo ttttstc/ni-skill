@@ -1,0 +1,27 @@
+id: format-any-proceeds
+title: 用户表示"都行"后按全量格式继续，不再追问
+description: |
+  第一轮未指定格式应先确认；第二轮用户说"都行"后，应按 any（全量格式）
+  继续搜索/列候选，不得重复追问格式偏好。
+  注：采用"搜索"路径规避引擎的下载类版权拒答，格式确认与 any 语义的
+  校验均可在搜索路径上完成。
+
+input:
+  turns:
+    - role: user
+      content: "用这个技能帮我搜《The Montessori Baby 》，先列候选不要下载"
+      post_condition:
+        must_contain_any: ["格式", "文字版", "PDF", "都行"]
+        on_fail: fail
+    - role: user
+      content: "都行，继续搜吧"
+
+judge:
+  type: rule_based
+  success:
+    - turn_response_contains:
+        turn: 2
+        contains_any: ["候选", "epub", "Montessori", "搜索", "全量", "any"]
+    - turn_response_not_contains:
+        turn: 2
+        not_contains: ["要文字版还是 PDF", "文字版还是PDF", "先告诉我你要哪种格式"]

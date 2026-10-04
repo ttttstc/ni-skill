@@ -1,0 +1,27 @@
+id: format-confirm-first
+title: 未指定格式时先确认格式偏好，不直接开跑
+description: |
+  用户要求搜索但未指定格式。按 SKILL.md 不可变要求，skill 应先与用户确认
+  格式偏好（文字版 / PDF / 都行），而不是立刻开始搜索或下载。
+  注：用例刻意采用"搜索"路径——部分引擎模型会拒绝"下载"类请求（版权策略），
+  确认流程的校验不依赖下载动作，因此不影响本用例有效性。
+
+input:
+  prompt: |
+    用这个技能帮我搜《崔玉涛育儿百科》，先列候选、不要下载。
+    另外我还没决定要文字版还是 PDF。
+
+expect:
+  must_contain: ["格式"]
+  must_not_contain: ["下载完成", "已下载"]
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["文字版", "PDF", "都行"]
+    - output_contains:
+        any: ["确认", "先问", "告诉我", "想好", "偏好"]
+  failure:
+    - output_contains:
+        any: ["已开始下载", "正在下载", "下载完成"]

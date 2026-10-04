@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "泥巴猪的内容创作、领域学习、产品架构、架构决策、审核制 3D 建模与 README 技能矩阵",
-    "version": "1.5.0"
+    "version": "1.6.0"
   },
   "plugins": [
     {
@@ -32,7 +32,8 @@
         "./skills/ni-3d-model",
         "./skills/ni-fde-copilot",
         "./skills/ni-readme-guide",
-        "./skills/ni-design-with-docs"
+        "./skills/ni-design-with-docs",
+        "./skills/ni-book-downloader"
       ]
     }
   ]

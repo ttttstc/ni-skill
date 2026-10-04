@@ -1,0 +1,3 @@
+requests>=2.31
+websocket-client>=1.6
+pymupdf>=1.24

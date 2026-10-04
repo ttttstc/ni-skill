@@ -1,0 +1,22 @@
+id: sources-and-priority
+title: 能说明全部下载渠道与免配额优先的降级顺序
+description: |
+  知识类用例：回答应覆盖 GitHub 索引/网盘 → LibGen → Z-Library → Anna's Archive
+  → 全网搜索兜底的完整渠道链，并体现"免配额优先"原则。
+
+input:
+  prompt: |
+    这个技能支持从哪些渠道下载电子书？优先级和降级顺序是什么？
+
+expect:
+  must_contain: ["网盘", "LibGen", "Z-Library"]
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["GitHub", "Anna"]
+    - output_contains:
+        any: ["免配额", "免账号", "免费"]
+    - output_contains:
+        any: ["降级", "顺序", "兜底", "优先"]
