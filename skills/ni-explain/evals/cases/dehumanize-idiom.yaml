@@ -1,0 +1,18 @@
+id: dehumanize-idiom
+title: 去掉成语/套话，写出具体事实
+description: |
+  「开箱即用」「无缝衔接」「性能飞跃」是套话。改写应把它们还原成
+  可验证的具体事实（或标出缺数据），保留原意强度。
+input:
+  prompt: |
+    用 ni-explain 改写：该方案开箱即用，无缝衔接现有系统，性能飞跃。
+expect:
+  must_not_contain: ["开箱即用", "无缝", "飞跃"]
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["9.4", "套话", "具体", "数字", "多少", "待补"]
+  failure:
+    - output_contains:
+        any: ["开箱即用", "无缝衔接", "性能飞跃"]

@@ -1,0 +1,22 @@
+id: review-no-rewrite
+title: 审查模式只列问题，不改写
+description: |
+  用户明确要「只审查、不要改」。skill 应列出被误读的位置与命中的规则，
+  而不是交付一份改写后的文档。
+input:
+  prompt: |
+    用 ni-explain 审查这段，只告诉我哪里会被误读，不要改：
+    我们实现了对多格式的支持，性能优化了。
+expect:
+  must_contain: ["规则"]
+  must_not_contain: ["改写后", "改写版本"]
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["3.1", "1.5", "位置", "行", "规则"]
+    - output_contains:
+        any: ["实现了对", "优化"]
+  failure:
+    - output_contains:
+        any: ["改写后如下", "改写版本", "以下是改写"]

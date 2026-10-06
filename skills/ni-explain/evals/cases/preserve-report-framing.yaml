@@ -1,0 +1,21 @@
+id: preserve-report-framing
+title: 汇报打磨保留判断框架，不转交他处
+description: |
+  这段汇报的框架句（判断式表达）超过普通单句长度上限。按 SKILL.md 第一节，
+  汇报的框架句豁免长度限制；且 ni-explain 不转交、不指路——只做句子层，
+  不该把框架句压平，也不该让用户去别的地方。
+input:
+  prompt: |
+    用 ni-explain 把这段汇报写清楚，保留原判断：
+    这个方向不是要不要做的问题，而是如何在窗口期内突破关键瓶颈。
+expect:
+  must_contain: ["窗口期"]
+  must_not_contain: ["ni-tech-report"]
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["窗口期", "瓶颈"]
+  failure:
+    - output_contains:
+        any: ["ni-tech-report"]

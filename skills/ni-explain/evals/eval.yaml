@@ -1,0 +1,29 @@
+schema_version: v1alpha1
+
+environment:
+  type: none
+
+skills:
+  - source: local_path
+    path: .
+    exclude:
+      - "evals/**"
+      - "tests/__pycache__/**"
+      - "scripts/__pycache__/**"
+
+engine:
+  name: claude_code
+
+cases:
+  files:
+    - evals/cases/rewrite-buried-verb.yaml
+    - evals/cases/review-no-rewrite.yaml
+    - evals/cases/explain-format-ladder.yaml
+    - evals/cases/preserve-report-framing.yaml
+    - evals/cases/dehumanize-idiom.yaml
+  defaults:
+    timeout_seconds: 300
+    max_turns: 6
+
+report:
+  formats: [json, html]

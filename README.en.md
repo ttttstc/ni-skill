@@ -19,6 +19,7 @@ After installation, name the skill, your goal, and your sources in a conversatio
 | Write an article | Use ni-article-workflow for an article about Agent engineering. Confirm the research findings and outline first |
 | Create a poster | Use ni-poster to turn this text into a minimal paper-zine poster: 〈text〉 |
 | Restage a photo | Use ni-poster r to rebuild this travel photo into a restrained surreal cinematic tableau: 〈photo〉 |
+| Explain a plan clearly | Use ni-explain to rewrite this technical proposal clearly, removing empty verbs and vague words |
 
 ## Install
 
@@ -46,7 +47,7 @@ Configure dependencies as needed: web capture uses Node.js and a browser; local 
 | Source collection | [ni-url2md](./skills/ni-url2md/SKILL.md): web pages to Markdown; [ni-video2md](./skills/ni-video2md/SKILL.md): local public-video transcription; [douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md): batch transcripts from a Douyin creator; [ni-book-downloader](./skills/ni-book-downloader/SKILL.md): download ebooks by title, separating text formats from PDF |
 | Learning and research | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md): learning blueprints and guides; [ni-unknown-first](./skills/ni-unknown-first/SKILL.md): identify unknowns and next steps; [ni-research](./skills/ni-research/SKILL.md): deep research, discussion, and article outlines |
 | Product and architecture | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md): product architecture baselines; [think-like-architect](./skills/think-like-architect/SKILL.md): first-cut architecture decisions |
-| Writing and communication | [ni-radar](./skills/ni-radar/SKILL.md): topic recommendations; [ni-writer](./skills/ni-writer/SKILL.md): articles; [ni-book-writer](./skills/ni-book-writer/SKILL.md): books and chapters; [ni-tech-report](./skills/ni-tech-report/SKILL.md): technical reports; [ni-readme-guide](./skills/ni-readme-guide/SKILL.md): Chinese and English READMEs |
+| Writing and communication | [ni-radar](./skills/ni-radar/SKILL.md): topic recommendations; [ni-writer](./skills/ni-writer/SKILL.md): articles; [ni-book-writer](./skills/ni-book-writer/SKILL.md): books and chapters; [ni-tech-report](./skills/ni-tech-report/SKILL.md): technical reports; [ni-explain](./skills/ni-explain/SKILL.md): explain clearly (proposals and reports); [ni-readme-guide](./skills/ni-readme-guide/SKILL.md): Chinese and English READMEs |
 | Article preparation | [ni-inspect](./skills/ni-inspect/SKILL.md): prepublication checks; [ni-formatter](./skills/ni-formatter/SKILL.md): layout; [ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md): image prompts; [ni-draft](./skills/ni-draft/SKILL.md): WeChat draft delivery |
 | Visual creation | [ni-poster](./skills/ni-poster/SKILL.md): ZINE-style posters and documentary-photo surreal restaging (five modes); [ni-3d-model](./skills/ni-3d-model/SKILL.md): multiview review and textured GLB generation and validation |
 

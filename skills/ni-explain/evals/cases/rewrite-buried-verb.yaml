@@ -1,0 +1,22 @@
+id: rewrite-buried-verb
+title: 改写时把万能动词还原成物理动作，且不改事实
+description: |
+  「进行」「通过……获取」是万能动词。改写模式应把它们还原成具体动作
+  （校验、读取），同时保持原意不变。
+input:
+  prompt: |
+    用 ni-explain 改写这句，去掉万能动词：
+    我们要对用户请求进行校验，然后通过缓存获取数据。
+expect:
+  must_contain: ["校验"]
+  must_not_contain: ["进行"]
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["校验", "读取", "查缓存", "拉取"]
+    - output_contains:
+        any: ["3.1", "万能动词", "物理动作", "改动"]
+  failure:
+    - output_contains:
+        any: ["进行校验", "进行", "通过缓存获取"]

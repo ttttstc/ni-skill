@@ -19,6 +19,7 @@
 | 写一篇文章 | 用 ni-article-workflow 写一篇 Agent 工程实践文章，先确认研究结论与大纲 |
 | 做一张海报 | 用 ni-poster，把这句话做成极简纸刊风格海报：〈文案〉 |
 | 重构一张照片 | 用 ni-poster r，把这张旅行照重构成克制的超现实电影画面：〈照片〉 |
+| 把方案讲清楚 | 用 ni-explain 把这段技术方案写清楚，去掉万能动词和含糊词 |
 
 ## 安装
 
@@ -46,7 +47,7 @@
 | 资料整理 | [ni-url2md](./skills/ni-url2md/SKILL.md)：网页转 Markdown；[ni-video2md](./skills/ni-video2md/SKILL.md)：公开视频本地转写；[douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md)：抖音博主逐字稿批量归档；[ni-book-downloader](./skills/ni-book-downloader/SKILL.md)：按书名下载电子书，严格区分文字版与 PDF |
 | 学习与研究 | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md)：专业资料学习蓝图与指南；[ni-unknown-first](./skills/ni-unknown-first/SKILL.md)：识别未知与下一步；[ni-research](./skills/ni-research/SKILL.md)：深度研究、讨论结论与文章大纲 |
 | 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |
-| 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README |
+| 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-explain](./skills/ni-explain/SKILL.md)：讲清楚（技术方案/汇报）；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README |
 | 文章处理 | [ni-inspect](./skills/ni-inspect/SKILL.md)：发布前检查；[ni-formatter](./skills/ni-formatter/SKILL.md)：排版；[ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md)：配图提示词；[ni-draft](./skills/ni-draft/SKILL.md)：推送微信草稿箱 |
 | 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报与纪实照片超现实重构（五种模式）；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收 |
 
