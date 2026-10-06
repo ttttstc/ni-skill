@@ -1,6 +1,6 @@
 {
   "name": "ni-skill",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "A skill suite for content creation, domain learning, product architecture baselines, first-cut architecture, and review-gated 3D asset production.",
   "author": {
     "name": "泥巴猪",
@@ -46,7 +46,8 @@
       "用 douyin-bulk-transcript-exporter 导出这个抖音博主主页的全部视频逐字稿",
       "用 ni-poster r 把这张旅行照重构成克制的超现实电影画面",
       "先确认需求和多视图，再把这个主题做成 GLB 模型",
-      "用 ni-book-downloader 先确认格式偏好，再按书名下载电子书"
+      "用 ni-book-downloader 先确认格式偏好，再按书名下载电子书",
+      "用 ni-explain 把这段技术方案写清楚，去掉万能动词和含糊词"
     ],
     "brandColor": "#0F766E",
     "screenshots": []

@@ -1,0 +1,18 @@
+id: explain-format-ladder
+title: 讲解抽象概念时选对载体（图/表），不只写一段
+description: |
+  讲「调用链路」这种有拓扑/时序关系的内容，应按格式阶梯选图或表，
+  而不是硬写成一段文字。
+input:
+  prompt: |
+    用 ni-explain 给非技术同学讲清楚微服务的调用链路。
+expect:
+  must_contain: ["图"]
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["图", "表格", "时序", "架构图", "流程"]
+    - output_contains:
+        any: ["格式", "载体", "所以选"]
+  failure: []
