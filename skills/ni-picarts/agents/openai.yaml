@@ -1,0 +1,4 @@
+interface:
+  display_name: "ni-picarts"
+  short_description: "生成平滑浅浮雕、配套法线与遮罩，交付金属反光擦拭互动网页"
+  default_prompt: "用 $ni-picarts 把这个主题或参考图做成 Athens 风格浅浮雕，先出一张金属光影互动样片。"

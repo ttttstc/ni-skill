@@ -22,6 +22,7 @@
         "./skills/ni-inspect",
         "./skills/ni-article-image-gen",
         "./skills/ni-poster",
+        "./skills/ni-picarts",
         "./skills/ni-draft",
         "./skills/ni-article-workflow",
         "./skills/ni-url2md",

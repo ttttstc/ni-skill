@@ -19,6 +19,7 @@
 | 写一篇文章 | 用 ni-article-workflow 写一篇 Agent 工程实践文章，先确认研究结论与大纲 |
 | 做一张海报 | 用 ni-poster，把这句话做成极简纸刊风格海报：〈文案〉 |
 | 重构一张照片 | 用 ni-poster r，把这张旅行照重构成克制的超现实电影画面：〈照片〉 |
+| 做金属光影动效 | 用 ni-picarts，把这张图做成浅浮雕金属擦拭互动网页，先做一张样片：〈图片〉 |
 | 把方案讲清楚 | 用 ni-explain 把这段技术方案写清楚，去掉万能动词和含糊词 |
 
 ## 安装
@@ -38,7 +39,7 @@
 
 也可手动将本仓库 `skills/` 下所需子目录复制到运行时的 skills 目录。
 
-依赖按需配置：网页抓取需要 Node.js 与浏览器；本地视频转写需要 Python 和 Whisper 等工具；微信草稿推送需要公众号凭证；3D 建模需要图像生成与图生 3D 服务。具体配置见各技能文档。
+依赖按需配置：网页抓取需要 Node.js 与浏览器；本地视频转写需要 Python 和 Whisper 等工具；微信草稿推送需要公众号凭证；3D 建模需要图像生成与图生 3D 服务；ni-picarts 需要图像生成与 Python（Pillow、NumPy），自动浏览器验收另需 Node.js 和 Playwright。具体配置见各技能文档。
 
 ## 按场景选工具
 
@@ -49,7 +50,7 @@
 | 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |
 | 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-explain](./skills/ni-explain/SKILL.md)：讲清楚（技术方案/汇报）；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README |
 | 文章处理 | [ni-inspect](./skills/ni-inspect/SKILL.md)：发布前检查；[ni-formatter](./skills/ni-formatter/SKILL.md)：排版；[ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md)：配图提示词；[ni-draft](./skills/ni-draft/SKILL.md)：推送微信草稿箱 |
-| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报与纪实照片超现实重构（五种模式）；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收 |
+| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报与纪实照片超现实重构（五种模式）；[ni-picarts](./skills/ni-picarts/SKILL.md)：浅浮雕底图、法线、遮罩与金属擦拭互动网页，也支持仅静态图；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收 |
 
 需要串联文章生产时，用 [ni-article-workflow](./skills/ni-article-workflow/SKILL.md) 从选题、研究和大纲推进到初稿，支持断点续跑。默认先确认研究结论、大纲和写作授权；审稿、配图、排版与推送草稿箱另行调用。
 

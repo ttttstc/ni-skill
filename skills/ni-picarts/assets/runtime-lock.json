@@ -1,0 +1,10 @@
+{
+  "threeRevision": "183",
+  "sha256": {
+    "athens-effect.js": "aa2ca352f308b8213ea4a7af55c4c40fbbaaaa7acafb4775b4c182d5a1d82b9f",
+    "three.module.js": "d8ecc4fc0852d9690085411d17307c50e25de9dabb14f4d5a942c6ae0e2bad29",
+    "three.core.js": "6ed72f08289a29f547bb0ab96e396a1fa2e9921ecff743fd99e0fd927bc00d7c",
+    "clouds.jpg": "edaaf950f95f0406848f424c494410aaa1fd0d642c42f36941e2f14bb3e56ea9",
+    "THREE-LICENSE.txt": "5797cefc35ee77088f6290f28dc6179b1923c83f968e588b87a5d5d563097159"
+  }
+}
