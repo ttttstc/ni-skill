@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>__TITLE__</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <main>
+    <h1>__TITLE__</h1>
+    <nav aria-label="光影预览">
+      <button data-mode="interactive" aria-pressed="true">互动擦拭</button>
+      <button data-mode="stone" aria-pressed="false">白石底图</button>
+      <button data-mode="left" aria-pressed="false">左侧光源</button>
+      <button data-mode="center" aria-pressed="false">中间光源</button>
+      <button data-mode="right" aria-pressed="false">右侧光源</button>
+    </nav>
+    <p>移动鼠标或手指查看金属光影；鼠标按住保留擦痕，离开后消退。</p>
+    <figure id="art" aria-label="金属浮雕互动预览">
+      <img id="base" alt="白石浅浮雕底图">
+      <canvas id="relief" aria-hidden="true"></canvas>
+    </figure>
+    <p id="status" role="status">正在载入图片…</p>
+  </main>
+  <script type="module" src="preview.js"></script>
+</body>
+</html>

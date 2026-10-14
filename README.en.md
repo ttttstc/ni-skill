@@ -19,6 +19,7 @@ After installation, name the skill, your goal, and your sources in a conversatio
 | Write an article | Use ni-article-workflow for an article about Agent engineering. Confirm the research findings and outline first |
 | Create a poster | Use ni-poster to turn this text into a minimal paper-zine poster: 〈text〉 |
 | Restage a photo | Use ni-poster r to rebuild this travel photo into a restrained surreal cinematic tableau: 〈photo〉 |
+| Create metallic light effects | Use ni-picarts to turn this image into a shallow relief with interactive metallic wipe effects. Start with one sample: 〈image〉 |
 | Explain a plan clearly | Use ni-explain to rewrite this technical proposal clearly, removing empty verbs and vague words |
 
 ## Install
@@ -38,7 +39,7 @@ For one skill, add “Install only ni-video2md.” Start a new session after ins
 
 You can also copy the required subdirectories from `skills/` into your runtime's skills directory.
 
-Configure dependencies as needed: web capture uses Node.js and a browser; local video transcription uses Python and tools such as Whisper; WeChat draft delivery needs account credentials; 3D modeling needs image generation and an image-to-3D service. See each skill's documentation for setup.
+Configure dependencies as needed: web capture uses Node.js and a browser; local video transcription uses Python and tools such as Whisper; WeChat draft delivery needs account credentials; 3D modeling needs image generation and an image-to-3D service; ni-picarts uses image generation and Python with Pillow and NumPy, with Node.js and Playwright for automated browser validation. See each skill's documentation for setup.
 
 ## Choose by task
 
@@ -49,7 +50,7 @@ Configure dependencies as needed: web capture uses Node.js and a browser; local 
 | Product and architecture | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md): product architecture baselines; [think-like-architect](./skills/think-like-architect/SKILL.md): first-cut architecture decisions |
 | Writing and communication | [ni-radar](./skills/ni-radar/SKILL.md): topic recommendations; [ni-writer](./skills/ni-writer/SKILL.md): articles; [ni-book-writer](./skills/ni-book-writer/SKILL.md): books and chapters; [ni-tech-report](./skills/ni-tech-report/SKILL.md): technical reports; [ni-explain](./skills/ni-explain/SKILL.md): explain clearly (proposals and reports); [ni-readme-guide](./skills/ni-readme-guide/SKILL.md): Chinese and English READMEs |
 | Article preparation | [ni-inspect](./skills/ni-inspect/SKILL.md): prepublication checks; [ni-formatter](./skills/ni-formatter/SKILL.md): layout; [ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md): image prompts; [ni-draft](./skills/ni-draft/SKILL.md): WeChat draft delivery |
-| Visual creation | [ni-poster](./skills/ni-poster/SKILL.md): ZINE-style posters and documentary-photo surreal restaging (five modes); [ni-3d-model](./skills/ni-3d-model/SKILL.md): multiview review and textured GLB generation and validation |
+| Visual creation | [ni-poster](./skills/ni-poster/SKILL.md): ZINE-style posters and documentary-photo surreal restaging (five modes); [ni-picarts](./skills/ni-picarts/SKILL.md): relief base images, normal maps, masks, and interactive metallic wipe effects, with a static-only option; [ni-3d-model](./skills/ni-3d-model/SKILL.md): multiview review and textured GLB generation and validation |
 
 To connect the article stages, use [ni-article-workflow](./skills/ni-article-workflow/SKILL.md) for topics, research, outlines, and an initial draft, with support for resuming interrupted work. By default, it requires confirmation of findings, the outline, and permission to write. Review, imagery, formatting, and draft delivery are separate calls.
 
