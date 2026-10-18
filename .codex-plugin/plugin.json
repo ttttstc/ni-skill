@@ -1,6 +1,6 @@
 {
   "name": "ni-skill",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "A skill suite for content creation, domain learning, product architecture baselines, first-cut architecture, and review-gated 3D asset production.",
   "author": {
     "name": "泥巴猪",
@@ -37,6 +37,7 @@
     "privacyPolicyURL": "https://github.com/ttttstc/ni-skill",
     "termsOfServiceURL": "https://github.com/ttttstc/ni-skill",
     "defaultPrompt": [
+      "用 be-ambitious 深化这个任务，明确原始材料、专业方法和外部验收标准，先重写提示词",
       "用 ni-skill 从选题到草稿跑一篇公众号文章",
       "帮我把这个链接抓成 Markdown 当素材",
       "把这篇文章做发布前预检",
