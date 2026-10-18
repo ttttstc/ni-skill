@@ -4,7 +4,7 @@
 
 **A personal skill toolbox for everyday work and creative projects with AI agents.**
 
-Skills I use with Codex, Claude Code, and similar AI agents for collecting sources, learning, research, writing, product architecture, and visual creation. Pick what the task needs. Each skill works on its own.
+Skills I use with Codex, Claude Code, OpenCode, and similar AI agents for collecting sources, learning, research, writing, product architecture, and visual creation. Pick what the task needs. Each skill works on its own.
 
 ## Start here
 
@@ -12,6 +12,7 @@ After installation, name the skill, your goal, and your sources in a conversatio
 
 | Goal | Example request |
 |---|---|
+| Deepen a task | Use be-ambitious to identify raw sources, expert methods, and external checks for this task. Rewrite the prompt first |
 | Organize sources | Use ni-video2md to turn this public video into Markdown: 〈URL〉 |
 | Find ebooks | Use ni-book-downloader to download a book by title. Confirm text or PDF format first |
 | Learn a domain | Use ni-fde-copilot to read these sources. Confirm a learning blueprint before writing the guide |
@@ -26,9 +27,9 @@ After installation, name the skill, your goal, and your sources in a conversatio
 
 **Codex:** give the agent this request:
 
-> Install skills from https://github.com/ttttstc/ni-skill into ~/.codex/skills/. Check existing skills with the same name before overwriting. Tell me which skills need extra dependencies.
+> Install skills from https://github.com/ttttstc/ni-skill into ~/.agents/skills/. Check existing skills with the same name before overwriting. Tell me which skills need extra dependencies.
 
-For one skill, add “Install only ni-video2md.” Start a new session after installation.
+For one skill, add “Install only be-ambitious.” Start a new session after installation.
 
 **Claude Code:**
 
@@ -37,7 +38,19 @@ For one skill, add “Install only ni-video2md.” Start a new session after ins
 /plugin install ni-skill@ni-skill
 ```
 
-You can also copy the required subdirectories from `skills/` into your runtime's skills directory.
+**OpenCode:** give the agent this request:
+
+> Install the required skills from https://github.com/ttttstc/ni-skill into ~/.config/opencode/skills/. Check existing skills with the same name before overwriting. For be-ambitious only, copy the entire skills/be-ambitious directory.
+
+You can also copy the required full subdirectories from `skills/` to the matching location, keeping their documentation and licenses:
+
+| Agent | User directory | Project directory |
+|---|---|---|
+| Codex | `~/.agents/skills/` | `.agents/skills/` |
+| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
+| OpenCode | `~/.config/opencode/skills/` | `.opencode/skills/` |
+
+The installed layout should be `<skills directory>/<skill name>/SKILL.md`. See the official [Codex](https://developers.openai.com/codex/skills), [Claude Code](https://code.claude.com/docs/en/skills), and [OpenCode](https://opencode.ai/docs/skills/) documentation for directory conventions.
 
 Configure dependencies as needed: web capture uses Node.js and a browser; local video transcription uses Python and tools such as Whisper; WeChat draft delivery needs account credentials; 3D modeling needs image generation and an image-to-3D service; ni-picarts uses image generation and Python with Pillow and NumPy, with Node.js and Playwright for automated browser validation. See each skill's documentation for setup.
 
@@ -45,6 +58,7 @@ Configure dependencies as needed: web capture uses Node.js and a browser; local 
 
 | Task | Skills and purpose |
 |---|---|
+| Task refinement | [be-ambitious](./skills/be-ambitious/SKILL.md): keep the goal and scope, identify expert moves, raw sources, specific tools, and external checks, then rewrite the prompt around actions and intended outcomes; [installation and source](./skills/be-ambitious/README.md) |
 | Source collection | [ni-url2md](./skills/ni-url2md/SKILL.md): web pages to Markdown; [ni-video2md](./skills/ni-video2md/SKILL.md): local public-video transcription; [douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md): batch transcripts from a Douyin creator; [ni-book-downloader](./skills/ni-book-downloader/SKILL.md): download ebooks by title, separating text formats from PDF |
 | Learning and research | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md): learning blueprints and guides; [ni-unknown-first](./skills/ni-unknown-first/SKILL.md): identify unknowns and next steps; [ni-research](./skills/ni-research/SKILL.md): deep research, discussion, and article outlines |
 | Product and architecture | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md): product architecture baselines; [think-like-architect](./skills/think-like-architect/SKILL.md): first-cut architecture decisions |
