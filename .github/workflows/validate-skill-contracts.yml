@@ -3,6 +3,7 @@ name: Validate skill contracts
 on:
   pull_request:
     paths:
+      - "skills/be-ambitious/**"
       - "skills/ni-3d-model/**"
       - "skills/ni-fde-copilot/**"
       - "skills/ni-design-with-docs/**"
@@ -22,6 +23,7 @@ on:
     branches:
       - main
     paths:
+      - "skills/be-ambitious/**"
       - "skills/ni-3d-model/**"
       - "skills/ni-fde-copilot/**"
       - "skills/ni-design-with-docs/**"

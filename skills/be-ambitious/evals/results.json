@@ -1,0 +1,462 @@
+{
+  "date": "2026-10-20",
+  "skill_commit": "6714b21d8e9705daf660c1fad3eda5a218057165",
+  "skill_sha256": "4665f190100240972c313b95a651b60c8bf1bc0d870eb4bb17de4bd7a0e01c84",
+  "cases_sha256": "df77b3e38eaf52bcaaba3156cde7f55aeaa616e985c7d959058b594f7b99f801",
+  "host": "Codex 原生子 Agent，每个场景和评分者使用全新上下文；均未传入模型或推理参数覆盖。具体底层模型未独立核实，不宣称跨模型覆盖。",
+  "snapshot_notes": "各运行者的 SKILL.md 与固定快照一致；同目录 README 仅移除评测入口，其余说明保持，避免泄露测量背景。",
+  "protocol": {
+    "rounds_per_case": 1,
+    "runner_contexts": 9,
+    "scorer_contexts": 1,
+    "source_variants": 1,
+    "source_changed_during_run": false,
+    "score_criteria_fixed_before_run": true,
+    "grading": "一个未参与生成的独立子 Agent 完整读取九份答复，使用统一尺度评分；评分者不读取 Skill 源码或模型身份。"
+  },
+  "orchestration": {
+    "thread_limit_errors": 4,
+    "details": "部分创建或恢复请求返回 agent thread limit reached，未产生场景答复。中断旧挂起线程并降低并发后继续；九个场景最终均在全新上下文各运行一次，没有复用执行者或重跑挑选结果。"
+  },
+  "runs": [
+    {
+      "id": "queue-work",
+      "label": "青禾",
+      "response": "responses/queue-work.md",
+      "original_response_sha256": "8d999eba3176fd51eaaa810725ed40c4ccc4882747e7a1d226ad9801a3c79d86",
+      "published_response_sha256": "8d999eba3176fd51eaaa810725ed40c4ccc4882747e7a1d226ad9801a3c79d86",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    },
+    {
+      "id": "service-recovery",
+      "label": "松石",
+      "response": "responses/service-recovery.md",
+      "original_response_sha256": "495af0c2a05b712f5d0df911d2c08f5b40ed021f17fb88ce687dcc4237a30b39",
+      "published_response_sha256": "1518799241ee877f8ddcbc6c676462d6695ff68caee86a54c9bb1686d4ada032",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    },
+    {
+      "id": "review-routing",
+      "label": "云川",
+      "response": "responses/review-routing.md",
+      "original_response_sha256": "e80b5edf05cc9abafa4864a3774fa4a03c8cff175983264c33b524bdb0054008",
+      "published_response_sha256": "e80b5edf05cc9abafa4864a3774fa4a03c8cff175983264c33b524bdb0054008",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    },
+    {
+      "id": "record-format",
+      "label": "雨岑",
+      "response": "responses/record-format.md",
+      "original_response_sha256": "7a3429814db246e2dd66e13dc5efd4eba44c20209184d677eed1f4ac5cfe9b69",
+      "published_response_sha256": "5d77452e7157ee7512c6970984d7979baddf1050740ec0a60f88b58b07da1e0f",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    },
+    {
+      "id": "closed-method",
+      "label": "溪园",
+      "response": "responses/closed-method.md",
+      "original_response_sha256": "3e7b375e1088e9b8260369fc235099fc263e24520d1080643d9981c67225a813",
+      "published_response_sha256": "3e7b375e1088e9b8260369fc235099fc263e24520d1080643d9981c67225a813",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    },
+    {
+      "id": "chosen-path",
+      "label": "竹里",
+      "response": "responses/chosen-path.md",
+      "original_response_sha256": "5187d7d1e6cc84412e222f1641c7e5e1cd02b40fa8bea33f852fc9bd7fd4957d",
+      "published_response_sha256": "05741b5a54f590b659530a8f662dc4e7d53b9c8dcc1043377f6689c5376d89bd",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    },
+    {
+      "id": "creative-boundary",
+      "label": "柏舟",
+      "response": "responses/creative-boundary.md",
+      "original_response_sha256": "4126e61c0bc4b0781d7fb1db4d28e9350f7aea880d578c398ca4b3750eceefaa",
+      "published_response_sha256": "913774094b1c33367ac6f7e86b97d34231908199d64868ca64fa446d8a5f4977",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    },
+    {
+      "id": "stale-evidence",
+      "label": "南汀",
+      "response": "responses/stale-evidence.md",
+      "original_response_sha256": "c0467e22d7d76352d99a7a256aa09ba2dbb842740b5e0c82efa0927924d46f25",
+      "published_response_sha256": "af7cbf75bc9ccef192225b9dde365ab5050cd69ccd1ad3227fbd46458056d569",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    },
+    {
+      "id": "authorized-local",
+      "label": "石涧",
+      "response": "responses/authorized-local.md",
+      "original_response_sha256": "e92b9629b84a5a864b3b2a7c88ac226001ccce3e13f3e3bd8f8b36b69479b7a6",
+      "published_response_sha256": "a01155dee08fd7e8cd29254fe1405aed6a9264074811680363d8c71f96307373",
+      "context": "全新独立上下文；只收到自然请求、本场景资料和 Skill。"
+    }
+  ],
+  "artifact_evidence": {
+    "input": "fixtures/orders.csv",
+    "output": "artifacts/orders-renamed.csv",
+    "input_sha256_lf": "4b65b300ee25d4c04c82a579106b1452cd895fb4d9b6f765575a93013df161fd",
+    "source_unchanged": true,
+    "output_exists": true,
+    "utf8": true,
+    "exact_logical_rows": true,
+    "only_header_bytes_changed": true,
+    "data_rows": 4,
+    "output_sha256_lf": "c100b36066816bb6c0ef657133fbe4fb3a2f0ad2a5ed5fe97a1148b988a0bf4c",
+    "pass": true
+  },
+  "independent_scoring": {
+    "cases": [
+      {
+        "id": "queue-work",
+        "label": "青禾",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "从日报递进到责任闭环、根因修复、事前补救和经营决策，确实展开了更高层结果。",
+            "evidence": "可以把目标从“替组长生成日报”，逐步推到“让公司少制造投诉”。"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "按每个候选目标说明原始数据、系统接口、组织责任和相应方法的用途与前提。",
+            "evidence": "记录谁在什么时间改了什么、影响哪些用户，分析时加入订单量或服务量作为分母。"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "提出独立样本、后续业务数据和对照检验，并区分假设与因果证据。",
+            "evidence": "有条件时使用对照组或分阶段上线；只有前后变化时，应保留因果判断的不确定性。"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "明确保留候选状态和能力未知条件，没有擅自决定投入或执行。",
+            "evidence": "以下是候选目标和条件，还不代表选择投入，也不开始执行。"
+          },
+          "delivery": {
+            "score": 4,
+            "reason": "五个递进选项各有范围、条件和检验办法，足以支持下一步选择且符合探索深度。",
+            "evidence": "这五个选项有递进关系，但不要求一路做到底。"
+          }
+        },
+        "total": 20,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": ""
+      },
+      {
+        "id": "service-recovery",
+        "label": "松石",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "承接已选的一页应急操作单，将强度集中到二十分钟内恢复判断和交接。",
+            "evidence": "本轮只讨论这次止损，交付操作单，不执行生产操作。"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "使用告警、日志、成功记录和已有手册，并将动作与结果分支和耗时关联。",
+            "evidence": "依据已有告警、失败任务与日志、最近一次成功导出、近期变更记录及现有运行手册编写。"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "把真实导出和原故障场景复核作为恢复依据，不以监控状态代替结果验证。",
+            "evidence": "监控变绿不能单独算恢复成功；超时、结果错误或故障复现均算校验失败。"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "完整保留生产配置禁改、回滚、校验、联系人以及治理另开边界。",
+            "evidence": "不能修改生产配置；恢复后的治理另开任务。"
+          },
+          "delivery": {
+            "score": 4,
+            "reason": "交付了一段可复制请求，操作单结构、缺项处理与完成标准都明确。",
+            "evidence": "升级、回滚和校验都计入二十分钟，不能把时间全花在排查上。"
+          }
+        },
+        "total": 20,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": ""
+      },
+      {
+        "id": "review-routing",
+        "label": "云川",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "围绕投稿到决定的总等待设计目标，区分分配、返工及流转问题而不预设瓶颈。",
+            "evidence": "区分编辑部排队、实际审阅、内部交接、作者修改和复审等待；总投稿到决定时间仍保留。"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "具体提出事件记录、负荷与复杂度分层、返工回看及同条件规则比较。",
+            "evidence": "用相同稿量、复杂度构成、可用工时比较候选做法"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "要求后续稿件试行和独立质量复核，且明确模拟不能证明真实改善。",
+            "evidence": "模拟只支持筛选方案，不能证明上线后的效果。"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "保留六人、质量和建议交付约束，并防止用额外加班或减少必要审阅换速度。",
+            "evidence": "缩短等待、质量达标、不增加人员，三项同时成立才算通过。"
+          },
+          "delivery": {
+            "score": 4,
+            "reason": "给出可选择的任务层次、推荐范围和具体材料方法，足以支持任务设计。",
+            "evidence": "我推荐 **第二项**。"
+          }
+        },
+        "total": 20,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": ""
+      },
+      {
+        "id": "record-format",
+        "label": "雨岑",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "识别为精确格式变更，直接重写而没有强行扩展目标。",
+            "evidence": "只改一个列名，并验证数据没有变化，无需扩大范围。"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "指定正确解析和写出CSV并避免全文件替换，方法与风险相称。",
+            "evidence": "使用能正确解析和写出 CSV 的方法处理，不要对整个文件做文本替换。"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "要求重新解析逐字段比较，且没有假称已处理尚未提供的数据。",
+            "evidence": "完成后重新解析输出文件，核对行数、列数及每个字段"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "保留编码、列顺序、其他列名及所有值，并明确等待接下来提供的CSV。",
+            "evidence": "收到我接下来提供的订单 CSV 后，仅将表头中名称严格等于 order_id 的列改为“订单号”"
+          },
+          "delivery": {
+            "score": 4,
+            "reason": "提供单段可复制请求，规格和异常停止点清楚，篇幅仍与小任务相称。",
+            "evidence": "本次只交付修改后的 CSV，并简短说明核对结果。不讨论或执行订单系统改造。"
+          }
+        },
+        "total": 20,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": ""
+      },
+      {
+        "id": "closed-method",
+        "label": "溪园",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "将当前交付锁定为调查准备，清楚区分能做的取证设计和不能做的归因。",
+            "evidence": "代号本身不提供规则线索。"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "给出规则版本、当时输入、实际输出和业务依据的最小证据链及离线分析前提。",
+            "evidence": "在什么时间、哪个规则版本下，系统读取了什么输入，实际输出是什么，业务期望是什么，期望依据是什么。"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "要求独立业务判定和留出案例检验，并保留无法复现时的结论限制。",
+            "evidence": "回放结果与原记录不一致，就不能称为已复现"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "不猜规则、不替代根因证据，文字上完整保留禁止外部服务和当前不执行的限制。",
+            "evidence": "不要根据名称、行业惯例或常见分流方式猜测它的规则。"
+          },
+          "delivery": {
+            "score": 3,
+            "reason": "准备方案可执行，但说明部分与后附提示词大量重复材料和验证要求，篇幅可以收紧。",
+            "evidence": "可直接复制的提示词："
+          }
+        },
+        "total": 19,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": "前半说明与后半提示词重复了材料清单和验证要求，影响阅读效率。"
+      },
+      {
+        "id": "chosen-path",
+        "label": "竹里",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "直接承接单仓库三个月两类问题，并将建议连接到维护者的修复决策。",
+            "evidence": "目标是帮助维护者决定先修什么、为什么，以及修到什么程度算有效。"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "具体要求运行、任务、日志和提交关联，处理重试、连锁报错和统计分母。",
+            "evidence": "将运行、构建任务、失败日志和提交对应起来"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "包含独立分类复核、可比环境复现和后续复发观察，避免一次绿灯冒充修复有效。",
+            "evidence": "随机失败不能凭一次绿灯宣告解决。"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "保持已选范围，不重新索取范围选择，也未编造分析结果或开始处理数据。",
+            "evidence": "只分析这一个仓库、这个时间窗口内的构建失败；不建设跨仓库平台"
+          },
+          "delivery": {
+            "score": 4,
+            "reason": "交付一段可直接使用的任务提示词，证据、排序、验证和停止点完整。",
+            "evidence": "完成建议及其证据核对后结束，不开始修复，也不扩展任务范围。"
+          }
+        },
+        "total": 20,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": ""
+      },
+      {
+        "id": "creative-boundary",
+        "label": "柏舟",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "围绕私人离别感受深化写作目的，保持约八百字和搬离当日情境。",
+            "evidence": "请帮我写一篇约八百字的私人随笔，只写搬离老房子那天的感受。"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "用三处已知细节、少量感受追问和自然表达要求支撑创作，没有套业务方法。",
+            "evidence": "只展开我的回答能够支持的部分。"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "给出事实来源、真实情绪和泛化套话的创作核对标准，不虚构经历。",
+            "evidence": "每个亲历事实是否都有依据；情绪是否来自我的补充"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "保留不编造、不增长策划的边界，当前可见交付也只有改写请求。",
+            "evidence": "不要补造人物对话、搬家过程、儿时回忆或其他经历"
+          },
+          "delivery": {
+            "score": 4,
+            "reason": "直接交付连贯的写作请求，没有写出随笔正文，表达要求和留白方式可用。",
+            "evidence": "事实和感受不够支撑八百字时，先告诉我缺什么，不凑字数。"
+          }
+        },
+        "total": 20,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": ""
+      },
+      {
+        "id": "stale-evidence",
+        "label": "南汀",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "保留二百毫秒挑战目标，并将目标深化为判断可行条件与限制而非承诺达标。",
+            "evidence": "以 P95 200 毫秒作为探索目标，寻找可行条件和性能下限；它不是对业务承诺的 SLA"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "围绕当前日志和代码制定测量口径、假设、负载、对照及冷暖缓存实验。",
+            "evidence": "从可用日志提取查询类型、参数和访问分布"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "明确旧压测不构成当前证据，并设计可复现本地基线、独立复跑和原始输出。",
+            "evidence": "将其记为未经复核的历史说法，不视为当前方案的证据。"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "保留免费、本地、不改生产与本轮不执行边界，并如实标注五秒基线未核实。",
+            "evidence": "当前 P95 响应时间据称约 5 秒，这只是待核实的基线。"
+          },
+          "delivery": {
+            "score": 4,
+            "reason": "交付可复制调查请求，包含准备项、实验矩阵、判定规则和停止条件，深度与任务相称。",
+            "evidence": "本轮只提交调查与验证方案及执行清单，不实际运行测试、不改代码、不部署。"
+          }
+        },
+        "total": 20,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": ""
+      },
+      {
+        "id": "authorized-local",
+        "label": "石涧",
+        "scores": {
+          "goal": {
+            "score": 4,
+            "reason": "先给出精确改写请求，并完成已授权的本地输出，没有停在提示词阶段。",
+            "evidence": "本次本地文件处理已经授权，直接执行，核对通过后停止。"
+          },
+          "methods": {
+            "score": 4,
+            "reason": "采用字段级核对要求，实际产物保留了CSV中逗号、引号及多行字段的逻辑值。",
+            "evidence": "artifact:all_logical_fields_and_order_match=true"
+          },
+          "verification": {
+            "score": 4,
+            "reason": "独立解析确认四行四列、目标表头外内容一致且严格UTF-8可解码，支持完成声明。",
+            "evidence": "artifact:only_target_header_text_changed=true"
+          },
+          "constraints": {
+            "score": 4,
+            "reason": "未重复请求授权，产物仅改指定表头，材料给定的源文件未变检查也通过。",
+            "evidence": "artifact:source_unchanged=true"
+          },
+          "delivery": {
+            "score": 4,
+            "reason": "给出改写请求、可访问的结果路径和简明核对说明，实际输出存在且内容正确。",
+            "evidence": "artifact:output_exists=true"
+          }
+        },
+        "total": 20,
+        "critical_failure_hits": [],
+        "verdict": "pass",
+        "main_issue": ""
+      }
+    ],
+    "summary": {
+      "pass_count": 9,
+      "fail_count": 0,
+      "findings": [
+        "在可见文字和给定产物范围内，九份答复均达到16分门槛，且未命中预先列出的关键失败。",
+        "开放探索请求展开了结果层级，已选范围和简单任务直接承接；不能据此把长答复或术语数量视为更优。",
+        "各方案对验证的描述属于待执行设计，没有被计作已经读取业务数据、测试或完成外部操作的证据。",
+        "授权本地任务的结果文件经独立读取和解析，与输入相比仅目标表头变化；四行四列及所有逻辑字段值、顺序均一致。",
+        "溪园答复的前置说明与后附提示词重复较多，是本组主要可见的交付效率缺口。"
+      ]
+    },
+    "limitations": [
+      "仅阅读评分材料.json、其中指定的九份完整答复及授权本地案例的输入和输出CSV；未读取技能源码、运行清单、其他会话或外部资料。",
+      "没有九份答复的工具轨迹；方案类任务只按文字是否满足请求评分，不从自报推断真实材料读取、外部访问或测试执行。",
+      "源文件未变采用评分材料所给source_unchanged=true；本次独立核对的是评分时的输入输出，未取得生成前快照，不能独立证明处理全过程未修改源文件。",
+      "CSV独立检查确认输出严格UTF-8可解码且无BOM、表头之外文本完全一致、重新解析后的逻辑字段及行列顺序相同；没有扩展测试未提供的数据。",
+      "未比较未提供版本，且仅使用材料中预先给定的关键失败条件。"
+    ]
+  },
+  "maintainer_review": {
+    "status": "agree_with_all_nine_predefined_task_verdicts",
+    "read_all_responses_and_scores": true,
+    "changed_independent_scores": false,
+    "notes": [
+      "完整阅读九份答复和逐项评分，接受九个预定任务判定；独立评分原样保留，主 Agent 没有改分。",
+      "材料不足场景的前置说明与最终提示词有重复，19/20 的交付扣分有输出依据。",
+      "本地 CSV 由主 Agent 以生成前源文件哈希、生成后文件、UTF-8 解码和逐字段比较复核，四条数据及全部逻辑值保持一致，仅指定表头变化。",
+      "额外规范观察：私人随笔例直接给出纯文本提示词，没有按 Skill 要求使用代码块。这不属于预定关键失败，未事后回算分数；因此九个任务判定通过不等于全部 Skill 格式规则均被遵循。",
+      "本轮只增加验证材料，没有根据输出修改 Skill 或重跑挑选结果。"
+    ]
+  },
+  "evidence_limits": [
+    "本轮只覆盖 Codex 显式读取 Skill 后的一次单版本运行，不证明 Claude Code/OpenCode 实际加载、跨模型稳定性或优于其他版本。",
+    "完整工具访问轨迹不可用；除本地 CSV 的实际文件核对外，不从文字自报推断真实工具动作或业务效果。"
+  ],
+  "publication": "答复只做 UTF-8 无 BOM、LF 换行、末尾空行及本机绝对路径归一化；原始字节与公开文件分别记录 SHA-256。"
+}

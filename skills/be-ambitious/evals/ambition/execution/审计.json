@@ -1,0 +1,22 @@
+{
+  "frozen_sha256": "b622c35117c1021b91ef8452b4f97242b9796cc1c4d1c69bd274d24f28fb08b0",
+  "implementation_matches_freeze": true,
+  "source_sha256": {
+    "运行记录.csv": "47a7eea71e258da5ab5576b574ba1cadd806913216e45f27286a49051ce072d5",
+    "处理记录.csv": "fce502026334c02bd595eb0679c3aa59f004a7d975b60595fd4ca048dd049509",
+    "资料说明.md": "801090ae2be7e918ad54ec89d6df124ad4788c9549cfe4ce9d788ac8f741015e",
+    "任务.md": "fb4123a12342ccc6d4d8faef59d30ef84444546c15df63492e828c8a06444008"
+  },
+  "no_rule_change_after_freeze": true,
+  "all_decision_points": 14,
+  "holdout_decision_points": 4,
+  "holdout_failed_events": 3,
+  "max_time_checks_passed": 14,
+  "handling_table_read_after_all_decisions": true,
+  "independent_causal_truth_available": false,
+  "analyst_blinded_to_holdout": false,
+  "strict_blind_holdout_pass": false,
+  "decision_function_future_input_detected": false,
+  "verdict": "可行性尚未证实；程序前缀检查通过，全程盲化留出条件未通过。",
+  "no_business_operations_performed": true
+}

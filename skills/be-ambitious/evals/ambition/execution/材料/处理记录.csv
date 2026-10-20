@@ -1,0 +1,15 @@
+run_id,action,recorded_outcome,active_minutes
+02,retry,recovered,4
+04,retry,not_recovered,8
+05,change_commit,recovered,20
+07,retry,not_recovered,6
+08,permission_change,recovered,12
+10,retry,recovered,4
+12,retry,not_recovered,5
+13,runner_cleanup,recovered,10
+15,retry,not_recovered,9
+16,change_commit,recovered,25
+18,retry,recovered,4
+20,change_commit,recovered,15
+22,retry,not_recovered,6
+23,permission_change,recovered,12
