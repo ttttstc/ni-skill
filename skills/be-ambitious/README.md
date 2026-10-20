@@ -78,6 +78,6 @@ Claude Code 还可通过仓库插件安装：
 
 上游目录包含 `SKILL.md` 和 `README.md`，两份文件均已翻译为中文。目标探索、专业工具、原始材料、假设检验和外部验证依据 Felix 的文章组织；技能名与原始四问保留。
 
-[行为检查清单](./evals/README.md) 提供自然请求、预期行为和关键失败条件。
+[行为验证](./evals/README.md) 提供场景、完整答复、独立评分和证据范围。
 
 原作者为 Dan McAteer。上游 MIT 许可证及版权声明原文保留在 [LICENSE.upstream](./LICENSE.upstream)。
