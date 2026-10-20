@@ -58,7 +58,7 @@ Configure dependencies as needed: web capture uses Node.js and a browser; local 
 
 | Task | Skills and purpose |
 |---|---|
-| Goal and task exploration | [be-ambitious](./skills/be-ambitious/SKILL.md): explore higher-level outcomes, expand imagination and scope, then add expert methods and evidence; rewrite the prompt after a goal is chosen; [installation and source](./skills/be-ambitious/README.md) |
+| Goal and task exploration | [be-ambitious](./skills/be-ambitious/SKILL.md): explore more ambitious goals, scope, and ways of working; add expert methods and evidence; rewrite the prompt after a goal is chosen; [installation and source](./skills/be-ambitious/README.md) |
 | Source collection | [ni-url2md](./skills/ni-url2md/SKILL.md): web pages to Markdown; [ni-video2md](./skills/ni-video2md/SKILL.md): local public-video transcription; [douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md): batch transcripts from a Douyin creator; [ni-book-downloader](./skills/ni-book-downloader/SKILL.md): download ebooks by title, separating text formats from PDF |
 | Learning and research | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md): learning blueprints and guides; [ni-unknown-first](./skills/ni-unknown-first/SKILL.md): identify unknowns and next steps; [ni-research](./skills/ni-research/SKILL.md): deep research, discussion, and article outlines |
 | Product and architecture | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md): product architecture baselines; [think-like-architect](./skills/think-like-architect/SKILL.md): first-cut architecture decisions |

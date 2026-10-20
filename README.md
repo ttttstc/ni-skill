@@ -58,7 +58,7 @@
 
 | 场景 | 技能与用途 |
 |---|---|
-| 目标与任务探索 | [be-ambitious](./skills/be-ambitious/SKILL.md)：向上提高抽象层次、扩展目标的想象力与范围，向下用专业方法与证据做深；目标选定后重写提示词；[安装与来源](./skills/be-ambitious/README.md) |
+| 目标与任务探索 | [be-ambitious](./skills/be-ambitious/SKILL.md)：探索更有野心的目标、范围和工作方式，补齐专业方法与证据；目标选定后重写提示词；[安装与来源](./skills/be-ambitious/README.md) |
 | 资料整理 | [ni-url2md](./skills/ni-url2md/SKILL.md)：网页转 Markdown；[ni-video2md](./skills/ni-video2md/SKILL.md)：公开视频本地转写；[douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md)：抖音博主逐字稿批量归档；[ni-book-downloader](./skills/ni-book-downloader/SKILL.md)：按书名下载电子书，严格区分文字版与 PDF |
 | 学习与研究 | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md)：专业资料学习蓝图与指南；[ni-unknown-first](./skills/ni-unknown-first/SKILL.md)：识别未知与下一步；[ni-research](./skills/ni-research/SKILL.md)：深度研究、讨论结论与文章大纲 |
 | 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |

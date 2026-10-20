@@ -1,23 +1,18 @@
 # Be ambitious：重新想象我们可以做到的事
 
-给它一个准备交给 AI 的任务，打开目标的想象空间，再把选定方向做深。基于 [Attention Heads](https://attentionheads.substack.com/?utm_source=github&utm_medium=readme&utm_campaign=skills) 的原始技能，按 [Felix Rieseberg 的文章](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/) 组织向上、向下两个方向。
+给它一个准备交给 AI 的任务，探索更有野心的目标，补齐专业做法与验证，最后得到一段可直接使用的提示词。基于 [Attention Heads](https://attentionheads.substack.com/?utm_source=github&utm_medium=readme&utm_campaign=skills) 的原始技能和 [Felix Rieseberg 的文章](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/)。
 
 ## 它做什么
 
-| 方向 | 它会检查什么 |
-|---|---|
-| 向上扩展目标 | 追问目标背后的目标，提高抽象层次，设想更大胆的结果、更广范围和新的工作方式 |
-| 向下补齐证据 | 专家会多做什么，从什么原始材料开始，用哪些具体方法与工具，以及什么外部检验能证明结果正确 |
+它会追问目标背后的目标，从“修好这次崩溃”探索到“持续保持应用稳定”，从“做一份季度汇报”探索到“持续提早发现问题、支持资源调整”。每个目标都说明新增范围，以及需要接通的数据、工具、环境和反馈。
 
-向上会从“修好这次崩溃”探索到“持续保持应用稳定”，从“做一份季度汇报”探索到“持续提早发现问题、支持资源调整”。它会提出原先没有要求的目标和范围，再说明这些目标需要接通什么数据、工具、环境和反馈。
+再按领域专家的标准，明确从什么原始材料开始、使用哪些具体方法与工具、什么外部检验能证明结果正确。
 
-先展开目标选项，再比较收益、代价与风险。探索阶段允许扩大目标和范围；执行时以你选定的目标与授权为准。允许提出替代任务，不等于已经选定其中一个。
+目标尚有分歧时，先给选项和推荐理由，等你选择。确定后交付一段可复制的提示词，等待你授权执行。应急止损和已限定的范围照守，简单明确的任务简短处理。
 
-选定后交付一段可复制的提示词，等待你授权执行。应急止损和用户锁定的范围照守，简单明确的任务简短处理。
+## 专业标准
 
-## 原始四问
-
-向下做深保留 Felix Rieseberg（Anthropic）分享的提示。“更深而不是更大”用于这个方向，向上仍可打开新的目标与范围：
+深化选定任务时，使用 Felix Rieseberg 分享的四问：
 
 > 我想要这个任务的更深版本，而不是更大的版本。在重写之前：
 > （1）说出这个领域的顶尖专业人士在这里会做哪些我没要求的事；
@@ -81,17 +76,8 @@ Claude Code 还可通过仓库插件安装：
 
 完整移植并翻译自 [DannyMac180/skills 的 be-ambitious](https://github.com/DannyMac180/skills/tree/7dc63b7a748b8bd14bf213c15ecddd4536409407/be-ambitious)，上游提交为 `7dc63b7a748b8bd14bf213c15ecddd4536409407`。
 
-上游目录包含 `SKILL.md` 和 `README.md`，两份文件均已翻译为中文。本仓库扩展目标的抽象层次、想象力、野心与范围，以及竞争解释和反证，并保留原始四问、技能名和三种 Agent 的安装方式。
+上游目录包含 `SKILL.md` 和 `README.md`，两份文件均已翻译为中文。目标探索、专业工具、原始材料、假设检验和外部验证依据 Felix 的文章组织；技能名与原始四问保留。
 
-方法设计还参考 [dbskill](https://github.com/dontbesilent2025/dbskill) 的相关技能，用于还原目标和验证判断。向上展开目标以 Felix 的 Altitude 为主线，DBS 的目标澄清不作为限制想象空间的门槛：
-
-| 方法入口 | 吸收的判断 |
-|---|---|
-| [dbs-goal](https://github.com/dontbesilent2025/dbskill/blob/14b567fc71beef647d52a6bc40a4e9b71a9ee6c5/skills/dbs-goal/SKILL.md) | 有条件地追问手段与目的，只补会改变路径或验收的信息 |
-| [dbs-jtbd](https://github.com/dontbesilent2025/dbskill/blob/14b567fc71beef647d52a6bc40a4e9b71a9ee6c5/skills/dbs-jtbd/SKILL.md) | 区分表面请求、想推进的进展和现实结果 |
-| [dbs-deconstruct](https://github.com/dontbesilent2025/dbskill/blob/14b567fc71beef647d52a6bc40a4e9b71a9ee6c5/skills/dbs-deconstruct/SKILL.md) | 用动作、对象和结果还原概念，检查隐藏预设 |
-| [dbs-good-question](https://github.com/dontbesilent2025/dbskill/blob/14b567fc71beef647d52a6bc40a4e9b71a9ee6c5/skills/dbs-good-question/SKILL.md) | 用可观察信号区分竞争解释，设计最小验证 |
-
-运行时只需本技能，不依赖 DBS 安装。[行为验证说明](./evals/README.md) 提供样本、判据、原始答复及证据边界。
+[行为检查清单](./evals/README.md) 提供自然请求、预期行为和关键失败条件。
 
 原作者为 Dan McAteer。上游 MIT 许可证及版权声明原文保留在 [LICENSE.upstream](./LICENSE.upstream)。
