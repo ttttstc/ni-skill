@@ -1,0 +1,16 @@
+{
+  "frozen_rules_unchanged": true,
+  "analysis_script_unchanged": true,
+  "source_files_unchanged": true,
+  "independent_prefix_checks": 14,
+  "failed_event_count": 9,
+  "observed_recovered_events": 6,
+  "strict_holdout_pass": false,
+  "verdict": "本轮验证不通过；目标可行性尚未证实。",
+  "report_only_corrections": [
+    "明确已见留出导致严格条件不通过",
+    "成功不反驳必须改权限这一未经证实的必要性断言",
+    "处置卡填入候选解释而非区分问题"
+  ],
+  "report_sha256": "0751591ea257272567721d472580a49cc896be67f5cfe3c783bdf7f991714791"
+}

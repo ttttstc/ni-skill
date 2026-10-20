@@ -1,0 +1,46 @@
+{
+  "commands": [
+    {
+      "args": [
+        "离线分析.py",
+        "freeze"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"frozen\": \"冻结规则.json\", \"sha256\": \"08bc295deb36ea3012aeaa49b65b7279c55668549b16a487db15ecfa370e3387\", \"train_runs\": 17, \"handling_records_read\": false}\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "离线分析.py",
+        "replay"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifacts\": [\"答复.md\", \"冻结规则.json\", \"数据检查.json\", \"事件关联.json\", \"逐次建议.json\", \"时间线.json\", \"审计.json\"], \"runs\": 24, \"failures\": 14, \"holdout_events\": 3, \"holdout_decisions\": 4, \"verdict\": \"可行性尚未证实；程序前缀检查通过，全程盲化留出条件未通过。\"}\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "复核.py"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"frozen_rules_unchanged\": true, \"analysis_script_unchanged\": true, \"source_files_unchanged\": true, \"independent_prefix_checks\": 14, \"failed_event_count\": 9, \"observed_recovered_events\": 6, \"strict_holdout_pass\": false, \"verdict\": \"本轮验证不通过；目标可行性尚未证实。\", \"report_only_corrections\": [\"明确已见留出导致严格条件不通过\", \"成功不反驳必须改权限这一未经证实的必要性断言\", \"处置卡填入候选解释而非区分问题\"], \"report_sha256\": \"d6692558005d1c939484b9460da2d1536501856ebc7b11f8cdfe369c97d1b971\"}\n",
+      "stderr": ""
+    }
+  ],
+  "json_semantic_matches": {
+    "事件关联.json": true,
+    "冻结规则.json": true,
+    "复核结果.json": true,
+    "审计.json": true,
+    "数据检查.json": true,
+    "时间线.json": true,
+    "逐次建议.json": true
+  },
+  "report_matches_after_path_normalization": true,
+  "ignored_nondeterministic_fields": [
+    "created_at_utc",
+    "frozen_sha256",
+    "report_sha256"
+  ],
+  "note": "新目录复跑原脚本与复核脚本，不改规则；仅核对可复现性，不代表独立盲测或领域正确性。"
+}

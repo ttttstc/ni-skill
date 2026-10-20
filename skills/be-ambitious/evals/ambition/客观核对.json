@@ -1,0 +1,68 @@
+{
+  "runs": 24,
+  "failures": 14,
+  "retry_actions": 8,
+  "retry_recovered_recorded": 3,
+  "retry_not_recovered_recorded": 5,
+  "active_minutes_of_unrecovered_retries": 34,
+  "explicit_failure_chains": {
+    "02": [
+      "02",
+      "03"
+    ],
+    "04": [
+      "04",
+      "05"
+    ],
+    "07": [
+      "07",
+      "08",
+      "09"
+    ],
+    "10": [
+      "10",
+      "11"
+    ],
+    "12": [
+      "12",
+      "13",
+      "14"
+    ],
+    "15": [
+      "15",
+      "16"
+    ],
+    "18": [
+      "18",
+      "19"
+    ],
+    "20": [
+      "20"
+    ],
+    "22": [
+      "22",
+      "23",
+      "24"
+    ]
+  },
+  "latest_success_chains": [
+    "02",
+    "07",
+    "10",
+    "12",
+    "18",
+    "22"
+  ],
+  "unknown_after_cross_commit_success": [
+    "04",
+    "15",
+    "20"
+  ],
+  "materials_unchanged": true,
+  "material_sha256": {
+    "处理记录.csv": "fce502026334c02bd595eb0679c3aa59f004a7d975b60595fd4ca048dd049509",
+    "资料说明.md": "801090ae2be7e918ad54ec89d6df124ad4788c9549cfe4ce9d788ac8f741015e",
+    "运行记录.csv": "47a7eea71e258da5ab5576b574ba1cadd806913216e45f27286a49051ce072d5"
+  },
+  "limitations": "恢复为记录中的状态，不证明因果；34 分钟是已记录活动，不是可实现的节省。"
+}

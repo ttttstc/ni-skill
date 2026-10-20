@@ -12,7 +12,7 @@
 
 | 想做什么 | 可以这样说 |
 |---|---|
-| 打开目标想象 | 用 be-ambitious 提高目标的抽象层次，扩展野心和范围，再用专业方法与原始证据深化选定方向 |
+| 打开目标想象 | 用 be-ambitious 重新设想目标，检查初始解法的默认前提，推荐更有野心的任务并写成可执行 prompt |
 | 整理资料 | 用 ni-video2md 把这个公开视频转成 Markdown：〈链接〉 |
 | 找电子书 | 用 ni-book-downloader 按书名下载电子书，先确认要文字版还是 PDF |
 | 学习陌生领域 | 用 ni-fde-copilot 读这些资料，先出学习蓝图，确认后再写指南 |
@@ -58,7 +58,7 @@
 
 | 场景 | 技能与用途 |
 |---|---|
-| 目标与任务探索 | [be-ambitious](./skills/be-ambitious/SKILL.md)：探索更有野心的目标、范围和工作方式，补齐专业方法与证据；目标选定后重写提示词；[安装与来源](./skills/be-ambitious/README.md) |
+| 目标与任务探索 | [be-ambitious](./skills/be-ambitious/SKILL.md)：重构初始解法，推荐更有野心的目标，以专业方法、第一步行动和真实反馈形成任务提示词；[安装与来源](./skills/be-ambitious/README.md) |
 | 资料整理 | [ni-url2md](./skills/ni-url2md/SKILL.md)：网页转 Markdown；[ni-video2md](./skills/ni-video2md/SKILL.md)：公开视频本地转写；[douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md)：抖音博主逐字稿批量归档；[ni-book-downloader](./skills/ni-book-downloader/SKILL.md)：按书名下载电子书，严格区分文字版与 PDF |
 | 学习与研究 | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md)：专业资料学习蓝图与指南；[ni-unknown-first](./skills/ni-unknown-first/SKILL.md)：识别未知与下一步；[ni-research](./skills/ni-research/SKILL.md)：深度研究、讨论结论与文章大纲 |
 | 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |

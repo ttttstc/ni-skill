@@ -1,0 +1,271 @@
+{
+  "started_date": "2026-10-20",
+  "completed_date": "2026-10-21",
+  "source_versions": {
+    "original": {
+      "commit": "f26a376cbb7663a257bf4e579824013fbb00614e",
+      "sha256_lf": "4665f190100240972c313b95a651b60c8bf1bc0d870eb4bb17de4bd7a0e01c84"
+    },
+    "first_revision": {
+      "sha256_lf": "55476feb672e39dc2084cf036e4a4d3a17e29092f7a7dd8b85f0d99a003fbb99"
+    },
+    "final": {
+      "sha256_lf": "73fe5d7fc8eafbbfa557d1ba040b429943c645c99eb6108a3936be3f2c7cffdf",
+      "change": "首轮离线执行的严格留出条件失败后，补充已见材料不能再称为独立留出的通用规则。一次定向复核，原失败保留。"
+    }
+  },
+  "cases_sha256_lf": "d726106811ca88b86c732e1157d19e73fd0fb25616c55d919c1e01dccada0717",
+  "host": "Codex 原生独立上下文，未指定模型或推理覆盖；具体底层模型未独立核实。",
+  "protocol": {
+    "criteria_fixed_before_run": true,
+    "initial_response_contexts": 5,
+    "execution_contexts": 1,
+    "initial_scorer_contexts": 1,
+    "targeted_response_contexts": 1,
+    "targeted_scorer_contexts": 1,
+    "fresh_contexts": true,
+    "initial_source_changed_during_run": false,
+    "correction_after_initial_round": true,
+    "rounds_per_input_per_source": 1,
+    "budget_note": "严格留出验收失败后，仅修已见数据边界并做一次CI提示词定向复核；保留首轮失败，不再增加运行。",
+    "final_source_execution_run": false
+  },
+  "snapshot_notes": "生成者只收到自然请求、同目录材料及Skill。中性目录；README仅移除验证入口。评分者无Skill、版本映射或模型身份。",
+  "data_origin": "构造离线CI记录及培训摘要，不是真实生产数据。",
+  "runs": [
+    {
+      "id": "ci-original",
+      "label": "青松",
+      "case": "ci",
+      "variant": "original",
+      "response": "responses/ci-original.md",
+      "original_response_sha256": "009549edc242f91ada068f4529701c03139164b6187bc3e253a868c6149f927b",
+      "published_response_sha256": "009549edc242f91ada068f4529701c03139164b6187bc3e253a868c6149f927b",
+      "response_chars": 3188
+    },
+    {
+      "id": "ci-revised",
+      "label": "白鹭",
+      "case": "ci",
+      "variant": "revised",
+      "response": "responses/ci-revised.md",
+      "original_response_sha256": "c4c9464f8e6baaa66ac7b8c384c08c4377c00ff912dffdf8a5b1799be16775de",
+      "published_response_sha256": "c4c9464f8e6baaa66ac7b8c384c08c4377c00ff912dffdf8a5b1799be16775de",
+      "response_chars": 2727
+    },
+    {
+      "id": "training",
+      "label": "云岭",
+      "case": "training",
+      "variant": "revised",
+      "response": "responses/training.md",
+      "original_response_sha256": "011d3ee017fac6c010324e87a4e64c82bb4a42562da7aa56ef05fb51bb9289f3",
+      "published_response_sha256": "771178f3fd3c7bfa4696cd615b058097739b8b8d6c2e384d002cd4ecc69de5f2",
+      "response_chars": 1914
+    },
+    {
+      "id": "creative",
+      "label": "月沙",
+      "case": "creative",
+      "variant": "revised",
+      "response": "responses/creative.md",
+      "original_response_sha256": "87d2b10d9f8fb251a5c6e1ea944dba89cf6a37da04d9c529368badc710b0c138",
+      "published_response_sha256": "87d2b10d9f8fb251a5c6e1ea944dba89cf6a37da04d9c529368badc710b0c138",
+      "response_chars": 574
+    },
+    {
+      "id": "missing",
+      "label": "竹溪",
+      "case": "missing",
+      "variant": "revised",
+      "response": "responses/missing.md",
+      "original_response_sha256": "315b117c6160443c4ec600ba94087af4d6f88db3f395bfd9aac5a5e3c6cfbacf",
+      "published_response_sha256": "315b117c6160443c4ec600ba94087af4d6f88db3f395bfd9aac5a5e3c6cfbacf",
+      "response_chars": 1418
+    }
+  ],
+  "initial_scoring": {
+    "path": "independent-scoring.json",
+    "summary": [
+      {
+        "label": "青松",
+        "scores": {
+          "ambition": 4,
+          "reframing": 4,
+          "prompt": 4,
+          "feedback": 4,
+          "clarity": 3
+        },
+        "total": 19,
+        "pass": true
+      },
+      {
+        "label": "白鹭",
+        "scores": {
+          "ambition": 4,
+          "reframing": 4,
+          "prompt": 4,
+          "feedback": 3,
+          "clarity": 4
+        },
+        "total": 19,
+        "pass": true
+      },
+      {
+        "label": "云岭",
+        "scores": {
+          "ambition": 4,
+          "reframing": 4,
+          "prompt": 4,
+          "feedback": 4,
+          "clarity": 4
+        },
+        "total": 20,
+        "pass": true
+      },
+      {
+        "label": "月沙",
+        "checks_passed": 5,
+        "checks_total": 5,
+        "pass": true
+      },
+      {
+        "label": "竹溪",
+        "checks_passed": 5,
+        "checks_total": 5,
+        "pass": true
+      }
+    ],
+    "exact_quotes_verified": 137,
+    "original_scoring_sha256": "c76a2be7ba8a7c89b5dc9a320860e13c00a4ea660398c297e8446567d9cd7db5",
+    "published_scoring_sha256": "c76a2be7ba8a7c89b5dc9a320860e13c00a4ea660398c297e8446567d9cd7db5"
+  },
+  "targeted_run": {
+    "id": "ci-final",
+    "label": "海棠",
+    "variant": "final",
+    "response": "responses/ci-final.md",
+    "original_response_sha256": "784f740d4c4f5061259451ad3ccf8e975976fa137c112d4b32eb42f22a8cd05f",
+    "published_response_sha256": "784f740d4c4f5061259451ad3ccf8e975976fa137c112d4b32eb42f22a8cd05f",
+    "scoring": "targeted-scoring.json",
+    "scores": {
+      "ambition": 4,
+      "reframing": 4,
+      "prompt": 4,
+      "feedback": 4,
+      "clarity": 4
+    },
+    "total": 20,
+    "verdict": "PASS",
+    "exact_quotes_verified": 39,
+    "original_scoring_sha256": "85f917bf1bbbfc843bbfe8132f3ddfbe107a566f0a9fe866e6671ebd1aa0eddc",
+    "published_scoring_sha256": "55c863bc2e7b3f446ca51efb7a3b924a22b2d90ae139813733eb14579c08ca52"
+  },
+  "source_map": {
+    "青松/答复.md": "responses/ci-original.md",
+    "白鹭/答复.md": "responses/ci-revised.md",
+    "云岭/答复.md": "responses/training.md",
+    "月沙/答复.md": "responses/creative.md",
+    "竹溪/答复.md": "responses/missing.md",
+    "海棠/答复.md": "responses/ci-final.md",
+    "石桥/": "execution/",
+    "海棠/材料/": "fixtures/",
+    "海棠/需求.md": "cases.json#/requests/ci",
+    "判据.json": "cases.json"
+  },
+  "fixture_sha256_lf": {
+    "处理记录.csv": "fce502026334c02bd595eb0679c3aa59f004a7d975b60595fd4ca048dd049509",
+    "手册与过程.md": "42e9b47a1f1e77c482d04be342f1c2d9fc11f9be8bcbcadf6467542e55a7075d",
+    "资料说明.md": "801090ae2be7e918ad54ec89d6df124ad4788c9549cfe4ce9d788ac8f741015e",
+    "运行记录.csv": "47a7eea71e258da5ab5576b574ba1cadd806913216e45f27286a49051ce072d5"
+  },
+  "execution_artifacts": [
+    {
+      "path": "execution/事件关联.json",
+      "original_sha256": "c3be4a6f8e181a43eb440cb58aa83018d56e7038af357b113537a45845918453",
+      "published_sha256": "79fb7c76bd5c70160ea6ae91cf180cf300fdb2a5dbd6d910be2baa3a46463847"
+    },
+    {
+      "path": "execution/任务.md",
+      "original_sha256": "fb4123a12342ccc6d4d8faef59d30ef84444546c15df63492e828c8a06444008",
+      "published_sha256": "340ec4d2255e9e05082b0fc85c53b01de52ee1d46a38d389b2a754640fc17f03"
+    },
+    {
+      "path": "execution/冻结规则.json",
+      "original_sha256": "b622c35117c1021b91ef8452b4f97242b9796cc1c4d1c69bd274d24f28fb08b0",
+      "published_sha256": "70aca7a033c5f8df077d110f67cae01d1a0c847ae56e2eee9192669684bf4436"
+    },
+    {
+      "path": "execution/复核.py",
+      "original_sha256": "bb9783b7a0f3e85add9a0729396af18c362532263afea8cecb999ab76ce95d91",
+      "published_sha256": "bb9783b7a0f3e85add9a0729396af18c362532263afea8cecb999ab76ce95d91"
+    },
+    {
+      "path": "execution/复核结果.json",
+      "original_sha256": "fc09b9d5262f0dd25ff3f81a7aeb264f6b0733cffafa43e385703038d756b53c",
+      "published_sha256": "c7066b7e67e26f56d3514adb30523acedfc4a85291fdf57be2ae0456b4d80365"
+    },
+    {
+      "path": "execution/审计.json",
+      "original_sha256": "13a15e709e344bb51deedf8b2cfe71bc7b096e32787db13da6b5fd50bfe5318f",
+      "published_sha256": "81bf886b2cf7551c45619d5564f2bc28945147e699d579a2bbf9d248339a0c51"
+    },
+    {
+      "path": "execution/数据检查.json",
+      "original_sha256": "8c82af1145fb56ff8b1c5513d42960626bc1f870c566cbaf47663e6b1c4cc9d2",
+      "published_sha256": "d85697caded76a3d1d4f800eb8dbe637204f2ee1b72c23977008c67ff5a4e414"
+    },
+    {
+      "path": "execution/时间线.json",
+      "original_sha256": "a025ed394426e3d714ce2957724ce3b95dcb33fd6584e0e73856edbeb305e533",
+      "published_sha256": "dad9f5504b2e6ed407533f088bcd428285ae4abe13d372c835c6818a522155af"
+    },
+    {
+      "path": "execution/材料/处理记录.csv",
+      "original_sha256": "fce502026334c02bd595eb0679c3aa59f004a7d975b60595fd4ca048dd049509",
+      "published_sha256": "fce502026334c02bd595eb0679c3aa59f004a7d975b60595fd4ca048dd049509"
+    },
+    {
+      "path": "execution/材料/资料说明.md",
+      "original_sha256": "801090ae2be7e918ad54ec89d6df124ad4788c9549cfe4ce9d788ac8f741015e",
+      "published_sha256": "801090ae2be7e918ad54ec89d6df124ad4788c9549cfe4ce9d788ac8f741015e"
+    },
+    {
+      "path": "execution/材料/运行记录.csv",
+      "original_sha256": "47a7eea71e258da5ab5576b574ba1cadd806913216e45f27286a49051ce072d5",
+      "published_sha256": "47a7eea71e258da5ab5576b574ba1cadd806913216e45f27286a49051ce072d5"
+    },
+    {
+      "path": "execution/离线分析.py",
+      "original_sha256": "01ccc0d79e4f838dd980ce9e3e98beef5aa1c6861c367ec3cf98cdb7ea9e28cd",
+      "published_sha256": "01ccc0d79e4f838dd980ce9e3e98beef5aa1c6861c367ec3cf98cdb7ea9e28cd"
+    },
+    {
+      "path": "execution/答复.md",
+      "original_sha256": "0751591ea257272567721d472580a49cc896be67f5cfe3c783bdf7f991714791",
+      "published_sha256": "9a3a9ec61a25dd16060c788d53ed90a0d4b1fcb1aa3af87bc7ede3243f56847c"
+    },
+    {
+      "path": "execution/逐次建议.json",
+      "original_sha256": "f9a88aa389714b06ebb6e801b6e5733a3a0a4ef542f6325c85107a5a6fd503ad",
+      "published_sha256": "5b6a8feff99d28efa5a618824c2ab72719de1378f04607d81d7fd20992040c93"
+    }
+  ],
+  "publication_normalization": "UTF-8/LF与末尾单换行；仅执行答复中的本地绝对路径改为相对路径。JSON内部原运行哈希不改写。",
+  "parent_review": {
+    "all_responses_read": true,
+    "all_scoring_read": true,
+    "objective_checks": "客观核对.json",
+    "rerun_checks": "复跑核对.json",
+    "initial_exact_quotes_verified": 137,
+    "execution_reproducible": true,
+    "strict_blind_validation_pass": false,
+    "business_effect_proven": false,
+    "notes": [
+      "首轮CI两份均19/20，不能宣称总体提升。",
+      "最终源码只复核CI提示词，不转记首轮执行为最终执行。",
+      "评分中关于工具活动的表述只按可见文本与产物理解，缺少完整工具轨迹时不独立判定。",
+      "脚本含固定规则与手写案例文字，仅核对本批数据，不代表通用分析器。"
+    ]
+  }
+}

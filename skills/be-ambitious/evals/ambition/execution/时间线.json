@@ -1,0 +1,837 @@
+[
+  {
+    "run": {
+      "run_id": "01",
+      "started_at": "2026-10-01 09:00",
+      "commit": "a01",
+      "phase": "build",
+      "status": "success",
+      "duration_s": "80",
+      "log_excerpt": "",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:2"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "02",
+      "started_at": "2026-10-01 09:20",
+      "commit": "a02",
+      "phase": "fetch",
+      "status": "failed",
+      "duration_s": "30",
+      "log_excerpt": "connection reset",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:3"
+    },
+    "decision": {
+      "run_id": "02",
+      "time": "2026-10-01 09:20",
+      "event": "E02",
+      "source": "材料/运行记录.csv:3",
+      "rule": "R2",
+      "fact": "fetch / connection reset / commit=a02 / duration_s=30",
+      "main_next_step": "在确认拉取安全、幂等且无持续外部故障迹象后，有条件尝试一次重试",
+      "reason": "fetch 的连接中断节选符合短时故障候选；不是短时故障的证明",
+      "conditions": "确认没有非幂等副作用、无拒绝/持续异常证据，且仅一次；材料未提供这些前提",
+      "distinguish": "同提交同阶段一次重跑是否仍失败；成功也不能证明网络根因",
+      "overturn": "重跑再次失败、持续服务异常或发现身份/配置等稳定差异",
+      "missing_evidence": "请求/网络与上游证据、幂等性、同环境确认；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02"
+      ],
+      "max_visible_time": "2026-10-01 09:20",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "有条件尝试一次重试"
+    }
+  },
+  {
+    "run": {
+      "run_id": "03",
+      "started_at": "2026-10-01 09:25",
+      "commit": "a02",
+      "phase": "fetch",
+      "status": "success",
+      "duration_s": "33",
+      "log_excerpt": "",
+      "rerun_of": "02",
+      "source": "材料/运行记录.csv:4"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "04",
+      "started_at": "2026-10-02 09:00",
+      "commit": "a03",
+      "phase": "verify",
+      "status": "failed",
+      "duration_s": "100",
+      "log_excerpt": "expected 2 actual 3",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:5"
+    },
+    "decision": {
+      "run_id": "04",
+      "time": "2026-10-02 09:00",
+      "event": "E04",
+      "source": "材料/运行记录.csv:5",
+      "rule": "R3",
+      "fact": "verify / expected 2 actual 3 / commit=a03 / duration_s=100",
+      "main_next_step": "先核查原始断言、输入和本提交变更，再决定是否需要重跑或修正",
+      "reason": "节选出现期望/实际不一致，可定位核查方向，尚无根因证据",
+      "conditions": "错误确实来自当前验证步骤；需完整错误和输入确认",
+      "distinguish": "稳定输入/逻辑差异与不稳定测试或环境差异",
+      "overturn": "发现不稳定输入/外部依赖证据或同环境可复现结果与节选不一致",
+      "missing_evidence": "断言位置、测试输入、完整错误、本提交 diff；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ],
+      "max_visible_time": "2026-10-02 09:00",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查期望与实际差异"
+    }
+  },
+  {
+    "run": {
+      "run_id": "05",
+      "started_at": "2026-10-02 09:15",
+      "commit": "a03",
+      "phase": "verify",
+      "status": "failed",
+      "duration_s": "96",
+      "log_excerpt": "expected 2 actual 3",
+      "rerun_of": "04",
+      "source": "材料/运行记录.csv:6"
+    },
+    "decision": {
+      "run_id": "05",
+      "time": "2026-10-02 09:15",
+      "event": "E04",
+      "source": "材料/运行记录.csv:6",
+      "rule": "R1",
+      "fact": "verify / expected 2 actual 3 / commit=a03 / duration_s=96",
+      "main_next_step": "停止机械重试，先核查断言或超时的原始位置、输入/配置和本提交变更并交人工决定",
+      "reason": "显式同链已有失败：04；当前再次失败，一次重跑已未解除观察到的故障",
+      "conditions": "当前属于登记的同一链；任何后续操作仍需新证据和相应授权",
+      "distinguish": "区分持续的输入/环境/策略问题与单次扰动；当前不能确定哪一种",
+      "overturn": "新证据确认环境已改变、故障是短时外因且已解除，或原关联被证明登记错误",
+      "missing_evidence": "断言或超时的原始位置、输入/配置和本提交变更；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [
+        "04"
+      ],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05"
+      ],
+      "max_visible_time": "2026-10-02 09:15",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查期望与实际差异"
+    }
+  },
+  {
+    "run": {
+      "run_id": "06",
+      "started_at": "2026-10-02 10:00",
+      "commit": "a04",
+      "phase": "verify",
+      "status": "success",
+      "duration_s": "92",
+      "log_excerpt": "",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:7"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "07",
+      "started_at": "2026-10-03 09:00",
+      "commit": "a05",
+      "phase": "publish",
+      "status": "failed",
+      "duration_s": "20",
+      "log_excerpt": "HTTP 403",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:8"
+    },
+    "decision": {
+      "run_id": "07",
+      "time": "2026-10-03 09:00",
+      "event": "E07",
+      "source": "材料/运行记录.csv:8",
+      "rule": "R4",
+      "fact": "publish / HTTP 403 / commit=a05 / duration_s=20",
+      "main_next_step": "先核查原始响应、有效身份、发布目标和策略/网关证据，再决定处置",
+      "reason": "403 是拒绝响应的节选；身份、目标策略、网关等均只是候选解释",
+      "conditions": "确认响应来自哪个请求和哪一跳；不据此改权限",
+      "distinguish": "身份/策略/目标差异与网关或上游临时拒绝",
+      "overturn": "证实是已解除的上游临时故障且重试安全，或原状态码/阶段记录错误",
+      "missing_evidence": "响应体/头、请求目标、有效身份、策略和上游状态；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07"
+      ],
+      "max_visible_time": "2026-10-03 09:00",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查 403 原始响应与上下文"
+    }
+  },
+  {
+    "run": {
+      "run_id": "08",
+      "started_at": "2026-10-03 09:10",
+      "commit": "a05",
+      "phase": "publish",
+      "status": "failed",
+      "duration_s": "21",
+      "log_excerpt": "HTTP 403",
+      "rerun_of": "07",
+      "source": "材料/运行记录.csv:9"
+    },
+    "decision": {
+      "run_id": "08",
+      "time": "2026-10-03 09:10",
+      "event": "E07",
+      "source": "材料/运行记录.csv:9",
+      "rule": "R1",
+      "fact": "publish / HTTP 403 / commit=a05 / duration_s=21",
+      "main_next_step": "停止机械重试，先核查响应体/头、有效身份、目标和策略/网关证据并交人工决定",
+      "reason": "显式同链已有失败：07；当前再次失败，一次重跑已未解除观察到的故障",
+      "conditions": "当前属于登记的同一链；任何后续操作仍需新证据和相应授权",
+      "distinguish": "区分持续的输入/环境/策略问题与单次扰动；当前不能确定哪一种",
+      "overturn": "新证据确认环境已改变、故障是短时外因且已解除，或原关联被证明登记错误",
+      "missing_evidence": "响应体/头、有效身份、目标和策略/网关证据；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [
+        "07"
+      ],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08"
+      ],
+      "max_visible_time": "2026-10-03 09:10",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查 403 原始响应与上下文"
+    }
+  },
+  {
+    "run": {
+      "run_id": "09",
+      "started_at": "2026-10-03 09:40",
+      "commit": "a05",
+      "phase": "publish",
+      "status": "success",
+      "duration_s": "24",
+      "log_excerpt": "",
+      "rerun_of": "08",
+      "source": "材料/运行记录.csv:10"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "10",
+      "started_at": "2026-10-04 09:00",
+      "commit": "a06",
+      "phase": "fetch",
+      "status": "failed",
+      "duration_s": "32",
+      "log_excerpt": "connection reset",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:11"
+    },
+    "decision": {
+      "run_id": "10",
+      "time": "2026-10-04 09:00",
+      "event": "E10",
+      "source": "材料/运行记录.csv:11",
+      "rule": "R2",
+      "fact": "fetch / connection reset / commit=a06 / duration_s=32",
+      "main_next_step": "在确认拉取安全、幂等且无持续外部故障迹象后，有条件尝试一次重试",
+      "reason": "fetch 的连接中断节选符合短时故障候选；不是短时故障的证明",
+      "conditions": "确认没有非幂等副作用、无拒绝/持续异常证据，且仅一次；材料未提供这些前提",
+      "distinguish": "同提交同阶段一次重跑是否仍失败；成功也不能证明网络根因",
+      "overturn": "重跑再次失败、持续服务异常或发现身份/配置等稳定差异",
+      "missing_evidence": "请求/网络与上游证据、幂等性、同环境确认；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [
+        "E02"
+      ],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10"
+      ],
+      "max_visible_time": "2026-10-04 09:00",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "有条件尝试一次重试"
+    }
+  },
+  {
+    "run": {
+      "run_id": "11",
+      "started_at": "2026-10-04 09:05",
+      "commit": "a06",
+      "phase": "fetch",
+      "status": "success",
+      "duration_s": "35",
+      "log_excerpt": "",
+      "rerun_of": "10",
+      "source": "材料/运行记录.csv:12"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "12",
+      "started_at": "2026-10-05 09:00",
+      "commit": "a07",
+      "phase": "build",
+      "status": "failed",
+      "duration_s": "60",
+      "log_excerpt": "No space left on device",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:13"
+    },
+    "decision": {
+      "run_id": "12",
+      "time": "2026-10-05 09:00",
+      "event": "E12",
+      "source": "材料/运行记录.csv:13",
+      "rule": "R5",
+      "fact": "build / No space left on device / commit=a07 / duration_s=60",
+      "main_next_step": "先核查报错目标挂载、空间、inode/配额，再由人工判断容量处置",
+      "reason": "节选提示容量路径，可有空间、inode、配额或目标挂载等不同解释",
+      "conditions": "取得失败路径和实际容量证据，不自动执行 runner 清理",
+      "distinguish": "定位真正受限的资源与影响范围",
+      "overturn": "容量证据充足且节选指向不同远端资源，或错误已因外部变化解除",
+      "missing_evidence": "失败路径、挂载、空间/inode/配额、共享 runner 信息；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12"
+      ],
+      "max_visible_time": "2026-10-05 09:00",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查容量证据"
+    }
+  },
+  {
+    "run": {
+      "run_id": "13",
+      "started_at": "2026-10-05 09:10",
+      "commit": "a07",
+      "phase": "build",
+      "status": "failed",
+      "duration_s": "61",
+      "log_excerpt": "No space left on device",
+      "rerun_of": "12",
+      "source": "材料/运行记录.csv:14"
+    },
+    "decision": {
+      "run_id": "13",
+      "time": "2026-10-05 09:10",
+      "event": "E12",
+      "source": "材料/运行记录.csv:14",
+      "rule": "R1",
+      "fact": "build / No space left on device / commit=a07 / duration_s=61",
+      "main_next_step": "停止机械重试，先核查目标挂载、可用空间、inode/配额和容量变化并交人工决定",
+      "reason": "显式同链已有失败：12；当前再次失败，一次重跑已未解除观察到的故障",
+      "conditions": "当前属于登记的同一链；任何后续操作仍需新证据和相应授权",
+      "distinguish": "区分持续的输入/环境/策略问题与单次扰动；当前不能确定哪一种",
+      "overturn": "新证据确认环境已改变、故障是短时外因且已解除，或原关联被证明登记错误",
+      "missing_evidence": "目标挂载、可用空间、inode/配额和容量变化；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [
+        "12"
+      ],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13"
+      ],
+      "max_visible_time": "2026-10-05 09:10",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查容量证据"
+    }
+  },
+  {
+    "run": {
+      "run_id": "14",
+      "started_at": "2026-10-05 09:40",
+      "commit": "a07",
+      "phase": "build",
+      "status": "success",
+      "duration_s": "60",
+      "log_excerpt": "",
+      "rerun_of": "13",
+      "source": "材料/运行记录.csv:15"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "15",
+      "started_at": "2026-10-06 09:00",
+      "commit": "a08",
+      "phase": "verify",
+      "status": "failed",
+      "duration_s": "200",
+      "log_excerpt": "deadline exceeded",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:16"
+    },
+    "decision": {
+      "run_id": "15",
+      "time": "2026-10-06 09:00",
+      "event": "E15",
+      "source": "材料/运行记录.csv:16",
+      "rule": "R6",
+      "fact": "verify / deadline exceeded / commit=a08 / duration_s=200",
+      "main_next_step": "先核查验证步骤耗时、超时配置、输入和资源证据，再决定处置",
+      "reason": "verify 的超时节选和运行耗时只表明超时现象，不能判断慢测、资源或外部依赖根因",
+      "conditions": "明确超时发生层、实际预算和同环境可比性",
+      "distinguish": "测试/输入慢、资源限制、外部等待和预算不匹配",
+      "overturn": "原始证据确认一次性外部扰动且已恢复，并且重试安全",
+      "missing_evidence": "步骤级耗时、deadline 来源、资源/依赖证据、可比基线；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15"
+      ],
+      "max_visible_time": "2026-10-06 09:00",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查超时证据"
+    }
+  },
+  {
+    "run": {
+      "run_id": "16",
+      "started_at": "2026-10-06 09:15",
+      "commit": "a08",
+      "phase": "verify",
+      "status": "failed",
+      "duration_s": "205",
+      "log_excerpt": "deadline exceeded",
+      "rerun_of": "15",
+      "source": "材料/运行记录.csv:17"
+    },
+    "decision": {
+      "run_id": "16",
+      "time": "2026-10-06 09:15",
+      "event": "E15",
+      "source": "材料/运行记录.csv:17",
+      "rule": "R1",
+      "fact": "verify / deadline exceeded / commit=a08 / duration_s=205",
+      "main_next_step": "停止机械重试，先核查断言或超时的原始位置、输入/配置和本提交变更并交人工决定",
+      "reason": "显式同链已有失败：15；当前再次失败，一次重跑已未解除观察到的故障",
+      "conditions": "当前属于登记的同一链；任何后续操作仍需新证据和相应授权",
+      "distinguish": "区分持续的输入/环境/策略问题与单次扰动；当前不能确定哪一种",
+      "overturn": "新证据确认环境已改变、故障是短时外因且已解除，或原关联被证明登记错误",
+      "missing_evidence": "断言或超时的原始位置、输入/配置和本提交变更；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [
+        "15"
+      ],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "max_visible_time": "2026-10-06 09:15",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查超时证据"
+    }
+  },
+  {
+    "run": {
+      "run_id": "17",
+      "started_at": "2026-10-06 10:10",
+      "commit": "a09",
+      "phase": "verify",
+      "status": "success",
+      "duration_s": "90",
+      "log_excerpt": "",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:18"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "18",
+      "started_at": "2026-10-07 09:00",
+      "commit": "a10",
+      "phase": "fetch",
+      "status": "failed",
+      "duration_s": "30",
+      "log_excerpt": "deadline exceeded",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:19"
+    },
+    "decision": {
+      "run_id": "18",
+      "time": "2026-10-07 09:00",
+      "event": "E18",
+      "source": "材料/运行记录.csv:19",
+      "rule": "R7",
+      "fact": "fetch / deadline exceeded / commit=a10 / duration_s=30",
+      "main_next_step": "先核查拉取超时位置、实际预算与幂等性；若短时外因已解除且安全，再考虑一次重试",
+      "reason": "训练中同词仅见于 verify；fetch 的请求/传输证据不同，不能套用验证步骤解释",
+      "conditions": "属于新阶段组合；确认安全、幂等、无持续拒绝和持续故障证据后才可一次重试；这些前提目前未知",
+      "distinguish": "请求/传输等待、上游慢和超时配置差异；一次重跑可观察是否持续",
+      "overturn": "发现持续故障、身份/配置问题、非幂等影响或一次重跑仍失败",
+      "missing_evidence": "请求/上游时序、超时来源、幂等性与运行环境；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18"
+      ],
+      "max_visible_time": "2026-10-07 09:00",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查超时证据"
+    }
+  },
+  {
+    "run": {
+      "run_id": "19",
+      "started_at": "2026-10-07 09:05",
+      "commit": "a10",
+      "phase": "fetch",
+      "status": "success",
+      "duration_s": "31",
+      "log_excerpt": "",
+      "rerun_of": "18",
+      "source": "材料/运行记录.csv:20"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "20",
+      "started_at": "2026-10-08 09:00",
+      "commit": "a11",
+      "phase": "build",
+      "status": "failed",
+      "duration_s": "22",
+      "log_excerpt": "syntax error",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:21"
+    },
+    "decision": {
+      "run_id": "20",
+      "time": "2026-10-08 09:00",
+      "event": "E20",
+      "source": "材料/运行记录.csv:21",
+      "rule": "R8",
+      "fact": "build / syntax error / commit=a11 / duration_s=22",
+      "main_next_step": "信息不足，补原始错误位置、本提交 diff 和环境信息，交人工判断",
+      "reason": "训练规则未覆盖该阶段/节选组合；文本可作定位入口，不能据此确认诊断",
+      "conditions": "取得完整日志和错误位置后才选择后续操作",
+      "distinguish": "源代码、生成文件、配置或执行环境等候选来源",
+      "overturn": "新证据定位了可验证的问题，或确认节选与当前失败不相符",
+      "missing_evidence": "错误文件/行/命令、提交 diff、生成步骤与环境；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20"
+      ],
+      "max_visible_time": "2026-10-08 09:00",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "新关键词，信息不足，交人工"
+    }
+  },
+  {
+    "run": {
+      "run_id": "21",
+      "started_at": "2026-10-08 09:50",
+      "commit": "a12",
+      "phase": "build",
+      "status": "success",
+      "duration_s": "85",
+      "log_excerpt": "",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:22"
+    },
+    "decision": null
+  },
+  {
+    "run": {
+      "run_id": "22",
+      "started_at": "2026-10-09 09:00",
+      "commit": "a13",
+      "phase": "publish",
+      "status": "failed",
+      "duration_s": "20",
+      "log_excerpt": "HTTP 403",
+      "rerun_of": "",
+      "source": "材料/运行记录.csv:23"
+    },
+    "decision": {
+      "run_id": "22",
+      "time": "2026-10-09 09:00",
+      "event": "E22",
+      "source": "材料/运行记录.csv:23",
+      "rule": "R4",
+      "fact": "publish / HTTP 403 / commit=a13 / duration_s=20",
+      "main_next_step": "先核查原始响应、有效身份、发布目标和策略/网关证据，再决定处置",
+      "reason": "403 是拒绝响应的节选；身份、目标策略、网关等均只是候选解释",
+      "conditions": "确认响应来自哪个请求和哪一跳；不据此改权限",
+      "distinguish": "身份/策略/目标差异与网关或上游临时拒绝",
+      "overturn": "证实是已解除的上游临时故障且重试安全，或原状态码/阶段记录错误",
+      "missing_evidence": "响应体/头、请求目标、有效身份、策略和上游状态；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [
+        "E07"
+      ],
+      "already_visible_chain_failures": [],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "max_visible_time": "2026-10-09 09:00",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查 403 原始响应与上下文"
+    }
+  },
+  {
+    "run": {
+      "run_id": "23",
+      "started_at": "2026-10-09 09:10",
+      "commit": "a13",
+      "phase": "publish",
+      "status": "failed",
+      "duration_s": "21",
+      "log_excerpt": "HTTP 403",
+      "rerun_of": "22",
+      "source": "材料/运行记录.csv:24"
+    },
+    "decision": {
+      "run_id": "23",
+      "time": "2026-10-09 09:10",
+      "event": "E22",
+      "source": "材料/运行记录.csv:24",
+      "rule": "R1",
+      "fact": "publish / HTTP 403 / commit=a13 / duration_s=21",
+      "main_next_step": "停止机械重试，先核查响应体/头、有效身份、目标和策略/网关证据并交人工决定",
+      "reason": "显式同链已有失败：22；当前再次失败，一次重跑已未解除观察到的故障",
+      "conditions": "当前属于登记的同一链；任何后续操作仍需新证据和相应授权",
+      "distinguish": "区分持续的输入/环境/策略问题与单次扰动；当前不能确定哪一种",
+      "overturn": "新证据确认环境已改变、故障是短时外因且已解除，或原关联被证明登记错误",
+      "missing_evidence": "响应体/头、有效身份、目标和策略/网关证据；完整日志、任务/环境/runner 标识、失败步骤与影响范围",
+      "history_events": [
+        "E07"
+      ],
+      "already_visible_chain_failures": [
+        "22"
+      ],
+      "visible_run_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23"
+      ],
+      "max_visible_time": "2026-10-09 09:10",
+      "handling_records_visible": false,
+      "recorded_outcome_visible": false,
+      "baseline": "每次失败都先建议重试，包括显式重跑再次失败。",
+      "keyword_baseline": "先核查 403 原始响应与上下文"
+    }
+  },
+  {
+    "run": {
+      "run_id": "24",
+      "started_at": "2026-10-09 09:40",
+      "commit": "a13",
+      "phase": "publish",
+      "status": "success",
+      "duration_s": "23",
+      "log_excerpt": "",
+      "rerun_of": "23",
+      "source": "材料/运行记录.csv:25"
+    },
+    "decision": null
+  }
+]

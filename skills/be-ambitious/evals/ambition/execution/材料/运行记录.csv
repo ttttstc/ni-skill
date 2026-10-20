@@ -1,0 +1,25 @@
+run_id,started_at,commit,phase,status,duration_s,log_excerpt,rerun_of
+01,2026-10-01 09:00,a01,build,success,80,,
+02,2026-10-01 09:20,a02,fetch,failed,30,connection reset,
+03,2026-10-01 09:25,a02,fetch,success,33,,02
+04,2026-10-02 09:00,a03,verify,failed,100,expected 2 actual 3,
+05,2026-10-02 09:15,a03,verify,failed,96,expected 2 actual 3,04
+06,2026-10-02 10:00,a04,verify,success,92,,
+07,2026-10-03 09:00,a05,publish,failed,20,HTTP 403,
+08,2026-10-03 09:10,a05,publish,failed,21,HTTP 403,07
+09,2026-10-03 09:40,a05,publish,success,24,,08
+10,2026-10-04 09:00,a06,fetch,failed,32,connection reset,
+11,2026-10-04 09:05,a06,fetch,success,35,,10
+12,2026-10-05 09:00,a07,build,failed,60,No space left on device,
+13,2026-10-05 09:10,a07,build,failed,61,No space left on device,12
+14,2026-10-05 09:40,a07,build,success,60,,13
+15,2026-10-06 09:00,a08,verify,failed,200,deadline exceeded,
+16,2026-10-06 09:15,a08,verify,failed,205,deadline exceeded,15
+17,2026-10-06 10:10,a09,verify,success,90,,
+18,2026-10-07 09:00,a10,fetch,failed,30,deadline exceeded,
+19,2026-10-07 09:05,a10,fetch,success,31,,18
+20,2026-10-08 09:00,a11,build,failed,22,syntax error,
+21,2026-10-08 09:50,a12,build,success,85,,
+22,2026-10-09 09:00,a13,publish,failed,20,HTTP 403,
+23,2026-10-09 09:10,a13,publish,failed,21,HTTP 403,22
+24,2026-10-09 09:40,a13,publish,success,23,,23

@@ -1,0 +1,52 @@
+{
+  "run_fields": [
+    "run_id",
+    "started_at",
+    "commit",
+    "phase",
+    "status",
+    "duration_s",
+    "log_excerpt",
+    "rerun_of"
+  ],
+  "action_fields": [
+    "run_id",
+    "action",
+    "recorded_outcome",
+    "active_minutes"
+  ],
+  "runs": 24,
+  "failures": 14,
+  "actions": 14,
+  "time_range": [
+    "2026-10-01 09:00",
+    "2026-10-09 09:40"
+  ],
+  "action_time_range": "未知：无动作时间字段",
+  "missing_run_fields": {
+    "run_id": 0,
+    "started_at": 0,
+    "commit": 0,
+    "phase": 0,
+    "status": 0,
+    "duration_s": 0,
+    "log_excerpt": 10,
+    "rerun_of": 13
+  },
+  "missing_action_fields": {
+    "run_id": 0,
+    "action": 0,
+    "recorded_outcome": 0,
+    "active_minutes": 0
+  },
+  "issues": [],
+  "explicit_edges": 11,
+  "root_count_all_runs": 13,
+  "root_count_failed_events": 9,
+  "input_sha256": {
+    "运行记录.csv": "47a7eea71e258da5ab5576b574ba1cadd806913216e45f27286a49051ce072d5",
+    "处理记录.csv": "fce502026334c02bd595eb0679c3aa59f004a7d975b60595fd4ca048dd049509",
+    "资料说明.md": "801090ae2be7e918ad54ec89d6df124ad4788c9549cfe4ce9d788ac8f741015e",
+    "任务.md": "fb4123a12342ccc6d4d8faef59d30ef84444546c15df63492e828c8a06444008"
+  }
+}
