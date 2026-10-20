@@ -12,7 +12,7 @@ After installation, name the skill, your goal, and your sources in a conversatio
 
 | Goal | Example request |
 |---|---|
-| Deepen a task | Use be-ambitious to identify raw sources, expert methods, and external checks for this task. Rewrite the prompt first |
+| Imagine bigger goals | Use be-ambitious to raise the goal's level of abstraction, expand ambition and scope, bring in methods from other fields, then deepen the chosen direction |
 | Organize sources | Use ni-video2md to turn this public video into Markdown: 〈URL〉 |
 | Find ebooks | Use ni-book-downloader to download a book by title. Confirm text or PDF format first |
 | Learn a domain | Use ni-fde-copilot to read these sources. Confirm a learning blueprint before writing the guide |
@@ -58,7 +58,7 @@ Configure dependencies as needed: web capture uses Node.js and a browser; local 
 
 | Task | Skills and purpose |
 |---|---|
-| Task refinement | [be-ambitious](./skills/be-ambitious/SKILL.md): keep the goal and scope, identify expert moves, raw sources, specific tools, and external checks, then rewrite the prompt around actions and intended outcomes; [installation and source](./skills/be-ambitious/README.md) |
+| Goal and task exploration | [be-ambitious](./skills/be-ambitious/SKILL.md): explore higher-level outcomes, expand imagination and scope, bring in methods from other fields, and add expert evidence; rewrite the prompt after a goal is chosen; [installation and source](./skills/be-ambitious/README.md) |
 | Source collection | [ni-url2md](./skills/ni-url2md/SKILL.md): web pages to Markdown; [ni-video2md](./skills/ni-video2md/SKILL.md): local public-video transcription; [douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md): batch transcripts from a Douyin creator; [ni-book-downloader](./skills/ni-book-downloader/SKILL.md): download ebooks by title, separating text formats from PDF |
 | Learning and research | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md): learning blueprints and guides; [ni-unknown-first](./skills/ni-unknown-first/SKILL.md): identify unknowns and next steps; [ni-research](./skills/ni-research/SKILL.md): deep research, discussion, and article outlines |
 | Product and architecture | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md): product architecture baselines; [think-like-architect](./skills/think-like-architect/SKILL.md): first-cut architecture decisions |
