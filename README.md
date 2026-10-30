@@ -22,6 +22,9 @@
 | 重构一张照片 | 用 ni-poster r，把这张旅行照重构成克制的超现实电影画面：〈照片〉 |
 | 做金属光影动效 | 用 ni-picarts，把这张图做成浅浮雕金属擦拭互动网页，先做一张样片：〈图片〉 |
 | 把方案讲清楚 | 用 ni-explain 把这段技术方案写清楚，去掉万能动词和含糊词 |
+| 做一本文献可追溯的书 | 用 ni-poetry-book 把诗词、史料或 Markdown 文章排成可重建 PDF |
+| 做王虹手写风演示 | 用 ni-wanghong-handwritten-style，按指令输出 PPT、视频或两者 |
+| 做动态架构图 | 用 ni-live-panel 把架构配置生成循环网页或 MP4 |
 
 ## 安装
 
@@ -53,6 +56,7 @@
 安装后的结构应为 `<skills 目录>/<技能名>/SKILL.md`。具体目录约定见 [Codex](https://developers.openai.com/codex/skills)、[Claude Code](https://code.claude.com/docs/en/skills) 和 [OpenCode](https://opencode.ai/docs/skills/) 官方文档。
 
 依赖按需配置：网页抓取需要 Node.js 与浏览器；本地视频转写需要 Python 和 Whisper 等工具；微信草稿推送需要公众号凭证；3D 建模需要图像生成与图生 3D 服务；ni-picarts 需要图像生成，金属浮雕互动流程另需 Python（Pillow、NumPy），自动浏览器验收需要 Node.js 和 Playwright。具体配置见各技能文档。
+ni-poetry-book 需要 LaTeX 和 Ghostscript；ni-wanghong-handwritten-style 需要浏览器，视频模式还需 Node.js、ffmpeg 和 ffprobe。这两个技能均附带所需字体；ni-live-panel 需要 Python、Chrome/Chromium 和 ffmpeg，Windows 原生运行另需 websocket-client。详细依赖与平台限制见各技能文档。
 
 ## 按场景选工具
 
@@ -62,9 +66,9 @@
 | 资料整理 | [ni-url2md](./skills/ni-url2md/SKILL.md)：网页转 Markdown；[ni-video2md](./skills/ni-video2md/SKILL.md)：公开视频本地转写；[douyin-bulk-transcript-exporter](./skills/douyin-bulk-transcript-exporter/SKILL.md)：抖音博主逐字稿批量归档；[ni-book-downloader](./skills/ni-book-downloader/SKILL.md)：按书名下载电子书，严格区分文字版与 PDF |
 | 学习与研究 | [ni-fde-copilot](./skills/ni-fde-copilot/SKILL.md)：专业资料学习蓝图与指南；[ni-unknown-first](./skills/ni-unknown-first/SKILL.md)：识别未知与下一步；[ni-research](./skills/ni-research/SKILL.md)：深度研究、讨论结论与文章大纲 |
 | 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |
-| 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-explain](./skills/ni-explain/SKILL.md)：讲清楚（技术方案/汇报）；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README |
+| 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-explain](./skills/ni-explain/SKILL.md)：讲清楚（技术方案/汇报）；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README；[ni-poetry-book](./skills/ni-poetry-book/SKILL.md)：诗词、史料和技术文章排成可校验 PDF 书籍 |
 | 文章处理 | [ni-inspect](./skills/ni-inspect/SKILL.md)：发布前检查；[ni-formatter](./skills/ni-formatter/SKILL.md)：排版；[ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md)：配图提示词；[ni-draft](./skills/ni-draft/SKILL.md)：推送微信草稿箱 |
-| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报与纪实照片超现实重构（五种模式）；[ni-picarts](./skills/ni-picarts/SKILL.md)：金属浅浮雕、东方色域地景海报、照片厚涂微景观海报；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收 |
+| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报与纪实照片超现实重构（五种模式）；[ni-picarts](./skills/ni-picarts/SKILL.md)：金属浅浮雕、东方色域地景海报、照片厚涂微景观海报；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收；[ni-wanghong-handwritten-style](./skills/ni-wanghong-handwritten-style/SKILL.md)：王虹手写风 PPT 或视频；[ni-live-panel](./skills/ni-live-panel/SKILL.md)：动态架构图 |
 
 需要串联文章生产时，用 [ni-article-workflow](./skills/ni-article-workflow/SKILL.md) 从选题、研究和大纲推进到初稿，支持断点续跑。默认先确认研究结论、大纲和写作授权；审稿、配图、排版与推送草稿箱另行调用。
 

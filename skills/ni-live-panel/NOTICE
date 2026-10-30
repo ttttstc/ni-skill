@@ -1,0 +1,18 @@
+live-panel - notices
+
+The MIT license (see LICENSE) covers the code in this repository. The visual design,
+layout and wording that examples/codex-agents/ recreates belong to the original
+author, @thedelost (see README, "Credits"). The infographic re-animated in
+examples/agent-architecture/ belongs to 小红书 @林纾. The Airbnb figures in
+examples/airbnb/ are Airbnb's own statements from a public interview.
+
+assets/fonts/SmileySans-Oblique.woff2 is 得意黑 Smiley Sans, licensed under the SIL Open
+Font License 1.1 (assets/fonts/SmileySans-OFL.txt), not under MIT.
+
+assets/views/loop.js embeds icon paths from Lucide (https://lucide.dev), ISC License; the
+full text, with the Feather (MIT) portions, is in assets/views/LUCIDE-LICENSE.txt.
+Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022 as part of Feather (MIT).
+All other copyright (c) for Lucide are held by Lucide Contributors 2022.
+The flow drawn in examples/loop-poteto/ is described in a public post by Lauren Tan @poteto
+(https://x.com/poteto/status/2107510472601985336); its visual grammar follows an infographic
+by @akshay_pachaar. Iteration counts in that example are illustrative.

@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use or reference live-panel, please cite it as below."
+type: software
+title: "live-panel: animated architecture diagrams from one JSON file"
+abstract: >-
+  live-panel is an open-source agent skill and renderer that turns one JSON
+  config into an animated architecture diagram - a terminal-style live panel
+  or a light pastel infographic - rendered to an H.264 mp4 or a self-contained
+  web page. The motion idea comes from an architecture-diagram clip by
+  @thedelost.
+authors:
+  - alias: "ythx-101"
+    given-names: "Qingyue"
+    website: "https://x.com/YuLin807"
+repository-code: "https://github.com/ythx-101/live-panel-skill"
+url: "https://github.com/ythx-101/live-panel-skill"
+license: MIT
+date-released: "2026-10-03"
+keywords:
+  - animated architecture diagram
+  - architecture diagram
+  - agent architecture
+  - live panel
+  - json to video
+  - diagram as code
+  - claude code skill
+  - agent skill
+  - mp4
+  - xiaohongshu

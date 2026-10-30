@@ -1,0 +1,69 @@
+{
+ "meta": {
+  "title": "Agent 自动修 Bug 流水线 · funnel",
+  "lang": "zh"
+ },
+ "canvas": {
+  "preset": "4:5",
+  "duration": 36,
+  "fps": 30,
+  "preroll": 8
+ },
+ "theme": {
+  "preset": "light-pastel",
+  "titleFont": "smiley"
+ },
+ "titlebar": {
+  "text": "~/funnel/agent-bugfix — live-panel"
+ },
+ "credit": {
+  "text": "Agent 自动修 Bug 流水线 · illustrative / 示意数据 · live-panel funnel view",
+  "c": "muted"
+ },
+ "elements": [
+  {
+   "type": "view",
+   "kind": "funnel",
+   "title": "Agent 自动修 Bug 流水线",
+   "subtitle": "from report to merged PR · 示意数据",
+   "period": 18,
+   "stages": [
+    {
+     "label": "Bug 报告",
+     "sub": "Reports",
+     "value": 1200
+    },
+    {
+     "label": "分诊有效",
+     "sub": "Triaged",
+     "value": 860
+    },
+    {
+     "label": "成功复现",
+     "sub": "Reproduced",
+     "value": 610
+    },
+    {
+     "label": "生成补丁",
+     "sub": "Patched",
+     "value": 480
+    },
+    {
+     "label": "测试通过",
+     "sub": "Tests pass",
+     "value": 390
+    },
+    {
+     "label": "评审通过",
+     "sub": "Approved",
+     "value": 320
+    },
+    {
+     "label": "合并入库",
+     "sub": "Merged",
+     "value": 300
+    }
+   ]
+  }
+ ]
+}
