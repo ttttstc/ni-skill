@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 import shutil
 
-from book_common import ManuscriptError, file_sha256, validate_manuscript
+from book_common import ManuscriptError, console_json, file_sha256, validate_manuscript
 from markdown_article import article_links, materialize_images, parse_markdown
 from render_book import render
 
@@ -122,7 +122,7 @@ def main():
         result = render(argparse.Namespace(input=str(book_json), output=args.output, theme=args.theme))
         result["images"] = images
         result["assets"] = str(Path(args.assets_dir).expanduser().resolve()) if args.assets_dir else str(Path(args.output).expanduser().resolve().parent / f"{Path(args.output).name}-assets")
-        print(json.dumps(result, ensure_ascii=False))
+        print(console_json(result))
     except (OSError, ManuscriptError) as exc:
         parser.exit(1, f"技术文章构建失败：{exc}\n")
 

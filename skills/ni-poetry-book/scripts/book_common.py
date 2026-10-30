@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 
 from fontTools.ttLib import TTCollection, TTFont
 
@@ -23,6 +24,15 @@ METADATA_DEFAULTS = {
 
 class ManuscriptError(ValueError):
     pass
+
+
+def console_json(value, **kwargs):
+    text = json.dumps(value, ensure_ascii=False, **kwargs)
+    try:
+        text.encode(sys.stdout.encoding or "utf-8")
+    except UnicodeEncodeError:
+        return json.dumps(value, ensure_ascii=True, **kwargs)
+    return text
 
 
 def find_ghostscript():

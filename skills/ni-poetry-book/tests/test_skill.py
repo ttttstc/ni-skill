@@ -83,6 +83,14 @@ class PoetryBookSkillTests(unittest.TestCase):
         )
         self.assertEqual(len(json.loads(result.stdout)["themes"]), 6)
 
+    def test_theme_list_cli_supports_legacy_console_encoding(self):
+        env = dict(os.environ, PYTHONIOENCODING="cp1252")
+        result = subprocess.run(
+            [sys.executable, str(SKILL_HOME / "scripts" / "build_style.py"), "--list"],
+            check=True, capture_output=True, text=True, encoding="ascii", env=env,
+        )
+        self.assertEqual(json.loads(result.stdout)["themes"][0]["name"], "烟雨留白")
+
     def test_example_is_valid_and_not_sushi(self):
         quality = validate_manuscript(self.example)
         self.assertEqual(quality["works"], 4)

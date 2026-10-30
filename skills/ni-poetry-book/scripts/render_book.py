@@ -11,6 +11,7 @@ import sys
 
 from book_common import (
     ManuscriptError,
+    console_json,
     find_ghostscript,
     SKILL_HOME,
     TeXCodec,
@@ -222,7 +223,7 @@ def main():
     parser.add_argument("--output", required=True, help="新的或空的输出目录")
     args = parser.parse_args()
     try:
-        print(json.dumps(render(args), ensure_ascii=False))
+        print(console_json(render(args)))
     except (OSError, ManuscriptError, subprocess.TimeoutExpired) as exc:
         parser.exit(1, f"Poetry Book 构建失败：{exc}\n")
 

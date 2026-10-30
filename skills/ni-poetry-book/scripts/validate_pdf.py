@@ -9,7 +9,7 @@ import unicodedata
 
 import fitz
 from PIL import Image, ImageDraw
-from book_common import find_ghostscript
+from book_common import console_json, find_ghostscript
 
 
 def normalized(text):
@@ -229,7 +229,7 @@ def main():
         "ghostscript_returncode": ghostscript.returncode,
     }
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"passed": report["passed"], "checks": len(checks), "failed": sum(not x["passed"] for x in checks), "pages": len(doc), "works": len(expected_ids), "blank_pages": len(blank_pages), "out_of_bounds": len(out_of_bounds), "report": str(report_path)}, ensure_ascii=False))
+    print(console_json({"passed": report["passed"], "checks": len(checks), "failed": sum(not x["passed"] for x in checks), "pages": len(doc), "works": len(expected_ids), "blank_pages": len(blank_pages), "out_of_bounds": len(out_of_bounds), "report": str(report_path)}))
     for item in checks:
         if not item["passed"]:
             print(f"FAIL {item['name']}: {item['detail']}")

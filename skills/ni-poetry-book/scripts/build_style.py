@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import argparse
-import json
 from pathlib import Path
 import re
 import sys
 
-from book_common import ManuscriptError, SKILL_HOME, TeXCodec, load_json
+from book_common import ManuscriptError, SKILL_HOME, TeXCodec, console_json, load_json
 
 THEME_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
@@ -117,9 +116,9 @@ def main():
     try:
         if args.list:
             payload, _ = load_themes(args.config)
-            print(json.dumps(payload, ensure_ascii=False, indent=2))
+            print(console_json(payload, indent=2))
             return
-        print(json.dumps(build_style(args), ensure_ascii=False))
+        print(console_json(build_style(args)))
     except (OSError, ManuscriptError) as exc:
         parser.exit(1, f"Poetry Book 样式生成失败：{exc}\n")
 
