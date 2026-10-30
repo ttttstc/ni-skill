@@ -1,0 +1,43 @@
+# live-panel
+
+> live-panel (GitHub: ythx-101/live-panel-skill) is an open-source agent skill and renderer that turns one JSON config into an animated architecture diagram: a terminal-style "live panel" or a light pastel infographic, rendered to an H.264 mp4 or a self-contained web page. The layout stays fixed while packets flow along wires, a log scrolls, counters tick, bars flip state and side triggers light up. 中文：把一个 JSON 配置渲染成会动的架构图（动态架构图 / agent 架构动图），输出 mp4 或网页，适配 X 4:5 与小红书 3:4。
+
+Key facts:
+- Input: one JSON file (canvas, theme, boxes, wires, packet flows, state machines, log). The HTML template never needs editing.
+- Output: H.264 mp4 (silent AAC track) and/or a self-contained HTML page that loops live in a browser.
+- Themes: terminal-dark, light-pastel. Canvas presets: 4:5 = 1200x1500 (X), 3:4 = 1080x1440 (Xiaohongshu), 1:1 = 1080x1080.
+- Runs locally on Windows, Linux and macOS: Python 3.8+, Chrome/Chromium and ffmpeg. Windows requires websocket-client. No API key is needed.
+- Deterministic: every frame is a pure function of time (window.seek(t)); check_frames.py measures text overflow/overlap from the DOM and proves replays are identical.
+- Agent skill: SKILL.md works with Claude Code, Codex and other agents that load SKILL.md skills.
+- Credit: the look and motion grammar come from an architecture-diagram clip by @thedelost (https://x.com/thedelost/status/2105398038026195279). Recreations must credit the original author; numbers without a source are labelled "illustrative".
+- License: MIT for the code; the recreated example designs belong to their original authors.
+
+## Docs
+
+- [README](https://github.com/ythx-101/live-panel-skill/blob/main/README.md): overview, quick start, FAQ, comparison with Mermaid / Excalidraw / Remotion / Manim
+- [SKILL.md](https://github.com/ythx-101/live-panel-skill/blob/main/SKILL.md): the agent skill - when to use it, fixed procedure, motion rules, credit rule
+- [Config schema](https://github.com/ythx-101/live-panel-skill/blob/main/references/config-schema.md): every JSON key, element and state machine
+- [Motion grammar](https://github.com/ythx-101/live-panel-skill/blob/main/references/motion-grammar.md): the three-tempo motion rules and timing recipe
+- [Views](https://github.com/ythx-101/live-panel-skill/blob/main/references/views.md): auto-laid-out diagram shapes (`ring` loop, `funnel` conversion, `loop` nested workflow with decisions; nebula/timeline/tree/kpi planned) that work at 4:5, 3:4 and 1:1 in both themes; acceptance gate `scripts/verify_view.py`
+
+## Examples
+
+- [Minimal config](https://github.com/ythx-101/live-panel-skill/blob/main/examples/minimal/config.json): 1:1, three boxes, packets, a counter and a log
+- [Codex agent tree](https://github.com/ythx-101/live-panel-skill/blob/main/examples/codex-agents/config.json): terminal-dark 4:5 agent-tree panel (credited recreation of @thedelost)
+- [Airbnb](https://github.com/ythx-101/live-panel-skill/blob/main/examples/airbnb/config.json): terminal-dark 4:5, Chinese content, figures from a public interview
+- [AI Agent architecture](https://github.com/ythx-101/live-panel-skill/blob/main/examples/agent-architecture/config.json): light-pastel 3:4 Xiaohongshu infographic made to move (credited to 小红书 @林纾)
+- [Ring view](https://github.com/ythx-101/live-panel-skill/blob/main/examples/ring/config.json) and [funnel view](https://github.com/ythx-101/live-panel-skill/blob/main/examples/funnel/config.json): agent loop and bug-fix pipeline, laid out automatically
+- [Loop view](https://github.com/ythx-101/live-panel-skill/blob/main/examples/loop-poteto/config.json): outer/inner loop with decision diamonds and loop-backs, from a public thread by @poteto
+- [Karpathy funnel](https://github.com/ythx-101/live-panel-skill/blob/main/examples/funnel-karpathy/config.json): real-data funnel from 8B people to 5,000, log-scale widths
+
+## Code
+
+- [scripts/render.py](https://github.com/ythx-101/live-panel-skill/blob/main/scripts/render.py): config -> mp4 (and --html-out page)
+- [scripts/check_frames.py](https://github.com/ythx-101/live-panel-skill/blob/main/scripts/check_frames.py): overflow/overlap checks, PNG export, replay determinism
+- [scripts/scaffold.py](https://github.com/ythx-101/live-panel-skill/blob/main/scripts/scaffold.py): short spec -> complete config (rows of boxes, wires, rail, log)
+- [scripts/verify_view.py](https://github.com/ythx-101/live-panel-skill/blob/main/scripts/verify_view.py): view acceptance gate (3 canvases x 2 themes)
+- [assets/template.html](https://github.com/ythx-101/live-panel-skill/blob/main/assets/template.html): the generic page (never edited per diagram)
+
+## Optional
+
+- [CITATION.cff](https://github.com/ythx-101/live-panel-skill/blob/main/CITATION.cff): how to cite this repository

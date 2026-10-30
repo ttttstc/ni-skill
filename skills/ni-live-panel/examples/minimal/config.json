@@ -1,0 +1,29 @@
+{
+  "meta": {"title": "minimal live-panel", "lang": "en"},
+  "canvas": {"preset": "1:1", "duration": 12, "fps": 30, "preroll": 4},
+  "theme": {"preset": "terminal-dark"},
+  "clock": {"start": "09:00:00", "rate": 1},
+  "titlebar": {"text": "~/minimal - live-panel"},
+  "credit": {"text": "minimal example - all numbers are illustrative", "y": 1060},
+  "machines": {
+    "reqs": {"type": "counter", "start": 1200, "rate": 7, "format": "comma"},
+    "agent": {"type": "lane", "period": 6, "run": 4, "off": 0.5, "busy": "working", "done": ["done"],
+              "log": {"who": "agent", "c": "gr", "msgs": [["task finished, result sent back", "ok"]]}}
+  },
+  "elements": [
+    {"type": "text", "x": 0, "w": 1080, "y": 90, "align": "center", "runs": [{"t": "USER -> AGENT -> TOOLS", "c": "fg", "b": 1}]},
+    {"type": "box", "x": 390, "y": 140, "w": 300, "h": 110, "color": "cy", "pad": [12, 14],
+     "lines": [{"t": "user", "c": "cy", "b": 1}, {"runs": ["requests ", {"v": "reqs"}]}, {"t": "(illustrative)", "c": "dim"}]},
+    {"type": "line", "from": [540, 250], "to": [540, 330]},
+    {"type": "box", "x": 390, "y": 330, "w": 300, "h": 110, "color": "gr", "pad": [12, 14],
+     "lines": [{"t": "agent", "c": "gr", "b": 1}, {"runs": [{"v": "agent"}]}]},
+    {"type": "line", "from": [540, 440], "to": [540, 520]},
+    {"type": "box", "x": 390, "y": 520, "w": 300, "h": 110, "color": "ye", "pad": [12, 14],
+     "lines": [{"t": "tools", "c": "ye", "b": 1}, "search / code / files"]},
+    {"type": "flow", "path": [[540, 250], [540, 330]], "period": 1.5, "offsets": [0, 0.7], "color": "cy"},
+    {"type": "flow", "path": [[540, 440], [540, 520]], "period": 2, "offsets": [0.3], "color": "gr"},
+    {"type": "log", "x": 40, "y": 700, "w": 1000, "rows": 4, "padTop": 16, "padBottom": 30, "padLeft": 20,
+     "title": "log", "titleX": 36, "titleW": 80,
+     "cols": [{"key": "time", "x": 0}, {"key": "who", "x": 130}, {"key": "m", "x": 260}, {"key": "g", "x": 860}]}
+  ]
+}

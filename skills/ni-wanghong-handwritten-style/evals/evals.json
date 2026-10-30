@@ -1,0 +1,56 @@
+{
+  "skill": "ni-wanghong-handwritten-style",
+  "evals": [
+    {
+      "id": "ppt-article-to-full-deck",
+      "prompt": "把这篇中文技术文章做成 16:9 王虹手写PPT风格的完整 HTML 幻灯片，并导出全部 PNG。",
+      "expected": [
+        "极简封面",
+        "一页一个问题",
+        "完整逻辑链",
+        "浏览器翻页",
+        "逐页PNG",
+        "无溢出"
+      ]
+    },
+    {
+      "id": "ppt-notability-chinese-annotations",
+      "prompt": "做一套 Notability 学术手写幻灯片，用中文 neat-annotations 标出推荐档、风险和结论。",
+      "expected": [
+        "中文标注可读",
+        "标注不遮挡",
+        "颜色有明确含义",
+        "关键结论仍在正文"
+      ]
+    },
+    {
+      "id": "ppt-dense-research-talk",
+      "prompt": "把论文讲稿整理成 45 分钟数学报告风 HTML PPT，要求工整、干净、信息量大。",
+      "expected": [
+        "高信息密度",
+        "逻辑连续",
+        "手绘图表",
+        "每页讲稿备注",
+        "总览检查"
+      ]
+    },
+    {
+      "id": "video-1",
+      "prompt": "把 ni-wanghong-handwritten-style 生成的这套 HTML 做成动画版，使用和静态导出一致的字体，输出 MP4，不要旁白音频。",
+      "expected_output": "直接渲染原 HTML DOM，锁定选定的字体并校验实际字形，输出 1920x1080、30fps、H.264、零音频流 MP4 与 cover.png。",
+      "files": []
+    },
+    {
+      "id": "video-2",
+      "prompt": "我有一套王虹手写 HTML PPT，保留原字号、配色、图表和标注，做成 45 秒纯画面视频。",
+      "expected_output": "不重新排版页面，按 DOM 顺序增加元素进入、标记揭示和 SVG 路径绘制，媒体检查通过。",
+      "files": []
+    },
+    {
+      "id": "video-3",
+      "prompt": "先用王虹手写 PPT skill 做这篇文章，再直接生成无声动画 MP4。",
+      "expected_output": "先完成并检查原 HTML，再用本 Skill 直接渲染相同 DOM，交付 MP4、封面和媒体验证结果。",
+      "files": []
+    }
+  ]
+}

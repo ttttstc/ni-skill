@@ -1,0 +1,508 @@
+{
+ "meta": {
+  "title": "AQuA inner + outer loop (excalidraw view)",
+  "lang": "en"
+ },
+ "canvas": {
+  "preset": "4:5",
+  "duration": 32,
+  "fps": 30
+ },
+ "theme": {
+  "preset": "light-pastel",
+  "font": "Excalifont, Xiaolai, \"Noto Sans CJK SC\", sans-serif",
+  "fonts": [
+   {
+    "family": "Excalifont",
+    "src": "Excalifont-Regular-Latin.woff2",
+    "weight": "400"
+   }
+  ],
+  "colors": {
+   "bg": "#ffffff",
+   "muted": "#5c636b",
+   "xblue": "#b8d3ec",
+   "xgreen": "#bedcb9",
+   "xyellow": "#f5e49e",
+   "xred": "#ecbcb6",
+   "xviolet": "#d3c6ef"
+  }
+ },
+ "credit": {
+  "text": "after Google adk-recipes AQuA diagram, via @Saboo_Shubham_ · https://github.com/google/adk-recipes/tree/main/core/python/ambient-quality-agent\nhttps://x.com/Saboo_Shubham_/status/2112428713979900248 · recreation, motion illustrative · made with live-panel (excalidraw view)",
+  "y": 1472,
+  "size": 12.5,
+  "lh": 16,
+  "c": "#868e96",
+  "font": "\"Noto Sans CJK SC\", sans-serif"
+ },
+ "elements": [
+  {
+   "type": "view",
+   "kind": "excalidraw",
+   "space": [
+    1000,
+    1250
+   ],
+   "period": 32,
+   "t0": 1.55,
+   "seed": 11,
+   "boil": {
+    "step": 0.125,
+    "variants": 4,
+    "amp": 0.5
+   },
+   "noteSize": 30,
+   "roughness": 1.05,
+   "strokeWidth": 2.6,
+   "edgeRough": 0.8,
+   "edgeMulti": false,
+   "zones": [
+    {
+     "x": 34,
+     "y": 132,
+     "w": 932,
+     "h": 548,
+     "fill": "#f1f6fc",
+     "r": 40
+    },
+    {
+     "x": 34,
+     "y": 744,
+     "w": 932,
+     "h": 460,
+     "fill": "#f1f7ef",
+     "r": 40
+    }
+   ],
+   "texts": [
+    {
+     "t": "Ambient Quality Agent (AQuA)",
+     "x": 500,
+     "y": 64,
+     "size": 56,
+     "c": "ink",
+     "weight": 0.8,
+     "underline": {
+      "hue": "yellow",
+      "width": 16,
+      "dy": 20,
+      "tilt": -4
+     }
+    },
+    {
+     "t": "INNER LOOP:\nBuild & Test\n(local / CI)",
+     "x": 140,
+     "y": 200,
+     "size": 28,
+     "c": "slate"
+    },
+    {
+     "t": "OUTER LOOP:\nShip, Monitor & Learn\n(24/7 in production)",
+     "x": 940,
+     "y": 1153,
+     "size": 22,
+     "c": "sage",
+     "align": "right"
+    }
+   ],
+   "icons": [
+    {
+     "kind": "laptop",
+     "x": 500,
+     "y": 372,
+     "w": 112
+    },
+    {
+     "kind": "cloud",
+     "x": 500,
+     "y": 966,
+     "w": 150
+    }
+   ],
+   "nodes": [
+    {
+     "id": "offline",
+     "t": "offline\nevals",
+     "x": 500,
+     "y": 222,
+     "w": 222,
+     "h": 112,
+     "hue": "green",
+     "size": 38
+    },
+    {
+     "id": "evalset",
+     "t": "eval set",
+     "x": 800,
+     "y": 405,
+     "w": 222,
+     "h": 96,
+     "hue": "blue",
+     "size": 38
+    },
+    {
+     "id": "coding",
+     "t": "coding\nagent /\noptimizer",
+     "x": 200,
+     "y": 405,
+     "w": 222,
+     "h": 140,
+     "hue": "yellow",
+     "size": 34
+    },
+    {
+     "id": "compare",
+     "t": "compare\n+ deploy",
+     "x": 500,
+     "y": 592,
+     "w": 226,
+     "h": 112,
+     "hue": "red",
+     "size": 38
+    },
+    {
+     "id": "live",
+     "t": "live\ntraffic",
+     "x": 500,
+     "y": 810,
+     "w": 210,
+     "h": 108,
+     "hue": "blue",
+     "size": 38
+    },
+    {
+     "id": "online",
+     "t": "online\nevals",
+     "x": 800,
+     "y": 966,
+     "w": 216,
+     "h": 112,
+     "hue": "violet",
+     "size": 38
+    },
+    {
+     "id": "sweep",
+     "t": "AQuA\nsweep",
+     "x": 500,
+     "y": 1122,
+     "w": 216,
+     "h": 108,
+     "hue": "green",
+     "size": 38
+    },
+    {
+     "id": "root",
+     "t": "AQuA root\ncause",
+     "x": 200,
+     "y": 966,
+     "w": 226,
+     "h": 116,
+     "hue": "yellow",
+     "size": 38
+    }
+   ],
+   "edges": [
+    {
+     "id": "e1",
+     "from": "evalset",
+     "to": "offline",
+     "fromSide": "top",
+     "toSide": "right",
+     "bend": 0.25,
+     "fromOff": -0.45,
+     "toOff": 0
+    },
+    {
+     "id": "e2",
+     "from": "offline",
+     "to": "coding",
+     "fromSide": "left",
+     "toSide": "top",
+     "bend": 0.25,
+     "fromOff": 0,
+     "toOff": 0
+    },
+    {
+     "id": "e3",
+     "from": "coding",
+     "to": "compare",
+     "fromSide": "bottom",
+     "toSide": "left",
+     "bend": 0.25,
+     "fromOff": 0,
+     "toOff": 0
+    },
+    {
+     "id": "e4",
+     "from": "compare",
+     "to": "evalset",
+     "fromSide": "right",
+     "toSide": "bottom",
+     "bend": 0.25,
+     "fromOff": 0,
+     "toOff": -0.1
+    },
+    {
+     "id": "deploy",
+     "from": "compare",
+     "to": "live",
+     "fromSide": "bottom",
+     "toSide": "top",
+     "bend": 0,
+     "fromOff": 0,
+     "toOff": 0,
+     "width": 3.6,
+     "label": "deploy",
+     "labelAt": [
+      566,
+      707
+     ]
+    },
+    {
+     "id": "e5",
+     "from": "live",
+     "to": "online",
+     "fromSide": "right",
+     "toSide": "top",
+     "bend": -0.25,
+     "fromOff": 0,
+     "toOff": 0
+    },
+    {
+     "id": "e6",
+     "from": "online",
+     "to": "sweep",
+     "fromSide": "bottom",
+     "toSide": "right",
+     "bend": -0.25,
+     "fromOff": 0,
+     "toOff": 0
+    },
+    {
+     "id": "e7",
+     "from": "sweep",
+     "to": "root",
+     "fromSide": "left",
+     "toSide": "bottom",
+     "bend": -0.25,
+     "fromOff": 0,
+     "toOff": 0
+    },
+    {
+     "id": "d1",
+     "from": "online",
+     "to": "evalset",
+     "fromSide": "top",
+     "toSide": "bottom",
+     "bend": 0.17,
+     "fromOff": 0.72,
+     "toOff": 0.72,
+     "dashed": true,
+     "label": "failing transcripts\nseed evals",
+     "labelAt": [
+      908,
+      712
+     ],
+     "labelAlign": "right"
+    },
+    {
+     "id": "d2",
+     "from": "root",
+     "to": "coding",
+     "fromSide": "top",
+     "toSide": "bottom",
+     "bend": -0.17,
+     "fromOff": -0.72,
+     "toOff": -0.72,
+     "dashed": true,
+     "label": "root causes, evidence\n& raw traces",
+     "labelAt": [
+      72,
+      712
+     ],
+     "labelAlign": "left"
+    }
+   ],
+   "steps": [
+    {
+     "node": "compare",
+     "edge": "e4",
+     "note": "not better yet",
+     "at": [
+      500,
+      488
+     ],
+     "align": "center",
+     "dur": 1.5,
+     "dwell": 0.62
+    },
+    {
+     "node": "evalset",
+     "edge": "e1",
+     "note": "run it again",
+     "at": [
+      846,
+      312
+     ],
+     "align": "center",
+     "dur": 1
+    },
+    {
+     "node": "offline",
+     "edge": "e2",
+     "note": "scoring offline…",
+     "at": [
+      640,
+      156
+     ],
+     "align": "left",
+     "dur": 1
+    },
+    {
+     "node": "coding",
+     "edge": "e3",
+     "note": "trying another fix",
+     "at": [
+      338,
+      454
+     ],
+     "align": "left",
+     "dur": 1
+    },
+    {
+     "node": "compare",
+     "edge": "deploy",
+     "note": "better → ship it",
+     "at": [
+      500,
+      488
+     ],
+     "align": "center",
+     "dur": 1.5
+    },
+    {
+     "node": "live",
+     "edge": "e5",
+     "note": "real users, 24/7",
+     "at": [
+      500,
+      910
+     ],
+     "align": "center",
+     "dur": 1
+    },
+    {
+     "node": "online",
+     "edge": "e6",
+     "note": "reviewing sessions",
+     "at": [
+      692,
+      897
+     ],
+     "align": "right",
+     "dur": 1
+    },
+    {
+     "node": "sweep",
+     "edge": "e7",
+     "note": "grouping failures",
+     "at": [
+      500,
+      1024
+     ],
+     "align": "center",
+     "dur": 1
+    },
+    {
+     "node": "root",
+     "edge": "d2",
+     "note": "root cause found",
+     "at": [
+      140,
+      870
+     ],
+     "align": "left",
+     "dur": 1
+    },
+    {
+     "node": "coding",
+     "edge": "e3",
+     "note": "applying the fix",
+     "at": [
+      338,
+      454
+     ],
+     "align": "left",
+     "dur": 1
+    },
+    {
+     "node": "compare",
+     "edge": "deploy",
+     "note": "better → ship it",
+     "at": [
+      500,
+      488
+     ],
+     "align": "center",
+     "dur": 1.5
+    },
+    {
+     "node": "live",
+     "edge": "e5",
+     "note": "real users, 24/7",
+     "at": [
+      500,
+      910
+     ],
+     "align": "center",
+     "dur": 1
+    },
+    {
+     "node": "online",
+     "edge": "d1",
+     "note": "a failing transcript!",
+     "at": [
+      692,
+      897
+     ],
+     "align": "right",
+     "dur": 1
+    },
+    {
+     "node": "evalset",
+     "edge": "e1",
+     "note": "new eval case",
+     "at": [
+      846,
+      312
+     ],
+     "align": "center",
+     "dur": 1
+    },
+    {
+     "node": "offline",
+     "edge": "e2",
+     "note": "scoring offline…",
+     "at": [
+      640,
+      156
+     ],
+     "align": "left",
+     "dur": 1
+    },
+    {
+     "node": "coding",
+     "edge": "e3",
+     "note": "patching the agent",
+     "at": [
+      338,
+      454
+     ],
+     "align": "left",
+     "dur": 1
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,375 @@
+{
+ "meta": {
+  "title": "Grok Bot 负责人 Lauren Tan 的每日 Loop",
+  "lang": "zh"
+ },
+ "canvas": {
+  "preset": "4:5",
+  "duration": 18,
+  "fps": 30
+ },
+ "theme": {
+  "preset": "terminal-dark",
+  "titleFont": "smiley"
+ },
+ "titlebar": {
+  "text": "~/loop/poteto — live-panel"
+ },
+ "credit": {
+  "text": "流程原文：Lauren Tan @poteto · https://x.com/poteto/status/2107510472601985336 · 视觉语法参考 @akshay_pachaar · Lucide (ISC) · 轮次为示意",
+  "c": "muted",
+  "x": 16,
+  "w": 1048,
+  "align": "left"
+ },
+ "elements": [
+  {
+   "type": "view",
+   "kind": "loop",
+   "title": "Grok Bot 负责人 Lauren Tan 的每日 Loop",
+   "subtitle": "Grok Bot 管外环 · Cursor 管内环 · 人只在最后拍板",
+   "period": 50,
+   "cols": 4,
+   "status": {
+    "node": "status",
+    "round": "第 {n} 轮 · iteration",
+    "step": "当前步骤 · {label}",
+    "ambientTitle": "每日 Loop · 一直在转",
+    "ambientSub": "外环 Grok Bot · 内环 Cursor · 人在最后拍板"
+   },
+   "groups": [
+    {
+     "id": "outer",
+     "label": "Grok Bot · 外环",
+     "sub": "outer loop",
+     "hue": "green"
+    },
+    {
+     "id": "inner",
+     "label": "Cursor 云端 agent · 内环",
+     "sub": "inner loop",
+     "hue": "blue"
+    },
+    {
+     "id": "gate",
+     "label": "人工闸门 · Lauren Tan",
+     "sub": "human gate",
+     "hue": "purple"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "trigger",
+     "type": "trigger",
+     "row": 0,
+     "col": 0,
+     "hue": "green",
+     "icon": "message-square",
+     "label": "Slack 反馈频道",
+     "en": "Trigger",
+     "desc": [
+      "有人说话",
+      "就开工"
+     ]
+    },
+    {
+     "id": "legend",
+     "type": "legend",
+     "row": 0,
+     "col": 1,
+     "span": 3,
+     "items": [
+      {
+       "style": "solid",
+       "text": "前进"
+      },
+      {
+       "style": "dashed",
+       "text": "回环 · 下一轮"
+      },
+      {
+       "style": "dot",
+       "text": "数据流过"
+      }
+     ]
+    },
+    {
+     "id": "watch",
+     "group": "outer",
+     "row": 1,
+     "col": 0,
+     "icon": "eye",
+     "label": "盯反馈",
+     "en": "Watch",
+     "desc": [
+      "盯 Slack 反馈频道",
+      "有新消息就接手"
+     ]
+    },
+    {
+     "id": "ticket",
+     "group": "outer",
+     "row": 1,
+     "col": 1,
+     "icon": "ticket",
+     "label": "建工单",
+     "en": "Linear",
+     "desc": [
+      "每条反馈",
+      "落成 Linear 工单"
+     ]
+    },
+    {
+     "id": "status",
+     "group": "outer",
+     "type": "note",
+     "row": 1,
+     "col": 2,
+     "span": 2,
+     "label": "",
+     "desc": [],
+     "icon": "refresh-cw"
+    },
+    {
+     "id": "triage",
+     "group": "inner",
+     "row": 2,
+     "col": 0,
+     "icon": "bug",
+     "label": "分诊+复现",
+     "en": "Triage",
+     "desc": [
+      "在自己的云端机器上",
+      "用 pstack 复现"
+     ]
+    },
+    {
+     "id": "repro",
+     "group": "inner",
+     "type": "diamond",
+     "row": 2,
+     "col": 1,
+     "label": "明确复现？",
+     "en": "reproduced?"
+    },
+    {
+     "id": "fix",
+     "group": "inner",
+     "row": 2,
+     "col": 2,
+     "icon": "git-pull-request",
+     "label": "开 PR 修复",
+     "en": "Fix",
+     "desc": [
+      "写修复，开 PR",
+      "等 fuzz 来验"
+     ]
+    },
+    {
+     "id": "fuzz",
+     "group": "inner",
+     "row": 2,
+     "col": 3,
+     "icon": "shield-check",
+     "label": "蜂群 fuzz",
+     "en": "Fuzz",
+     "desc": [
+      "一小群 agent",
+      "来 fuzz 这个 PR"
+     ]
+    },
+    {
+     "id": "note",
+     "group": "inner",
+     "type": "note",
+     "row": 3,
+     "col": 0,
+     "span": 2,
+     "label": "",
+     "desc": [
+      "三条回路：复现不了 → 回工单（needs-info）",
+      "fuzz 不干净 → 回修复",
+      "要求修改 → 回修复"
+     ],
+     "icon": "info"
+    },
+    {
+     "id": "fuzzok",
+     "group": "inner",
+     "type": "diamond",
+     "row": 3,
+     "col": 3,
+     "label": "fuzz 干净？",
+     "en": "clean?"
+    },
+    {
+     "id": "output",
+     "group": "gate",
+     "type": "output",
+     "row": 4,
+     "col": 0,
+     "icon": "git-merge",
+     "label": "自动合并",
+     "en": "Merge",
+     "desc": [
+      "rebase 后自动合并"
+     ]
+    },
+    {
+     "id": "chg",
+     "group": "gate",
+     "type": "diamond",
+     "row": 4,
+     "col": 1,
+     "label": "要求修改？",
+     "en": "changes?"
+    },
+    {
+     "id": "ping",
+     "group": "gate",
+     "row": 4,
+     "col": 2,
+     "icon": "timer",
+     "label": "ping + 1h 计时",
+     "en": "Ping",
+     "desc": [
+      "Slack ping 我",
+      "1 小时内没异议"
+     ]
+    }
+   ],
+   "edges": [
+    {
+     "from": "trigger",
+     "to": "watch"
+    },
+    {
+     "from": "watch",
+     "to": "ticket"
+    },
+    {
+     "from": "ticket",
+     "to": "triage",
+     "fromSide": "bottom",
+     "toSide": "top"
+    },
+    {
+     "from": "triage",
+     "to": "repro"
+    },
+    {
+     "from": "repro",
+     "to": "fix",
+     "kind": "yes",
+     "label": "Yes"
+    },
+    {
+     "from": "repro",
+     "to": "ticket",
+     "kind": "no",
+     "label": "No · needs-info",
+     "fromSide": "top",
+     "toSide": "bottom"
+    },
+    {
+     "from": "fix",
+     "to": "fuzz"
+    },
+    {
+     "from": "fuzz",
+     "to": "fuzzok",
+     "fromSide": "bottom",
+     "toSide": "top"
+    },
+    {
+     "from": "fuzzok",
+     "to": "fix",
+     "kind": "no",
+     "label": "No · 回修复",
+     "fromSide": "left",
+     "toSide": "bottom"
+    },
+    {
+     "from": "fuzzok",
+     "to": "ping",
+     "kind": "yes",
+     "label": "Yes",
+     "fromSide": "bottom",
+     "toSide": "right"
+    },
+    {
+     "from": "ping",
+     "to": "chg"
+    },
+    {
+     "from": "chg",
+     "to": "output",
+     "kind": "no",
+     "label": "No",
+     "dashed": false
+    },
+    {
+     "from": "chg",
+     "to": "fix",
+     "kind": "yes",
+     "dashed": true,
+     "label": "Yes · 要求修改",
+     "fromSide": "top",
+     "toSide": "bottom"
+    },
+    {
+     "from": "output",
+     "to": "watch",
+     "kind": "back",
+     "label": "下一条反馈 · next",
+     "lane": "left",
+     "fromSide": "left",
+     "toSide": "left"
+    }
+   ],
+   "font": "sans",
+   "entry": "trigger",
+   "walks": [
+    [
+     "watch",
+     "ticket",
+     "triage",
+     "repro",
+     "ticket",
+     "triage",
+     "repro",
+     "fix",
+     "fuzz",
+     "fuzzok",
+     "fix",
+     "fuzz",
+     "fuzzok",
+     "ping",
+     "chg",
+     "output",
+     "watch"
+    ],
+    [
+     "watch",
+     "ticket",
+     "triage",
+     "repro",
+     "fix",
+     "fuzz",
+     "fuzzok",
+     "ping",
+     "chg",
+     "fix",
+     "fuzz",
+     "fuzzok",
+     "ping",
+     "chg",
+     "output",
+     "watch"
+    ]
+   ],
+   "motion": "ambient",
+   "ambientPeriod": 3.0
+  }
+ ]
+}

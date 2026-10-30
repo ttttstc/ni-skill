@@ -13,6 +13,9 @@ on:
       - "skills/ni-research/**"
       - "skills/ni-article-workflow/**"
       - "skills/ni-book-downloader/**"
+      - "skills/ni-live-panel/**"
+      - "skills/ni-poetry-book/**"
+      - "skills/ni-wanghong-handwritten-style/**"
       - ".codex-plugin/plugin.json"
       - ".claude-plugin/marketplace.json"
       - "README.md"
@@ -32,6 +35,9 @@ on:
       - "skills/ni-research/**"
       - "skills/ni-article-workflow/**"
       - "skills/ni-book-downloader/**"
+      - "skills/ni-live-panel/**"
+      - "skills/ni-poetry-book/**"
+      - "skills/ni-wanghong-handwritten-style/**"
       - ".codex-plugin/plugin.json"
       - ".claude-plugin/marketplace.json"
       - "README.md"
@@ -50,6 +56,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install poetry skill test dependencies
+        run: python -m pip install -r skills/ni-poetry-book/requirements.txt
       - name: Validate skill contract tests
         run: |
           python -m unittest discover -s skills/ni-3d-model/tests -v
@@ -62,8 +70,32 @@ jobs:
           python -m unittest discover -s skills/ni-research/tests -v
           python -m unittest discover -s skills/ni-article-workflow/tests -v
           python -m unittest discover -s skills/ni-book-downloader/tests -v
+          python -m unittest discover -s skills/ni-live-panel/tests -v
+          python -m unittest discover -s skills/ni-poetry-book/tests -v
+          python -m unittest discover -s skills/ni-wanghong-handwritten-style/tests -v
       - name: Audit bilingual READMEs
         run: |
           python skills/ni-readme-guide/scripts/audit_readme.py .
           python skills/ni-readme-guide/scripts/audit_readme.py skills/ni-design-with-docs
           python skills/ni-readme-guide/scripts/audit_readme.py skills/ni-book-downloader
+
+  windows:
+    name: Windows browser and font contracts
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: |
+          python -m pip install -r skills/ni-live-panel/requirements.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pip install -r skills/ni-poetry-book/requirements.txt
+      - name: Validate new skills on Windows
+        run: |
+          python -m unittest discover -s skills/ni-live-panel/tests -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s skills/ni-poetry-book/tests -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s skills/ni-wanghong-handwritten-style/tests -v

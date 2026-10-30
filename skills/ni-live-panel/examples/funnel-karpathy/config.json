@@ -1,0 +1,58 @@
+{
+ "meta": {
+  "title": "Karpathy 的 AI 认知漏斗",
+  "lang": "zh"
+ },
+ "canvas": {
+  "preset": "4:5",
+  "duration": 36,
+  "fps": 30,
+  "preroll": 8
+ },
+ "theme": {
+  "preset": "light-pastel",
+  "titleFont": "smiley"
+ },
+ "titlebar": {
+  "text": "~/funnel/who-sees-the-curve — live-panel"
+ },
+ "credit": {
+  "text": "数据：@karpathy 2026-10-11 估算（1–2B 取中值 1.5B）· 宽度为对数刻度 · live-panel funnel",
+  "c": "muted"
+ },
+ "elements": [
+  {
+   "type": "view",
+   "kind": "funnel",
+   "title": "谁看见了曲线变陡",
+   "subtitle": "Karpathy: the gap in AI understanding is a sharp funnel",
+   "period": 18,
+   "stages": [
+    {
+     "label": "全球人口",
+     "sub": "~75% 几乎没碰过",
+     "value": 8000000000
+    },
+    {
+     "label": "偶尔用聊天机器人",
+     "sub": "~20% · 当搜索用",
+     "value": 1500000000
+    },
+    {
+     "label": "前沿模型重度用户",
+     "sub": "~0.2% · 写代码做数学",
+     "value": 20000000
+    },
+    {
+     "label": "内部前沿系统",
+     "sub": "~0.00006%",
+     "value": 5000
+    }
+   ],
+   "scale": "log",
+   "palette": "mono",
+   "valueScale": 2.0,
+   "labelScale": 1.35
+  }
+ ]
+}

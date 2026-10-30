@@ -1,0 +1,329 @@
+{
+ "meta": {
+  "title": "HybridAgent · 想在心里，说在嘴上",
+  "lang": "zh-CN"
+ },
+ "canvas": {
+  "width": 1280,
+  "height": 1176,
+  "duration": 3,
+  "fps": 30
+ },
+ "theme": {
+  "preset": "light-pastel",
+  "name": "sketch",
+  "font": "\"Mali\",\"LXGW WenKai\",\"Noto Sans CJK SC\",sans-serif",
+  "fonts": [
+   {
+    "family": "Mali",
+    "src": "fonts/mali.ttf",
+    "weight": "400 600"
+   },
+   {
+    "family": "Mali",
+    "src": "fonts/mali-bold.ttf",
+    "weight": "700 900"
+   },
+   {
+    "family": "LXGW WenKai",
+    "src": "fonts/wenkai.ttf"
+   }
+  ],
+  "colors": {
+   "bg": "#fbfaf5",
+   "fg": "#2a2a2e",
+   "muted": "#66666e",
+   "dim": "#7c7c84",
+   "grid": "#e4e2da",
+   "panel": "#ffffff",
+   "wcard": "#fbfcff",
+   "accent": "#b9a3ea",
+   "gdot": "#2f9e5e",
+   "gbg": "#eef6f1",
+   "gbd": "#a9ccb8",
+   "gpill": "#cfe6d9",
+   "gpbd": "#8fbea4",
+   "gcard": "#dcede3",
+   "gcbd": "#95c2a9",
+   "gtx": "#3f8a6c",
+   "ghl": "#d3ebdf",
+   "bbg": "#f1f3fc",
+   "bbd": "#b9c2ea",
+   "bpill": "#d9dff6",
+   "bpbd": "#a3afe2",
+   "bcard": "#e4e9f9",
+   "bcbd": "#a9b5e3",
+   "btx": "#5a74c4",
+   "bhl": "#dde5fb",
+   "bin": "#e8ecfa",
+   "ybg": "#fdf7e5",
+   "ybd": "#f0d48c",
+   "yrow": "#fdeec6",
+   "ycbd": "#f2b63c",
+   "ytx": "#9a6a0a",
+   "rbg": "#fbe6e3",
+   "rbd": "#de9c95",
+   "rcard": "#fff4f2",
+   "rcbd": "#de9c95",
+   "rtx": "#c0605a"
+  }
+ },
+ "series": {
+  "name": "live-panel sketch",
+  "brand": "@YuLin807"
+ },
+ "credit": {
+  "text": "来源：Jiaru Zou 等（Stanford × Together AI）arXiv:2610.18861 · via @rohanpaul_ai https://x.com/rohanpaul_ai/status/2110417627608969646 · 推理链与解码文字为示意",
+  "y": 1158,
+  "size": 12.5,
+  "c": "muted"
+ },
+ "elements": [
+  {
+   "type": "view",
+   "kind": "sketchboard",
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 1140,
+   "period": 3,
+   "page": "",
+   "titleSize": 60,
+   "title": [
+    {
+     "t": "Hybrid Agent："
+    },
+    {
+     "t": "想在心里",
+     "hue": "g"
+    },
+    {
+     "t": "说在嘴上",
+     "hue": "b"
+    }
+   ],
+   "split": 0.38,
+   "left": {
+    "hue": "g",
+    "title": "Text-only Agent",
+    "sub": "每一步推理都写成 token。",
+    "foot": "想一步写一步：慢、贵（14B 每题 66.9 TFLOP）",
+    "blocks": [
+     {
+      "label": "任务：GAIA 题",
+      "sub": "要搜索 + 写代码",
+      "icon": "doc",
+      "h": 76,
+      "w": 290
+     },
+     {
+      "label": "LLM 逐个 token 解码",
+      "icon": "chip",
+      "h": 72,
+      "w": 300
+     },
+     {
+      "type": "stream",
+      "title": "推理链：全部写成文字",
+      "h": 250,
+      "unit": " tokens",
+      "tokenSize": 16,
+      "tokens": [
+       "先",
+       "搜索",
+       "一下",
+       "这个",
+       "年份",
+       "…",
+       "嗯",
+       "等等",
+       "再",
+       "核对",
+       "一遍",
+       "来源",
+       "然后",
+       "写",
+       "一段",
+       "代码",
+       "算",
+       "差值",
+       "…",
+       "所以",
+       "答案",
+       "应该",
+       "是"
+      ],
+      "cap": "每个字都要一次完整解码",
+      "capIcon": "timer"
+     },
+     {
+      "label": "调用工具 / 给答案",
+      "icon": "wrench",
+      "h": 72,
+      "w": 290
+     }
+    ]
+   },
+   "right": {
+    "hue": "b",
+    "title": "HybridAgent",
+    "sub": "大部分思考留在 hidden state 里，需要时才写字。",
+    "foot": "只在调用工具、关键决策时花 token",
+    "sections": [
+     {
+      "n": 1,
+      "title": "Latent 思考",
+      "note": "不写字，静默循环",
+      "h": 186,
+      "loop": true,
+      "laps": 2,
+      "loopLabel": "hidden state 回灌成下一步输入",
+      "items": [
+       {
+        "label": "LLM f_θ",
+        "sub": "Qwen3-14B",
+        "icon": "chip"
+       },
+       {
+        "label": "h",
+        "sub": "最后一层",
+        "w": 104,
+        "mono": true,
+        "size": 22
+       },
+       {
+        "label": "HybridLink",
+        "sub": "小 adapter",
+        "icon": "link"
+       }
+      ]
+     },
+     {
+      "n": 2,
+      "title": "切回 text",
+      "note": "调用工具、关键决策",
+      "h": 140,
+      "laps": 2,
+      "items": [
+       {
+        "label": "</latent>",
+        "w": 130,
+        "mono": true,
+        "style": "white"
+       },
+       {
+        "label": "写出 tool call",
+        "sub": "几十个 token",
+        "icon": "code"
+       },
+       {
+        "label": "Python / 搜索",
+        "sub": "外部工具",
+        "icon": "search"
+       }
+      ]
+     },
+     {
+      "n": 3,
+      "title": "静默步骤可解码",
+      "note": "人照样能检查",
+      "h": 140,
+      "laps": 2,
+      "items": [
+       {
+        "label": "h",
+        "w": 80,
+        "mono": true,
+        "size": 22
+       },
+       {
+        "label": "LM head",
+        "sub": "读出",
+        "icon": "eye",
+        "w": 170
+       },
+       {
+        "label": "“先查官方数据，再算差值”",
+        "style": "white",
+        "typed": true,
+        "align": "left",
+        "sub": "pseudo-text（示意）"
+       }
+      ]
+     }
+    ]
+   },
+   "table": {
+    "question": "到底\n变了什么？",
+    "cols": [
+     {
+      "t": "Text-only Agent",
+      "hue": "g"
+     },
+     {
+      "t": "HybridAgent",
+      "hue": "b"
+     }
+    ],
+    "rows": [
+     {
+      "icon": "bolt",
+      "label": "解码算力 / 题",
+      "cells": [
+       {
+        "t": "51.2–66.9 TFLOP",
+        "bar": 1.0
+       },
+       {
+        "t": "13.9–25.1 TFLOP（−62.5%~72.9%）",
+        "b": true,
+        "bar": 0.375
+       }
+      ]
+     },
+     {
+      "icon": "chart",
+      "label": "GAIA 分数（14B）",
+      "cells": [
+       {
+        "t": "43.7（ARPO 文本 agent）",
+        "bar": 0.834
+       },
+       {
+        "t": "52.4",
+        "b": true,
+        "bar": 1.0
+       }
+      ]
+     },
+     {
+      "icon": "gauge",
+      "label": "推理速度",
+      "cells": [
+       {
+        "t": "1×（基线）",
+        "bar": 0.476
+       },
+       {
+        "t": "快 2.1×",
+        "b": true,
+        "bar": 1.0
+       }
+      ]
+     },
+     {
+      "icon": "eye",
+      "label": "可读性",
+      "cells": [
+       "每一步都是文字",
+       {
+        "t": "关键步写字，静默步可解码",
+        "b": true
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}
