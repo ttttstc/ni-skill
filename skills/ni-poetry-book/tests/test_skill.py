@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -13,18 +14,81 @@ from unittest.mock import patch
 SKILL_HOME = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SKILL_HOME / "scripts"))
 
-from book_common import ManuscriptError, discover_main_font, find_ghostscript, load_json, safe_filename, validate_manuscript
+from book_common import ManuscriptError, TeXCodec, discover_latin_font, discover_main_font, find_ghostscript, load_json, safe_filename, validate_manuscript
 from build_style import build_style, load_themes
+import install as install_skill
 
 
 class PoetryBookSkillTests(unittest.TestCase):
+    def test_install_removes_only_unmodified_legacy_fonts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source"
+            destination = root / "installed"
+            (source / "assets" / "fonts").mkdir(parents=True)
+            (source / "SKILL.md").write_text("name: ni-poetry-book\n", encoding="utf-8")
+            (source / "assets" / "fonts" / "NotoSerifSC-VF.ttf").write_bytes(b"new font")
+            (destination / "assets" / "fonts").mkdir(parents=True)
+            (destination / "SKILL.md").write_text("name: ni-poetry-book\n", encoding="utf-8")
+            fonts = destination / "assets" / "fonts"
+            (fonts / "old.ttf").write_bytes(b"stock font")
+            (fonts / "old-license.txt").write_bytes(b"stock license")
+            (fonts / "custom.ttf").write_bytes(b"modified font")
+            (fonts / "custom-license.txt").write_bytes(b"stock license")
+            license_hash = hashlib.sha256(b"stock license").hexdigest()
+            legacy = {
+                "old.ttf": (hashlib.sha256(b"stock font").hexdigest(), "old-license.txt", license_hash),
+                "custom.ttf": (hashlib.sha256(b"stock font").hexdigest(), "custom-license.txt", license_hash),
+            }
+            with patch.object(install_skill, "ROOT", source), patch.object(install_skill, "LEGACY_FONTS", legacy), patch.object(sys, "argv", ["install.py", "--dest", str(destination)]):
+                install_skill.main()
+            self.assertFalse((fonts / "old.ttf").exists())
+            self.assertFalse((fonts / "old-license.txt").exists())
+            self.assertEqual((fonts / "custom.ttf").read_bytes(), b"modified font")
+            self.assertTrue((fonts / "custom-license.txt").exists())
+            self.assertEqual((fonts / "NotoSerifSC-VF.ttf").read_bytes(), b"new font")
+
+    def test_bundled_font_package_is_small(self):
+        fonts = [font for font in (SKILL_HOME / "assets" / "fonts").iterdir() if font.suffix.lower() in {".ttf", ".otf", ".ttc", ".otc", ".woff", ".woff2"}]
+        names = {font.name for font in fonts}
+        self.assertIn("NotoSerifSC-VF.ttf", names)
+        self.assertLessEqual(names, {"NotoSerifSC-VF.ttf", "AnthropicSerif-Regular.ttf", "AnthropicSerif-Italic.ttf"})
+        self.assertLess(sum(font.stat().st_size for font in fonts), 26 * 1024 * 1024)
+
     def test_bundled_main_font_is_default_and_override_is_respected(self):
-        bundled = SKILL_HOME / "assets" / "fonts" / "SourceHanSerifSC-VF.ttf"
+        bundled = SKILL_HOME / "assets" / "fonts" / "NotoSerifSC-VF.ttf"
         with patch.dict(os.environ, {}, clear=True):
             self.assertEqual(discover_main_font(), bundled)
-        override = SKILL_HOME / "assets" / "fonts" / "LXGWWenKai-Regular.ttf"
-        with patch.dict(os.environ, {"POETRY_BOOK_MAIN_FONT": str(override)}):
-            self.assertEqual(discover_main_font(), override)
+        with tempfile.NamedTemporaryFile(suffix=".ttf") as override:
+            with patch.dict(os.environ, {"POETRY_BOOK_MAIN_FONT": override.name}):
+                self.assertEqual(discover_main_font(), Path(override.name))
+
+    def test_missing_latin_font_fails_with_setup_hint(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.dict(os.environ, {}, clear=True), patch("book_common.SKILL_HOME", Path(directory)), patch("book_common.Path.home", return_value=Path(directory)):
+                with self.assertRaisesRegex(ManuscriptError, "POETRY_BOOK_LATIN_FONT"):
+                    discover_latin_font()
+
+    def test_latin_font_prefers_explicit_then_portable_then_home(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            portable = root / "skill" / "assets" / "fonts" / "AnthropicSerif-Regular.ttf"
+            local = root / "home" / ".local" / "share" / "ni-skill" / "fonts" / "AnthropicSerif-Regular.ttf"
+            override = root / "override.ttf"
+            portable.parent.mkdir(parents=True)
+            local.parent.mkdir(parents=True)
+            local.write_bytes(b"local")
+            override.write_bytes(b"override")
+            with patch.dict(os.environ, {}, clear=True), patch("book_common.SKILL_HOME", root / "skill"), patch("book_common.Path.home", return_value=root / "home"):
+                self.assertEqual(discover_latin_font(), local.resolve())
+                portable.write_bytes(b"portable")
+                self.assertEqual(discover_latin_font(), portable.resolve())
+                with patch.dict(os.environ, {"POETRY_BOOK_LATIN_FONT": str(override)}):
+                    self.assertEqual(discover_latin_font(), override.resolve())
+
+    def test_missing_cjk_character_fails_instead_of_silent_substitution(self):
+        with self.assertRaisesRegex(ManuscriptError, "U\\+20000"):
+            TeXCodec().tex(chr(0x20000))
 
     def test_ghostscript_finds_windows_console_executable(self):
         with patch("book_common.shutil.which", side_effect=lambda name: "C:/gswin64c.exe" if name == "gswin64c" else None):
@@ -59,15 +123,15 @@ class PoetryBookSkillTests(unittest.TestCase):
             for theme in payload["themes"]:
                 with self.subTest(theme=theme["id"]):
                     output = Path(directory) / f"{theme['id']}.tex"
-                    result = build_style(self.style_args(theme["id"], output))
+                    with patch.dict(os.environ, {"POETRY_BOOK_LATIN_FONT": str(SKILL_HOME / "assets" / "fonts" / "NotoSerifSC-VF.ttf")}):
+                        result = build_style(self.style_args(theme["id"], output))
                     self.assertEqual(result["theme"], theme["id"])
                     style = output.read_text(encoding="utf-8")
                     self.assertIn("\\newcommand{\\ThemeCover}", style)
                     self.assertIn("月照诗心", style)
                     self.assertNotIn("%THEME_DEFINITIONS%", style)
                     self.assertIn((SKILL_HOME / "assets" / "fonts").as_posix(), style)
-                    for font in ("SourceHanSerifSC-VF.ttf", "LXGWWenKai-Regular.ttf", "EarlySummerSerif-VF.ttf"):
-                        self.assertIn(font, style)
+                    self.assertIn("NotoSerifSC-VF.ttf", style)
 
     def test_unknown_theme_fails(self):
         with tempfile.TemporaryDirectory() as directory:

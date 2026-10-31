@@ -56,7 +56,7 @@ You can also copy the required full subdirectories from `skills/` to the matchin
 The installed layout should be `<skills directory>/<skill name>/SKILL.md`. See the official [Codex](https://developers.openai.com/codex/skills), [Claude Code](https://code.claude.com/docs/en/skills), and [OpenCode](https://opencode.ai/docs/skills/) documentation for directory conventions.
 
 Configure dependencies as needed: web capture uses Node.js and a browser; local video transcription uses Python and tools such as Whisper; WeChat draft delivery needs account credentials; 3D modeling needs image generation and an image-to-3D service; ni-picarts uses image generation, while its interactive metallic relief workflow also needs Python with Pillow and NumPy, and Node.js and Playwright for automated browser validation. See each skill's documentation for setup.
-ni-poetry-book needs LaTeX and Ghostscript; ni-wanghong-handwritten-style needs a browser, with Node.js, ffmpeg, and ffprobe for video mode. Both skills include their fonts. ni-live-panel needs Python, Chrome/Chromium, and ffmpeg, plus websocket-client on Windows. See each skill's documentation for platform details.
+ni-poetry-book needs LaTeX, Ghostscript, and a locally supplied Anthropic Serif Latin font; its Chinese font is bundled. ni-wanghong-handwritten-style includes its handwriting font and needs a browser, with Node.js, ffmpeg, and ffprobe for video mode. ni-live-panel needs Python, Chrome/Chromium, and ffmpeg, plus websocket-client on Windows. See each skill's documentation for platform details.
 
 ## Choose by task
 

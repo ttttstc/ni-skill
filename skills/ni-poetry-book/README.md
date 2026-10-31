@@ -50,7 +50,8 @@
 
 - Python 3.9+
 - `latexmk`、LuaLaTeX、Ghostscript
-- 主字体默认使用随包的 Source Han Serif SC VF；可通过 `POETRY_BOOK_MAIN_FONT` 指定其他主中文字体文件
+- 中文默认使用随包的 Noto Serif SC（思源宋体简体版）；可通过 `POETRY_BOOK_MAIN_FONT` 指定其他主中文字体文件
+- 英文使用本机提供的 Anthropic Serif 正体 TTF/OTF；可通过 `POETRY_BOOK_LATIN_FONT` 指定文件路径
 - LaTeX 包：luatexja、TikZ、mdframed、fancyvrb、booktabs、tabularx
 
 Python 依赖：
@@ -59,9 +60,11 @@ Python 依赖：
 python3 -m pip install -r requirements.txt
 ```
 
-Source Han Serif SC VF、Early Summer Serif、LXGW WenKai、BabelStoneHan 和 I.Ming 已随仓库附带，无需先注册到系统。字体许可见 `assets/fonts/`；不会使用 Last Resort 或 Unifont 凑字。
+Noto Serif SC 及其 SIL Open Font License 1.1 随包附带，无需注册到系统。它与思源宋体同源；单一中文字库对部分生僻字的覆盖少于原来的多字体组合，缺字时会停止并指出字符，不会使用 Last Resort 或 Unifont 凑字。
 
-新增字体来源：[Source Han Serif](https://github.com/adobe-fonts/source-han-serif)（commit `7889f11`）、[Early Summer Serif](https://github.com/GuiWonder/EarlySummerSerif)（1.008）和 [LXGW WenKai](https://github.com/lxgw/LxgwWenKai)（commit `db34daf`），均按各自随附的 SIL Open Font License 1.1 分发。
+随包文件为本机 Noto Serif SC 2.02 版，字体内标注为 non-release；SHA-256 为 `a4aed9985a5916fbf6690456f8732a9fccd517938e353165d4142b4f11a39280`。字体来源与许可见 [Noto 项目](https://github.com/notofonts/noto-cjk)和 `assets/fonts/NotoSerifSC-OFL.txt`。
+
+Anthropic Serif 不随仓库分发。请自行准备可使用的字体文件，将正体放在技能目录 `assets/fonts/AnthropicSerif-Regular.ttf` 或 `~/.local/share/ni-skill/fonts/AnthropicSerif-Regular.ttf`，也可设置 `POETRY_BOOK_LATIN_FONT` 指向正体文件；同目录存在 `AnthropicSerif-Italic.ttf` 时会用于斜体。放在技能目录的字体可以随技能文件一起离线复制。
 
 ### 安装为 Skill
 
@@ -74,7 +77,7 @@ Source Han Serif SC VF、Early Summer Serif、LXGW WenKai、BabelStoneHan 和 I.
 
     python3 scripts/install.py --dest "/your/skill/directory/ni-poetry-book"
 
-安装器会拒绝覆盖同名非 Poetry Book 目录或符号链接。
+安装器会拒绝覆盖同名非 Poetry Book 目录或符号链接。升级时会清理与旧版随包文件完全一致的字体；改过的同名字体及其许可会保留并提示。
 
 ## 使用
 

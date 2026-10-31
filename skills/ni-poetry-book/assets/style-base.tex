@@ -1,12 +1,11 @@
 \usepackage[paperwidth=185mm,paperheight=260mm,top=20mm,bottom=22mm,left=20mm,right=20mm]{geometry}
 \usepackage[match]{luatexja-fontspec}
-\setmainfont[Path=%MAIN_FONT_DIR%]{%MAIN_FONT_FILE%}
+\setmainfont[Path=%LATIN_FONT_DIR%%LATIN_ITALIC%]{%LATIN_FONT_FILE%}
+\setsansfont[Path=%LATIN_FONT_DIR%%LATIN_ITALIC%]{%LATIN_FONT_FILE%}
 \setmainjfont[Path=%MAIN_FONT_DIR%]{%MAIN_FONT_FILE%}
-\setsansjfont[Path=%FONT_DIR%]{LXGWWenKai-Regular.ttf}
-\newjfontfamily\kaijfont[Path=%FONT_DIR%]{LXGWWenKai-Regular.ttf}
-\newjfontfamily\displayjfont[Path=%FONT_DIR%]{EarlySummerSerif-VF.ttf}
-\newjfontfamily\babeljfont[Path=%FONT_DIR%, Extension=.ttf]{BabelStoneHan}
-\newjfontfamily\imingjfont[Path=%FONT_DIR%, Extension=.ttf]{I.Ming-8.10}
+\setsansjfont[Path=%MAIN_FONT_DIR%]{%MAIN_FONT_FILE%}
+\newjfontfamily\kaijfont[Path=%MAIN_FONT_DIR%]{%MAIN_FONT_FILE%}
+\newjfontfamily\displayjfont[Path=%MAIN_FONT_DIR%]{%MAIN_FONT_FILE%}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{calc}

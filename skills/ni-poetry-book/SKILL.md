@@ -19,9 +19,9 @@ description: 把诗词、文赋、年谱、史料或技术文章整理为编年�
 
 ## 环境与输出
 
-需要 `latexmk`、LuaLaTeX、Ghostscript、Python 3，以及 `fontTools`、PyMuPDF、Pillow；技术文章模式另用 PyYAML，LaTeX 使用 fancyvrb、booktabs、tabularx。技能自带 Source Han Serif SC VF、Early Summer Serif、LXGW WenKai、BabelStoneHan 和 I.Ming 及各自许可，无需注册系统字体。可通过 `POETRY_BOOK_MAIN_FONT` 指定主中文字体文件，排版和生僻字回退检查使用同一文件。
+需要 `latexmk`、LuaLaTeX、Ghostscript、Python 3，以及 `fontTools`、PyMuPDF、Pillow；技术文章模式另用 PyYAML，LaTeX 使用 fancyvrb、booktabs、tabularx。中文使用随包的 Noto Serif SC（思源宋体简体版）及其许可，也可通过 `POETRY_BOOK_MAIN_FONT` 指定其他中文字体文件。英文使用本机提供的 Anthropic Serif 正体，依次查找技能内的 `assets/fonts/AnthropicSerif-Regular.ttf` 和 `~/.local/share/ni-skill/fonts/AnthropicSerif-Regular.ttf`，也可用 `POETRY_BOOK_LATIN_FONT` 指定。英文字体不随仓库分发；同目录有 `AnthropicSerif-Italic.ttf` 时用于斜体。
 
-依赖缺失时明确报告并停止，不静默换用 Last Resort 或 Unifont，不未经同意安装软件。
+依赖缺失或中文字体不覆盖书稿字符时明确报告并停止；不静默换用 Last Resort 或 Unifont，不未经同意安装软件。
 
 输出目录必须不存在或为空，防止覆盖用户资料。重建时使用新目录，或由用户明确处理旧产物后再运行。
 
