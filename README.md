@@ -56,7 +56,7 @@
 安装后的结构应为 `<skills 目录>/<技能名>/SKILL.md`。具体目录约定见 [Codex](https://developers.openai.com/codex/skills)、[Claude Code](https://code.claude.com/docs/en/skills) 和 [OpenCode](https://opencode.ai/docs/skills/) 官方文档。
 
 依赖按需配置：网页抓取需要 Node.js 与浏览器；本地视频转写需要 Python 和 Whisper 等工具；微信草稿推送需要公众号凭证；3D 建模需要图像生成与图生 3D 服务；ni-picarts 需要图像生成，金属浮雕互动流程另需 Python（Pillow、NumPy），自动浏览器验收需要 Node.js 和 Playwright。具体配置见各技能文档。
-ni-poetry-book 需要 LaTeX 和 Ghostscript；ni-wanghong-handwritten-style 需要浏览器，视频模式还需 Node.js、ffmpeg 和 ffprobe。这两个技能均附带所需字体；ni-live-panel 需要 Python、Chrome/Chromium 和 ffmpeg，Windows 原生运行另需 websocket-client。详细依赖与平台限制见各技能文档。
+ni-poetry-book 需要 LaTeX、Ghostscript 和本机提供的 Anthropic Serif 英文字体，中文字体随包附带；ni-wanghong-handwritten-style 需要浏览器，视频模式还需 Node.js、ffmpeg 和 ffprobe，并附带手写字体；ni-live-panel 需要 Python、Chrome/Chromium 和 ffmpeg，Windows 原生运行另需 websocket-client。详细依赖与平台限制见各技能文档。
 
 ## 按场景选工具
 

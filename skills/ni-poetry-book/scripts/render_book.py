@@ -12,6 +12,7 @@ import sys
 from book_common import (
     ManuscriptError,
     console_json,
+    discover_latin_font,
     find_ghostscript,
     SKILL_HOME,
     TeXCodec,
@@ -140,6 +141,7 @@ def compile_pdf(build_dir):
 
 def render(args):
     check_environment()
+    discover_latin_font()
     source = Path(args.input).expanduser().resolve()
     if not source.is_file():
         raise ManuscriptError(f"书稿不存在：{source}")
@@ -160,9 +162,7 @@ def render(args):
         frontmatter.extend(codec.tex(paragraph) + "\\par" for paragraph in section["paragraphs"])
     (build_dir / "frontmatter-content.tex").write_text("\n".join(frontmatter) + "\n", encoding="utf-8")
     (build_dir / "contents.tex").write_text(render_manuscript(payload, codec), encoding="utf-8")
-    bootstrap_font = (SKILL_HOME / "assets" / "fonts" / "LXGWWenKai-Regular.ttf").resolve()
-    if not bootstrap_font.is_file():
-        raise ManuscriptError(f"缺少随包字体：{bootstrap_font}")
+    bootstrap_font = codec.main_font
     if any(char in str(bootstrap_font) for char in '\n\r{}%#]"'):
         raise ManuscriptError("字体路径包含 LaTeX 不支持的字符")
     (build_dir / "book.tex").write_text(

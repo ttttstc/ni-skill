@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 import sys
 
-from book_common import ManuscriptError, SKILL_HOME, TeXCodec, console_json, load_json
+from book_common import ManuscriptError, SKILL_HOME, TeXCodec, console_json, discover_latin_font, load_json
 
 THEME_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
@@ -48,11 +48,12 @@ def build_style(args):
     if any(char in str(font_dir) for char in "\n\r{}%#"):
         raise ManuscriptError("字体路径包含 LaTeX 不支持的字符")
     codec = TeXCodec(font_dir)
-    for filename in ("LXGWWenKai-Regular.ttf", "EarlySummerSerif-VF.ttf"):
-        if not (font_dir / filename).is_file():
-            raise ManuscriptError(f"缺少随包字体：{font_dir / filename}")
+    latin_font = discover_latin_font()
+    italic_font = latin_font.with_name("AnthropicSerif-Italic.ttf")
     if any(char in str(codec.main_font) for char in '\n\r{}%#'):
         raise ManuscriptError("主字体路径包含 LaTeX 不支持的字符")
+    if any(char in str(latin_font) for char in '\n\r{}%#'):
+        raise ManuscriptError("西文字体路径包含 LaTeX 不支持的字符")
     metadata = {
         "title": args.title,
         "subtitle": args.subtitle,
@@ -66,7 +67,9 @@ def build_style(args):
             raise ManuscriptError(f"元数据 {key} 无效")
     pdf_title = args.title + ("——" + args.subtitle if args.subtitle else "")
     replacements = {
-        "%FONT_DIR%": "{" + font_dir.as_posix().rstrip("/") + "/}",
+        "%LATIN_FONT_DIR%": "{" + latin_font.parent.as_posix().rstrip("/") + "/}",
+        "%LATIN_FONT_FILE%": latin_font.name,
+        "%LATIN_ITALIC%": ",ItalicFont={" + italic_font.name + "}" if italic_font.is_file() else "",
         "%MAIN_FONT_DIR%": "{" + codec.main_font.parent.as_posix().rstrip("/") + "/}",
         "%MAIN_FONT_FILE%": codec.main_font.name,
         "%THEME_DEFINITIONS%": theme_path.read_text(encoding="utf-8"),

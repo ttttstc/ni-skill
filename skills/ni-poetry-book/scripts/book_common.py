@@ -5,7 +5,6 @@ import os
 from pathlib import Path
 import re
 import shutil
-import subprocess
 import sys
 
 from fontTools.ttLib import TTCollection, TTFont
@@ -253,17 +252,20 @@ def discover_main_font(font_dir=None):
         if not path.is_file():
             raise ManuscriptError(f"POETRY_BOOK_MAIN_FONT 不存在：{path}")
         return path
-    bundled = Path(font_dir or SKILL_HOME / "assets" / "fonts") / "SourceHanSerifSC-VF.ttf"
+    bundled = Path(font_dir or SKILL_HOME / "assets" / "fonts") / "NotoSerifSC-VF.ttf"
     if bundled.is_file():
         return bundled
-    executable = shutil.which("fc-match")
-    if not executable:
-        raise ManuscriptError("缺少 fc-match；请设置 POETRY_BOOK_MAIN_FONT 为主中文字体文件")
-    result = subprocess.run([executable, "-f", "%{file}", "Source Han Serif SC VF"], capture_output=True, text=True)
-    path = Path(result.stdout.strip())
-    if result.returncode or not path.is_file():
-        raise ManuscriptError("找不到 Source Han Serif SC VF；请安装字体或设置 POETRY_BOOK_MAIN_FONT")
-    return path
+    raise ManuscriptError("缺少随包思源宋体；请恢复 NotoSerifSC-VF.ttf 或设置 POETRY_BOOK_MAIN_FONT")
+
+
+def discover_latin_font():
+    configured = os.environ.get("POETRY_BOOK_LATIN_FONT")
+    portable = SKILL_HOME / "assets" / "fonts" / "AnthropicSerif-Regular.ttf"
+    local = Path.home() / ".local" / "share" / "ni-skill" / "fonts" / "AnthropicSerif-Regular.ttf"
+    path = Path(configured).expanduser() if configured else portable if portable.is_file() else local
+    if not path.is_file():
+        raise ManuscriptError("找不到 Anthropic Serif 西文字体；请设置 POETRY_BOOK_LATIN_FONT 为本机字体文件")
+    return path.resolve()
 
 
 class TeXCodec:
@@ -271,13 +273,6 @@ class TeXCodec:
         self.font_dir = Path(font_dir or SKILL_HOME / "assets" / "fonts").resolve()
         self.main_font = Path(main_font or discover_main_font(self.font_dir)).resolve()
         self.main_cmap = font_cmap(self.main_font)
-        self.fallbacks = {}
-        for family, filename in [("babeljfont", "BabelStoneHan.ttf"), ("imingjfont", "I.Ming-8.10.ttf")]:
-            path = self.font_dir / filename
-            if not path.is_file():
-                raise ManuscriptError(f"缺少生僻字字体：{path}")
-            self.fallbacks[family] = font_cmap(path)
-        self.usage = {family: set() for family in self.fallbacks}
 
     def tex(self, value):
         replacements = {
@@ -290,16 +285,12 @@ class TeXCodec:
             escaped = replacements.get(char, char)
             codepoint = ord(char)
             if codepoint not in self.main_cmap:
-                family = next((name for name, cmap in self.fallbacks.items() if codepoint in cmap), None)
-                if family is None:
-                    raise ManuscriptError(f"已配置字体均不覆盖 {char!r} U+{codepoint:04X}")
-                self.usage[family].add(char)
-                escaped = "{\\" + family + " " + escaped + "}"
+                raise ManuscriptError(f"中文字体未覆盖 {char!r} U+{codepoint:04X}；请通过 POETRY_BOOK_MAIN_FONT 指定覆盖该字符的字体")
             output.append(escaped)
         return "".join(output)
 
     def usage_payload(self):
-        return {family: {"characters": sorted(chars), "count": len(chars)} for family, chars in self.usage.items()}
+        return {}
 
 
 def load_json(path):
