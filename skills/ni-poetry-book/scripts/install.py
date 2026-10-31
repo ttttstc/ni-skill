@@ -3,6 +3,7 @@ import argparse
 import hashlib
 from pathlib import Path
 import shutil
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,6 +39,9 @@ def remove_stock_legacy_fonts(destination):
 
 
 def main():
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="backslashreplace")
     parser = argparse.ArgumentParser(description="安装 Poetry Book Skill")
     parser.add_argument("--dest", default=str(Path.home() / ".agents" / "skills" / "ni-poetry-book"))
     args = parser.parse_args()

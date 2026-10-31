@@ -48,6 +48,24 @@ class PoetryBookSkillTests(unittest.TestCase):
             self.assertTrue((fonts / "custom-license.txt").exists())
             self.assertEqual((fonts / "NotoSerifSC-VF.ttf").read_bytes(), b"new font")
 
+    def test_install_supports_legacy_console_encoding(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "中文路径"
+            source, destination = root / "source", root / "installed"
+            (source / "assets" / "fonts").mkdir(parents=True)
+            (source / "SKILL.md").write_text("name: ni-poetry-book\n", encoding="utf-8")
+            (destination / "assets" / "fonts").mkdir(parents=True)
+            (destination / "SKILL.md").write_text("name: ni-poetry-book\n", encoding="utf-8")
+            custom = destination / "assets" / "fonts" / "BabelStoneHan.ttf"
+            custom.write_bytes(b"custom font")
+            script = "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import install; install.ROOT=Path(sys.argv[2]); sys.argv=['install.py', '--dest', sys.argv[3]]; install.main()"
+            result = subprocess.run(
+                [sys.executable, "-c", script, str(SKILL_HOME / "scripts"), str(source), str(destination)],
+                env=dict(os.environ, PYTHONIOENCODING="cp1252"), capture_output=True, text=True, encoding="cp1252",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(custom.read_bytes(), b"custom font")
+
     def test_bundled_font_package_is_small(self):
         fonts = [font for font in (SKILL_HOME / "assets" / "fonts").iterdir() if font.suffix.lower() in {".ttf", ".otf", ".ttc", ".otc", ".woff", ".woff2"}]
         names = {font.name for font in fonts}
