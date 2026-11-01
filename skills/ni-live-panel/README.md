@@ -13,7 +13,7 @@
 > 中文一句话：**live-panel 把一个 JSON 配置渲染成会动的架构图**——终端监控面板风格的动态架构图 / agent 架构动图，或会动的浅色信息图，输出 mp4 视频或可循环的网页，画幅预设适配 X（4:5）和小红书（3:4）。
 
 - **Input:** one JSON file (boxes, wires, packet paths, log wording, counters). Start from an example; the HTML template never needs editing.
-- **Output:** H.264 mp4 (30 fps, silent AAC track) and/or a self-contained HTML page that loops live in any browser.
+- **Output:** H.264 mp4 (30 fps, silent AAC track) and/or a self-contained HTML page with automatic playback, click-to-advance looping steps, and editable text.
 - **Looks:** `terminal-dark` (monitoring panel in a terminal window) and `light-pastel` (Xiaohongshu-style infographic). Canvas presets `4:5` 1200x1500 (X), `3:4` 1080x1440 (Xiaohongshu), `1:1` 1080x1080.
 - **Use it for:** agent architecture diagrams, multi-agent / agent-tree panels, system and data-flow diagrams, "monitoring dashboard" style posts.
 - **For AI agents:** `SKILL.md` makes it a skill for Claude Code, Codex and other agents that read SKILL.md; the agent writes the JSON, renders and checks frames itself.
@@ -95,6 +95,12 @@ python3 scripts/check_frames.py --config examples/codex-agents/config.json --out
 - `render.py` options: `--width --height --duration --fps` (default from the config), `--chrome --ffmpeg` (default: found on PATH, Chrome also under `/Applications` on macOS), `--html-out page.html` (keep the self-contained live page), `--keep-frames DIR`, `--audio none`, `--crf`.
 - `check_frames.py` samples ~120 time points, measures text overflow / overlap from the DOM, writes a few PNGs and (with `--repeat`) re-renders each exported frame after seeking away to prove it is identical. Exit status 1 on any problem.
 - To use as a skill, put this folder where your agent loads skills (for Claude Code: `~/.claude/skills/ni-live-panel/`).
+
+### Interactive page
+
+Click **单步模式** to loop the current step, then **上一步** or **下一步** to move between steps. **自动播放** returns to the full animation. Use **速度** to choose 0.25×–2× playback in either mode; this does not change MP4 rendering. Click **编辑文字**, then click the text to change it; edits are saved in that browser. **下载 HTML** creates a standalone copy containing the edits, which can be opened on another computer. The source JSON and existing MP4 are unchanged. If browser storage is disabled, download the page to retain edits; longer text may need a layout check.
+
+Steps are inferred from supported views and state machines. For custom phases, define `playback.steps` with `label`, `start`, and `end` in seconds; see [the config schema](references/config-schema.md). A page without identifiable phases has one step.
 
 ### Make your own
 
@@ -242,6 +248,8 @@ MIT for the code (see `LICENSE`; carve-outs for the recreated example designs ar
 ## 中文说明
 
 把一份系统描述（一个 JSON）变成**终端风格、一直在运行的动态架构图**，或者一张会动的浅色粉彩信息图：版面不动，连线上有光点流动，日志滚动，计数跳动，进度条过阈值翻状态，侧栏触发点依次点亮。产出 H.264 mp4（适合发 X 和小红书）或可直接打开的网页。
+
+网页可切换**单步模式**：当前步骤循环播放，点击上一步或下一步切换。**速度**可选择 0.25× 至 2×，适用于自动和单步播放，不影响视频渲染。点击**编辑文字**后可修改页面文字，浏览器会自动保存；点击**下载 HTML**可带着修改复制到其他电脑。原 JSON 和已有视频不会被改写。自定义流程可在 `playback.steps` 中设置每步的开始、结束时间。
 
 动图预览：页首是 `loop` 视图（Grok Bot 负责人 Lauren Tan 的每日 Loop，流程原文 [Lauren Tan @poteto](https://x.com/poteto/status/2107510472601985336)，视觉语法参考 [@akshay_pachaar](https://x.com/akshay_pachaar)），例子画廊见 *What it looks like*，视图动图见 *Views*。动图是 WebP（一个完整循环），完整视频在各例子目录的 mp4。
 

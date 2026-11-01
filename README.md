@@ -24,7 +24,7 @@
 | 把方案讲清楚 | 用 ni-explain 把这段技术方案写清楚，去掉万能动词和含糊词 |
 | 做一本文献可追溯的书 | 用 ni-poetry-book 把诗词、史料或 Markdown 文章排成可重建 PDF |
 | 做王虹手写风演示 | 用 ni-wanghong-handwritten-style，按指令输出 PPT、视频或两者 |
-| 做动态架构图 | 用 ni-live-panel 把架构配置生成循环网页或 MP4 |
+| 做动态架构图 | 用 ni-live-panel 生成可单步播放、编辑文字的网页，也可输出 MP4 |
 
 ## 安装
 
@@ -68,7 +68,7 @@ ni-poetry-book 需要 LaTeX、Ghostscript 和本机提供的 Anthropic Serif 英
 | 产品与架构 | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md)：产品架构基线；[think-like-architect](./skills/think-like-architect/SKILL.md)：首层架构决策 |
 | 写作与表达 | [ni-radar](./skills/ni-radar/SKILL.md)：选题推荐；[ni-writer](./skills/ni-writer/SKILL.md)：文章写作；[ni-book-writer](./skills/ni-book-writer/SKILL.md)：书稿与章节；[ni-tech-report](./skills/ni-tech-report/SKILL.md)：技术汇报；[ni-explain](./skills/ni-explain/SKILL.md)：讲清楚（技术方案/汇报）；[ni-readme-guide](./skills/ni-readme-guide/SKILL.md)：中英文 README；[ni-poetry-book](./skills/ni-poetry-book/SKILL.md)：诗词、史料和技术文章排成可校验 PDF 书籍 |
 | 文章处理 | [ni-inspect](./skills/ni-inspect/SKILL.md)：发布前检查；[ni-formatter](./skills/ni-formatter/SKILL.md)：排版；[ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md)：配图提示词；[ni-draft](./skills/ni-draft/SKILL.md)：推送微信草稿箱 |
-| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报与纪实照片超现实重构（五种模式）；[ni-picarts](./skills/ni-picarts/SKILL.md)：金属浅浮雕、东方色域地景海报、照片厚涂微景观海报；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收；[ni-wanghong-handwritten-style](./skills/ni-wanghong-handwritten-style/SKILL.md)：王虹手写风 PPT 或视频；[ni-live-panel](./skills/ni-live-panel/SKILL.md)：动态架构图 |
+| 视觉创作 | [ni-poster](./skills/ni-poster/SKILL.md)：ZINE 风格海报与纪实照片超现实重构（五种模式）；[ni-picarts](./skills/ni-picarts/SKILL.md)：金属浅浮雕、东方色域地景海报、照片厚涂微景观海报；[ni-3d-model](./skills/ni-3d-model/SKILL.md)：多视图审核与带纹理 GLB 生成验收；[ni-wanghong-handwritten-style](./skills/ni-wanghong-handwritten-style/SKILL.md)：王虹手写风 PPT 或视频；[ni-live-panel](./skills/ni-live-panel/SKILL.md)：可单步播放、编辑文字的动态架构图 |
 
 需要串联文章生产时，用 [ni-article-workflow](./skills/ni-article-workflow/SKILL.md) 从选题、研究和大纲推进到初稿，支持断点续跑。默认先确认研究结论、大纲和写作授权；审稿、配图、排版与推送草稿箱另行调用。
 

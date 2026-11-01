@@ -8,12 +8,15 @@ One JSON object. All coordinates are canvas pixels (default 1200x1500, y grows d
 | --- | --- |
 | `meta` | `{title, lang}` page title and language |
 | `canvas` | `{preset:"4:5"|"3:4"|"1:1", width, height, duration, fps, preroll}` (explicit width/height win over the preset); `preroll` (s) is added to packet phases so delivery counters start above zero |
+| `playback` | Optional `{steps:[{label, start, end}, ...]}`. In interactive step mode, each `[start,end)` time range (seconds) loops until the user advances. Without it, steps are inferred from supported views or machines; if there is no sequence, the whole animation is one step. This does not change MP4 rendering. |
 | `theme` | `{preset:"terminal-dark"|"light-pastel", font, fontSize, lineHeight, boxMode:"segmented"|"solid", radius, borderWidth, wireWidth, packetSize, glow, colors:{name:"#rrggbb"}}`. A preset supplies every field; your values override it, `colors` are merged name by name. Colour names used by the engine: `bg bar line dim fg wh` (+ `line2` log frame, `dots` bar track); add any others |
 | `clock` | `{start:"HH:MM:SS", rate}`: log time at t=0 and how many log-seconds pass per second |
 | `titlebar` | `{text, height?, size?}` terminal title bar with three dots |
 | `credit` | text element for the source/credit line: `{text, y, size?, c?}` (default 12 px, centred, dim) |
 | `machines` | named state machines, see below |
 | `elements` | drawn in order (later = on top) |
+
+Example: `"playback": {"steps": [{"label":"准备", "start":0, "end":2}, {"label":"执行", "start":2, "end":5}]}`. Set ranges to actual phases of the animation; they may be non-contiguous and must have finite numeric `start < end`.
 
 ## Elements
 

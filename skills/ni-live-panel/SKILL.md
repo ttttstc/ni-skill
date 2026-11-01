@@ -1,6 +1,6 @@
 ---
 name: ni-live-panel
-description: Build a terminal-style, always-running animated architecture diagram (a "live panel") from a JSON config and render it to an mp4. Use when the user wants a system, agent or org architecture diagram that looks like a monitoring dashboard in a terminal window - fixed layout, glowing packets on the wires, scrolling log, counters, bars that flip state - as a screen-recording-style video or a live web page, instead of a static picture or a step-by-step reveal. 中文：当用户要做"活的"架构图、agent 树或系统监控面板风格的动画（mp4 视频或循环网页）时使用——终端里一直在跑的监控面板外观，固定布局、线上流动的数据包、滚动日志、翻转的计数器和状态条；不是静态图，也不是分步演示。
+description: Build an animated architecture diagram from JSON as an MP4 or self-contained interactive HTML page. The page supports adjustable playback speed, manually advancing through looping steps, and editing text. 中文：生成动态架构图、agent 树或监控面板，可导出视频，也可在网页调速、逐步讲解和编辑文字。
 ---
 
 # ni-live-panel
@@ -13,7 +13,7 @@ Turn a description of a system into an **always-running architecture diagram**: 
 
 - The user asks for an architecture / agent-tree / org-chart / data-flow diagram that should feel alive (video, GIF-like loop, or live page).
 - The user has a description of a system with a few boxes, a flow between them, a few "on call" side triggers, a log and some numbers.
-- Not for: diagrams that need interaction, real telemetry, or step-by-step explanations (use a slide or a normal diagram tool).
+- Not for: live telemetry or diagrams that must reveal or hide whole nodes one by one.
 
 ## Input
 
@@ -35,11 +35,17 @@ If the content has one clear shape, use a `{"type":"view"}` element instead of p
 3. **Render.** `python scripts/render.py --config my.json --out my.mp4` needs Chrome/Chromium and ffmpeg (use `--chrome` / `--ffmpeg` to specify paths). On Windows first run `python -m pip install -r requirements.txt` in this skill directory; Chrome or Edge is detected in common locations. `--html-out page.html` also keeps the self-contained page.
 4. **Check by frames, not by trust.** `python3 scripts/check_frames.py --config my.json --out-dir frames --repeat` samples ~120 time points, measures text overflow and overlaps from the DOM, exports PNGs and proves replay determinism. Open the PNGs and look: the checker catches geometry, not taste. Fix the config and repeat until it exits 0. For `text overflows its box`, take the cheapest fix - shorten the text, drop a size step, or widen that one box - rather than redesigning the layout; a config that passes beats a better one that is still being planned when time runs out.
 
+## Interactive HTML
+
+The page starts in automatic playback. **单步模式** loops the current animation segment until **下一步** or **上一步** is clicked; **自动播放** resumes the original loop. **速度** adjusts either playback mode from 0.25× to 2× without affecting MP4 rendering. **编辑文字** enables clicking text to edit it; edits are saved in the current browser and **下载 HTML** creates a standalone copy containing them. The original JSON and MP4 are not rewritten. If browser storage is unavailable, download the HTML to keep changes. Recheck the layout after making text longer.
+
+Step boundaries are inferred from a `ring`, `funnel`, `loop` with walks, `excalidraw` view, or the first `cycle`, `triggers`, or `lane` machine. For another layout, define actual animation phases in `playback.steps` as `[{"label":"...","start":0,"end":2}, ...]` (seconds); an animation without recognizable phases has one step. When asked for a step-by-step page, ensure its config has meaningful phases and a `loop` includes its walk order. Validate the interactive page by clicking through its steps and editing, refreshing, downloading, and reopening text, as well as the regular frame checks.
+
 ## Motion rules in one screen
 
 (Full text and rationale: `references/motion-grammar.md`.)
 
-- **Layout never moves.** No camera, no step-by-step reveal. Frame 0 is already a complete diagram.
+- **Layout never moves.** No camera or node-by-node reveal. Frame 0 is already a complete diagram; interactive steps loop individual phases of that diagram.
 - **Three tempos at once**: fast (packets with trails on every wire, spinners, fast counters), medium (log scrolls with newest line bright and older grey; bars re-roll and flip colour and label past a threshold), slow (side-rail triggers light up one at a time in order, their arrow changes colour and carries a packet, advice is typed out, totals accumulate).
 - **One truth everywhere.** The number in the log is the number on the bar; the trigger lit in the rail is the one the log mentions; counters in the status bar equal counters in boxes. In this engine that holds by construction: log lines are generated from the same state machines as the boxes.
 - **No real data? Say "illustrative".** Fixed facts stay fixed; only the animation's own counters move, and they are labelled.
@@ -50,7 +56,7 @@ The page exposes `window.seek(t)`. Every visual is a pure function of `t` (and a
 
 ## Files
 
-- `assets/template.html` - the generic page. `scripts/scaffold.py` - short spec -> complete config (layout done for you). `scripts/render.py` - mp4. `scripts/check_frames.py` - checks + PNGs. `scripts/livepanel.py` - shared helpers (DevTools pipe on POSIX, WebSocket on Windows).
+- `assets/template.html` and `assets/interaction.js` - the generic page and its controls. `scripts/scaffold.py` - short spec -> complete config (layout done for you). `scripts/render.py` - mp4. `scripts/check_frames.py` - checks + PNGs. `scripts/livepanel.py` - shared helpers (DevTools pipe on POSIX, WebSocket on Windows).
 - `references/motion-grammar.md`, `references/config-schema.md`.
 - `examples/codex-agents/`, `examples/airbnb/`, `examples/agent-architecture/` - config, mp4 and an animated `preview.webp`. `examples/ring/`, `examples/funnel/`, `examples/funnel-karpathy/` (log scale, mono palette), `examples/loop-poteto/` (grouped loop with decisions) - view examples.
 - `assets/views/<kind>.js` - one file per view; `references/views.md`, `references/view-rules.md`, `references/verify-view.md`; `scripts/verify_view.py`.

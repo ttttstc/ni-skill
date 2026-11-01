@@ -40,11 +40,42 @@ b,.b{font-weight:700}
 .lgrow{position:absolute}
 .lgrow span{position:absolute;top:0}
 #err{position:absolute;left:10px;top:10px;color:#f66;font:14px monospace;white-space:pre-wrap;z-index:9}
+#lp-controls{position:fixed;z-index:20;left:50%;bottom:12px;transform:translateX(-50%);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;width:max-content;max-width:calc(100vw - 20px);padding:7px;border:1px solid #d6d5ce;border-radius:12px;background:#fbfaf6;box-shadow:0 4px 20px #0002;color:#282823;font:14px/1.3 system-ui,sans-serif}
+#lp-controls[hidden],#lp-dialog[hidden]{display:none}
+#lp-controls button,#lp-dialog button{border:1px solid #cac8be;border-radius:7px;background:#fff;color:#282823;padding:7px 11px;font:inherit;cursor:pointer}
+#lp-controls select{border:1px solid #cac8be;border-radius:7px;background:#fff;color:#282823;padding:6px;font:inherit;cursor:pointer}
+#lp-controls button:hover,#lp-dialog button:hover{background:#efeee8}
+#lp-controls button:disabled{opacity:.45;cursor:not-allowed}
+#lp-controls button[aria-pressed="true"]{background:#343a35;color:#fff;border-color:#343a35}
+#lp-position{min-width:3.5em;max-width:12em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-variant-numeric:tabular-nums}
+#lp-status{font-size:12px;color:#9d4133}
+body.lp-editing #stage [data-t="text"],body.lp-editing #stage [data-lp-editable],body.lp-editing #stage svg text{cursor:text;pointer-events:all;outline:1px dashed #d07b57;outline-offset:2px}
+#lp-dialog{position:fixed;z-index:30;inset:0;display:grid;place-items:center;padding:20px;background:#0008;font:14px/1.5 system-ui,sans-serif;color:#282823}
+#lp-dialog .lp-sheet{width:min(520px,100%);padding:20px;border-radius:12px;background:#fbfaf6;box-shadow:0 12px 36px #0004}
+#lp-dialog label{display:block;font-weight:600;margin-bottom:8px}
+#lp-dialog textarea{width:100%;min-height:100px;padding:10px;border:1px solid #aaa99f;border-radius:7px;resize:vertical;font:inherit;color:inherit;background:#fff}
+#lp-dialog .lp-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
 </style><!--LIVE_FONTS--></head><body>
 <div id="stage"></div>
+<div id="lp-controls" role="toolbar" aria-label="播放与编辑" hidden>
+  <button id="lp-mode" type="button" aria-pressed="false">单步模式</button>
+  <button id="lp-prev" type="button" disabled>上一步</button>
+  <span id="lp-position" aria-live="polite"></span>
+  <button id="lp-next" type="button" disabled>下一步</button>
+  <label for="lp-speed">速度</label><select id="lp-speed" aria-label="动画速度"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
+  <button id="lp-edit" type="button" aria-pressed="false">编辑文字</button>
+  <button id="lp-export" type="button">下载 HTML</button>
+  <span id="lp-status" role="status"></span>
+</div>
+<div id="lp-dialog" role="dialog" aria-modal="true" aria-labelledby="lp-edit-label" hidden>
+  <div class="lp-sheet"><label id="lp-edit-label" for="lp-text">编辑文字</label><textarea id="lp-text"></textarea>
+    <div class="lp-actions"><button id="lp-cancel" type="button">取消</button><button id="lp-save" type="button">保存</button></div>
+  </div>
+</div>
 <!--LIVE_CONFIG-->
 <script>window.LP=window.LP||{_q:[],registerView:function(k,i){this._q.push([k,i])}};</script>
 <!--LIVE_VIEWS-->
+<!--LIVE_INTERACTION-->
 <script>
 (function(){
 'use strict';
@@ -53,7 +84,7 @@ var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 // deterministic "random": a pure hash of (seed, index). Never Math.random, never the wall clock.
 function hash(seed,k){var h=Math.imul((seed|0)+0x9e3779b9,0x85ebca6b)^Math.imul(k|0,0xc2b2ae35);h=Math.imul(h^(h>>>16),0x7feb352d);h=Math.imul(h^(h>>>15),0x846ca68b);return ((h^(h>>>16))>>>0)/4294967296}
 
-var cfg=null, ST=document.getElementById('stage'), V={}, DYN=[], PK=[], EVT=[], MACH=[], CHK=[];
+var cfg=null, ST=document.getElementById('stage'), V={}, DYN=[], PK=[], EVT=[], MACH=[], CHK=[], INTERACT=null;
 var CW=1200, CH=1500, LH=30, PRE=0, FS=21;
 window.__ready=false; window.__pending=null;
 
@@ -367,6 +398,7 @@ window.seek=function(t){
       else { A.P.el[0].style.display='none'; A.P.el[1].style.display='none'; } });
     VIEWS.forEach(function(v){ if(v.impl&&v.impl.seek) v.impl.seek.call(v.impl,t,v.ctx,v.state); });
     styleBoxes(); stylePaths(); applyDyn(); renderLog(t);
+    if(INTERACT) INTERACT.afterSeek();
     window.__t=t;
   }catch(e){fail(e)}
 };
@@ -398,11 +430,12 @@ window.__check=function(){
   items.forEach(function(a){ boxes.forEach(function(b){ if(b.k==='frame') return; if(b.el.contains(a.el)||a.el.getAttribute('data-in')) return; if(ov(a,b.r)) prob.push('text over a box: "'+a.txt+'"'); }); });
   for(var p=0;p<boxes.length;p++)for(var q=p+1;q<boxes.length;q++){ if(boxes[p].k==='frame'||boxes[q].k==='frame') continue; if(ov(boxes[p].r,boxes[q].r)) prob.push('box overlap: #'+p+' x #'+q); }
   VIEWS.forEach(function(v){ if(v.impl&&v.impl.check){ (v.impl.check.call(v.impl,v.ctx)||[]).forEach(function(m){prob.push('view '+v.kind+': '+m)}); } });
+  if(INTERACT) prob=prob.concat(INTERACT.problems());
   return prob;
 };
 
 // ---------- boot ----------
-function fit(){ var s=Math.min(innerWidth/CW,innerHeight/CH); ST.style.transform='scale('+s+')'; ST.style.left=((innerWidth-CW*s)/2)+'px'; ST.style.top=((innerHeight-CH*s)/2)+'px'; }
+function fit(){ var bar=document.getElementById('lp-controls'), h=innerHeight-(bar&&!bar.hidden?bar.offsetHeight+24:0); var s=Math.min(innerWidth/CW,Math.max(1,h)/CH); ST.style.transform='scale('+s+')'; ST.style.left=((innerWidth-CW*s)/2)+'px'; ST.style.top=((h-CH*s)/2)+'px'; }
 var CANVAS_PRESETS={'4:5':[1200,1500],'3:4':[1080,1440],'1:1':[1080,1080]};
 var THEME_PRESETS={
  'terminal-dark':{font:'"JetBrains Mono","IBM Plex Mono","DejaVu Sans Mono","Noto Sans Mono CJK SC",monospace',fontSize:21,lineHeight:30,boxMode:'segmented',
@@ -433,14 +466,18 @@ function boot(c){
   // titlebar
   if(c.titlebar){ var tb=c.titlebar, h=tb.height||38, d=document.createElement('div'); d.className='tb'; d.style.width=CW+'px'; d.style.height=h+'px'; d.style.lineHeight=h+'px'; d.style.fontSize=(tb.size||14)+'px';
     [['#f2645a',20],['#f1bd3c',42],['#55c552',64]].forEach(function(o){var i=document.createElement('i'); i.style.left=(o[1]-7)+'px'; i.style.top=(h/2-7)+'px'; i.style.width='14px'; i.style.height='14px'; i.style.background=o[0]; d.appendChild(i)});
-    d.appendChild(document.createTextNode(tb.text||'')); ST.appendChild(d); }
+    var title=document.createElement('span'); title.setAttribute('data-lp-editable',''); title.textContent=tb.text||''; d.appendChild(title); ST.appendChild(d); }
   (c.elements||[]).forEach(function(e){ var f=B[e.type]; if(!f) throw new Error('unknown element type '+e.type); f(e); });
   if(c.credit){ B.text(Object.assign({type:'text',x:0,w:CW,align:'center',y:CH-14,size:12,c:'dim'},c.credit)); }
   fit(); addEventListener('resize',fit);
   var fontsFor=function(){ if(!VIEWS.length||!document.fonts||!document.fonts.load) return Promise.resolve(); var f=TH.titleFont||TH.font;
     return Promise.all(['20px '+f,'700 20px '+f,'20px '+TH.font,'700 20px '+TH.font].map(function(q){return document.fonts.load(q).catch(function(){})})); };
-  var go=function(){ try{ buildViews(); }catch(e){ fail(e); } window.__ready=true; window.seek(window.__pending==null?0:window.__pending);
-    if(!/[?&]manual/.test(location.search)){ var t0=performance.now(), D=cv.duration||30; (function loop(now){ window.seek(((now-t0)/1000)%D); requestAnimationFrame(loop); })(t0); } };
+  var go=function(){ try{ buildViews(); }catch(e){ fail(e); }
+    var manual=/[?&]manual/.test(location.search);
+    if(window.LPInteractive) INTERACT=window.LPInteractive({stage:ST,config:cfg,views:VIEWS,duration:cv.duration||30,manual:manual,fit:fit});
+    window.__ready=true; window.seek(window.__pending==null?0:window.__pending);
+    if(INTERACT) INTERACT.start();
+    else if(!manual){ var t0=performance.now(), D=cv.duration||30; (function loop(now){ window.seek(((now-t0)/1000)%D); requestAnimationFrame(loop); })(t0); } };
   (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(fontsFor).then(go);
 }
 loadConfig().then(boot).catch(fail);
