@@ -131,6 +131,8 @@ def build_page(config_path, out_path, template=None):
         sys.exit("template has no <!--LIVE_CONFIG--> placeholder")
     page = tpl.replace("<!--LIVE_CONFIG-->", tag)
     page = page.replace("<!--LIVE_VIEWS-->", views_html()).replace("<!--LIVE_FONTS-->", fonts_html(cfg, Path(config_path).resolve().parent))
+    interaction = (ROOT / "assets" / "interaction.js").read_text(encoding="utf-8").replace("</script", "<\\/script")
+    page = page.replace("<!--LIVE_INTERACTION-->", "<script>\n" + interaction + "\n</script>")
     Path(out_path).write_text(page, encoding="utf-8")
     return cfg
 

@@ -24,7 +24,7 @@ After installation, name the skill, your goal, and your sources in a conversatio
 | Explain a plan clearly | Use ni-explain to rewrite this technical proposal clearly, removing empty verbs and vague words |
 | Make a source-traceable book | Use ni-poetry-book to turn poetry, historical sources, or Markdown into a reproducible PDF book |
 | Create a Wanghong-style presentation | Use ni-wanghong-handwritten-style and ask for slides, video, or both |
-| Animate an architecture diagram | Use ni-live-panel to turn a config into a looping page or MP4 |
+| Animate an architecture diagram | Use ni-live-panel to create a step-controlled, text-editable page, or render an MP4 |
 
 ## Install
 
@@ -68,7 +68,7 @@ ni-poetry-book needs LaTeX, Ghostscript, and a locally supplied Anthropic Serif 
 | Product and architecture | [ni-design-with-docs](./skills/ni-design-with-docs/SKILL.md): product architecture baselines; [think-like-architect](./skills/think-like-architect/SKILL.md): first-cut architecture decisions |
 | Writing and communication | [ni-radar](./skills/ni-radar/SKILL.md): topic recommendations; [ni-writer](./skills/ni-writer/SKILL.md): articles; [ni-book-writer](./skills/ni-book-writer/SKILL.md): books and chapters; [ni-tech-report](./skills/ni-tech-report/SKILL.md): technical reports; [ni-explain](./skills/ni-explain/SKILL.md): explain clearly (proposals and reports); [ni-readme-guide](./skills/ni-readme-guide/SKILL.md): Chinese and English READMEs; [ni-poetry-book](./skills/ni-poetry-book/SKILL.md): source-traceable, validated PDF books from poetry, historical sources, and technical articles |
 | Article preparation | [ni-inspect](./skills/ni-inspect/SKILL.md): prepublication checks; [ni-formatter](./skills/ni-formatter/SKILL.md): layout; [ni-article-image-gen](./skills/ni-article-image-gen/SKILL.md): image prompts; [ni-draft](./skills/ni-draft/SKILL.md): WeChat draft delivery |
-| Visual creation | [ni-poster](./skills/ni-poster/SKILL.md): ZINE-style posters and documentary-photo surreal restaging (five modes); [ni-picarts](./skills/ni-picarts/SKILL.md): metallic relief, oriental color-field landscape posters, and photo-to-impasto miniature landscape posters; [ni-3d-model](./skills/ni-3d-model/SKILL.md): multiview review and textured GLB generation and validation; [ni-wanghong-handwritten-style](./skills/ni-wanghong-handwritten-style/SKILL.md): Wanghong-style slides or video; [ni-live-panel](./skills/ni-live-panel/SKILL.md): animated architecture diagrams |
+| Visual creation | [ni-poster](./skills/ni-poster/SKILL.md): ZINE-style posters and documentary-photo surreal restaging (five modes); [ni-picarts](./skills/ni-picarts/SKILL.md): metallic relief, oriental color-field landscape posters, and photo-to-impasto miniature landscape posters; [ni-3d-model](./skills/ni-3d-model/SKILL.md): multiview review and textured GLB generation and validation; [ni-wanghong-handwritten-style](./skills/ni-wanghong-handwritten-style/SKILL.md): Wanghong-style slides or video; [ni-live-panel](./skills/ni-live-panel/SKILL.md): animated architecture diagrams with step playback and editable text |
 
 To connect the article stages, use [ni-article-workflow](./skills/ni-article-workflow/SKILL.md) for topics, research, outlines, and an initial draft, with support for resuming interrupted work. By default, it requires confirmation of findings, the outline, and permission to write. Review, imagery, formatting, and draft delivery are separate calls.
 

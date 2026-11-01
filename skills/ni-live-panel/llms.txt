@@ -4,7 +4,7 @@
 
 Key facts:
 - Input: one JSON file (canvas, theme, boxes, wires, packet flows, state machines, log). The HTML template never needs editing.
-- Output: H.264 mp4 (silent AAC track) and/or a self-contained HTML page that loops live in a browser.
+- Output: H.264 mp4 (silent AAC track) and/or a self-contained HTML page with adjustable-speed automatic and click-to-advance step playback, browser-saved text editing, and edited HTML download.
 - Themes: terminal-dark, light-pastel. Canvas presets: 4:5 = 1200x1500 (X), 3:4 = 1080x1440 (Xiaohongshu), 1:1 = 1080x1080.
 - Runs locally on Windows, Linux and macOS: Python 3.8+, Chrome/Chromium and ffmpeg. Windows requires websocket-client. No API key is needed.
 - Deterministic: every frame is a pure function of time (window.seek(t)); check_frames.py measures text overflow/overlap from the DOM and proves replays are identical.
